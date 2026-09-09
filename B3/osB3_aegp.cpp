@@ -24,6 +24,21 @@
 	redraw and not our write, and every other row is unreadable. There is also a
 	DEAD button, carried from B2, wired to nothing.
 
+	A CONSTRAINT FOUND AT RUNTIME, ON RUN 1
+
+	Run 1 called the AEGP suites straight from the panel's WM_COMMAND handler and
+	AE answered with "internal verification failure ... {no current context}" and
+	then "AEGP magic error". Our wndproc is a Win32 callback AE never set up a
+	plug-in context for, so project-touching AEGP calls are illegal there.
+
+	The work is therefore QUEUED by the button and performed in an AEGP idle hook,
+	which AE calls with a valid context. The DIRECT button is kept and expected to
+	fail: it turns "the deferred path works" into "the deferred path works AND the
+	direct one does not", which is the difference between a fix and a guess.
+
+	This is a real Phase 2 constraint, not a spike detail. Every panel control
+	that writes a param has to go through the same queue.
+
 	A CONSTRAINT FOUND IN THE HEADER, NOT AT RUNTIME
 
 	AE_GeneralPlug.h says AEGP_SetStreamValue is "only legal to call when
@@ -236,6 +251,38 @@ DoWrite(WriteKind kind)
 }
 
 /* ------------------------------------------------------------------ */
+/*  Deferral: from the button to a context AE will accept              */
+/* ------------------------------------------------------------------ */
+
+//	The panel's wndproc may not call AEGP project APIs (see the header). It sets
+//	this instead, and the idle hook drains it. Interlocked because the two run on
+//	AE's main thread but not in the same call, and a dropped or doubled request
+//	would be a confusing spike result rather than an obvious one.
+
+enum { kNoRequest = -1 };
+static volatile LONG S_pending = kNoRequest;
+
+static void
+QueueWrite(WriteKind kind)
+{
+	InterlockedExchange(&S_pending, (LONG)kind);
+	OSB3_Log("QUEUE   %s requested from the panel; waiting for idle",
+				(kind == kPlus) ? "PLUS " : (kind == kMinus) ? "MINUS" : "NOOP ");
+}
+
+static A_Err
+IdleHook(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long *max_sleepPL)
+{
+	LONG req = InterlockedExchange(&S_pending, (LONG)kNoRequest);
+
+	if (req != kNoRequest) {
+		DoWrite((WriteKind)req);
+	}
+	if (max_sleepPL) *max_sleepPL = 1;
+	return A_Err_NONE;
+}
+
+/* ------------------------------------------------------------------ */
 /*  Panel                                                              */
 /* ------------------------------------------------------------------ */
 
@@ -256,6 +303,9 @@ public:
 		MakeButton("Brightness -10",	OS_B3_BTN_MINUS,	150, 40);
 		MakeButton("No-op write",		OS_B3_BTN_NOOP,		10,  76);
 		MakeButton("Dead button",		OS_B3_BTN_DEAD,		150, 76);
+		//	Kept deliberately. Writes from the wndproc, the way run 1 did, and is
+		//	expected to raise AE's "no current context". Proof, not decoration.
+		MakeButton("Direct (expect err)", OS_B3_BTN_DIRECT,	10, 112);
 
 		outFunctionTable->DoFlyoutCommand	= S_DoFlyoutCommand;
 		outFunctionTable->GetSnapSizes		= S_GetSnapSizes;
@@ -295,9 +345,16 @@ private:
 				if (HIWORD(wp) == BN_CLICKED) {
 					//	OS_B3_BTN_DEAD is absent on purpose.
 					switch (LOWORD(wp)) {
-						case OS_B3_BTN_PLUS:	DoWrite(kPlus);		handledB = true; break;
-						case OS_B3_BTN_MINUS:	DoWrite(kMinus);	handledB = true; break;
-						case OS_B3_BTN_NOOP:	DoWrite(kNoOp);		handledB = true; break;
+						case OS_B3_BTN_PLUS:	QueueWrite(kPlus);	handledB = true; break;
+						case OS_B3_BTN_MINUS:	QueueWrite(kMinus);	handledB = true; break;
+						case OS_B3_BTN_NOOP:	QueueWrite(kNoOp);	handledB = true; break;
+
+						case OS_B3_BTN_DIRECT:
+							//	The control. Same call, wrong context.
+							OSB3_Log("DIRECT  calling DoWrite straight from the wndproc");
+							DoWrite(kPlus);
+							handledB = true;
+							break;
 					}
 				}
 				break;
@@ -418,6 +475,10 @@ EntryPointFunc(
 	ERR(suites.RegisterSuite5()->AEGP_RegisterCommandHook(S_my_id, AEGP_HP_BeforeAE,
 															S_cmd_panel, CommandHook, NULL));
 	ERR(suites.RegisterSuite5()->AEGP_RegisterUpdateMenuHook(S_my_id, UpdateMenuHook, NULL));
+
+	//	The panel's buttons queue; this is what actually writes.
+	ERR(suites.RegisterSuite5()->AEGP_RegisterIdleHook(S_my_id, IdleHook, NULL));
+
 	ERR(S_panelP->AEGP_RegisterCreatePanelHook(S_my_id, S_match_nameZ,
 												CreatePanelHook, NULL, true));
 

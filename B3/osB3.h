@@ -84,6 +84,7 @@ enum {
 #define OS_B3_BTN_MINUS			3002	// write brightness - 10
 #define OS_B3_BTN_NOOP			3003	// write the value it already holds
 #define OS_B3_BTN_DEAD			3004	// wired to nothing
+#define OS_B3_BTN_DIRECT		3005	// writes from the wndproc; expected to fail
 
 /* ---- shared --------------------------------------------------- */
 

@@ -73,6 +73,16 @@ close.** (`AEGP_ToggleVisibility` alone would close it; the code checks
 
 ## 4 — The gate
 
+> **Changed after run 1.** Run 1 wrote straight from the panel's window callback
+> and AE raised *"internal verification failure … {no current context}"* then
+> *"AEGP magic error"*. A Win32 wndproc is not a context AE has set up for
+> plug-in calls, so project-touching AEGP calls are illegal there. The buttons now
+> **queue** the write and an **idle hook** performs it, which is a context AE
+> accepts. Only `osB3panel.aex` changed.
+>
+> **This is a Phase 2 constraint, not a spike detail** — every panel control that
+> writes a param will go through the same queue.
+
 Dock the panel where you can see the comp viewer at the same time.
 
 1. **Select layer 1** — deliberately *not* the layer carrying the effect.
@@ -97,6 +107,18 @@ If a no-op write produces a visible repaint, we are watching AE's idle redraw
 rather than our write, and steps 4's observations are unreadable.
 
 Then click **Dead button** five times — no log lines at all.
+
+### 5b — The direct-path control (the diagnosis, made falsifiable)
+
+Click **Direct (expect err)** once. It performs the identical write from the
+wndproc, the way run 1 did.
+
+**It should raise the same "no current context" error.** That is the point: it
+turns "the deferred path works" into "the deferred path works *and* the direct
+one still does not", which is the difference between a fix and a coincidence.
+
+If Direct now *succeeds*, tell me — it would mean the deferral is not what fixed
+it and the real cause is still unidentified.
 
 ## 6 — Undo
 
@@ -147,6 +169,7 @@ What matters is that the number is **the same either side of the arrow**.
 | 4 | Works with nothing selected | |
 | 5 | No-op write causes no visible change | |
 | 5 | Dead button logs nothing | |
+| 5b | Direct button still raises "no current context" | |
 | 6 | One write = one undo step | |
 | 7 | Keyframed stream is refused, not corrupted | |
 
