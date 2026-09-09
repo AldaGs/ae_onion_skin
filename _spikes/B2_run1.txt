@@ -1,0 +1,22 @@
+[2026-09-09 12:41:20  t= 9925046]  STARTUP AE 126.3, plugin id 27
+[2026-09-09 12:41:20  t= 9925046]  READY   panel registered as "OnionSkinB2Panel"
+[2026-09-09 12:42:13  t= 9977390]  MENU    toggle requested
+[2026-09-09 12:42:13  t= 9977406]  PANEL   created. hwnd=000000000009096A
+[2026-09-09 12:42:21  t= 9985796]  CLICK   LIVE  #1  selection=none-or-multiple
+[2026-09-09 12:42:22  t= 9986750]  CLICK   LIVE  #2  selection=none-or-multiple
+[2026-09-09 12:42:22  t= 9986937]  CLICK   LIVE  #3  selection=none-or-multiple
+[2026-09-09 12:42:22  t= 9987125]  CLICK   LIVE  #4  selection=none-or-multiple
+[2026-09-09 12:42:24  t= 9988875]  CLICK   LIVE  #5  selection=none-or-multiple
+[2026-09-09 12:42:24  t= 9989140]  CLICK   LIVE  #6  selection=none-or-multiple
+[2026-09-09 12:43:05  t=10030203]  CLICK   LIVE  #7  selection=one layer, index 0
+[2026-09-09 12:43:07  t=10031890]  CLICK   LIVE  #8  selection=one layer, index 1
+[2026-09-09 12:43:09  t=10033609]  CLICK   LIVE  #9  selection=one layer, index 2
+[2026-09-09 12:43:11  t=10035312]  CLICK   LIVE  #10  selection=one layer, index 4
+[2026-09-09 12:43:12  t=10036687]  CLICK   LIVE  #11  selection=one layer, index 5
+[2026-09-09 12:43:18  t=10043015]  CLICK   LIVE  #12  selection=none-or-multiple
+[2026-09-09 12:43:24  t=10048234]  CLICK   LIVE  #13  selection=none-or-multiple
+[2026-09-09 12:43:55  t=10080062]  PANEL   created. hwnd=00000000000A0C22
+[2026-09-09 12:44:16  t=10101140]  STARTUP AE 126.3, plugin id 27
+[2026-09-09 12:44:16  t=10101140]  READY   panel registered as "OnionSkinB2Panel"
+[2026-09-09 12:44:17  t=10101937]  PANEL   created. hwnd=0000000000030D76
+[2026-09-09 12:44:24  t=10108546]  CLICK   LIVE  #1  selection=none-or-multiple
