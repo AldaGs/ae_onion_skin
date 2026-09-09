@@ -121,3 +121,77 @@ Known not-yet-done, for context rather than testing: this is a legacy `PF_Cmd_RE
 effect, not SmartFX, so it renders at full resolution regardless of the viewer's
 resolution setting. If it feels slow at Full on a big comp, that is expected and
 is a Phase 2 item, not a defect.
+
+---
+
+# v1.1 — re-test after run 1
+
+Run 1: rows 1–3 and 8 passed. Three things came back; two are addressed here and
+one is diagnosed rather than fixed, because guessing at it is how a morning
+disappears.
+
+**Redeploy** (`onionSkin.aex` only, version now 557058 = 1.1.0 build 2):
+
+```
+Copy-Item "C:\_build_out\AEGP\onionSkin.aex" "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\onionSkin.aex" -Force
+```
+
+## 4' — Ghosting must now THIN OUT, not stop
+
+**The bug was mine.** The render loop was guarded `for (...; !err && ...)`. Off
+the end of the timeline `PF_CHECKOUT_PARAM` fails, `err` stuck, and every
+remaining skin was skipped — including the **past** ones at nearer distances that
+were perfectly available — as was the final `C(t)` composite. The absence of a
+frame is not an error condition.
+
+Now each checkout's error is swallowed locally and the loop carries on.
+
+Re-test: scrub to the **last frame** with Previous 4 / Next 4. Expect the blue
+(future) ghosts to disappear one at a time as you approach the end, while the red
+(past) ones stay. Mirror at frame 0. **No abrupt loss of everything.**
+
+## 5' — Source Layers: turn on Debug Log first
+
+New checkbox at the bottom of the effect: **Debug Log**. It writes
+`%TEMP%\onionskin_fx.txt` describing what each render actually received.
+
+1. Adjustment layer over an opaque solid, Onion Skin applied.
+2. Set **Source Layer 1** to the drawing layer.
+3. **Tick Debug Log.**
+4. Nudge the current time once so a render happens.
+5. Untick Debug Log (it appends fast).
+6. Send me `%TEMP%\onionskin_fx.txt`.
+
+The lines that matter:
+
+```
+  source param 10: u.ld.data=yes  1920x1080     <- was the layer param handed to us at all?
+  resolved 1 source(s); first=10                <- did we pick it, or fall back to the input?
+    k=-1 src_param=10  checkout_err=0  data=yes  1920x1080
+```
+
+That distinguishes the three candidate causes without me speculating:
+`u.ld.data=NO` means AE never gave us the layer; `first=0` means we fell back to
+the input and the ghosts are being hidden by the opaque background exactly as
+step 5 predicts; `checkout_err` non-zero means the time-offset pull is the
+problem.
+
+## 7' — The empty dialog is expected, and will go away
+
+Clicking **Open Onion Skin Panel** opens an empty floating panel. That is AE
+creating the workspace slot for match name `OnionSkinPanel` and finding no
+registered creator — because the Phase 2 panel does not exist yet.
+
+Not a defect and not worth guarding: `AEGP_IsShown` returns success for an
+unregistered match name, so the effect cannot tell "not installed" from "installed
+and closed". It resolves itself the moment the Phase 2 panel binary is in place.
+Noted here so it is not re-reported as a bug.
+
+## Re-test verdict
+
+| # | Claim | Pass |
+|---|---|---|
+| 4' | Future ghosts thin out approaching the last frame | |
+| 4' | Past ghosts SURVIVE at the last frame | |
+| 4' | Mirror behaviour at frame 0 | |
+| 5' | Debug log captured and sent | |

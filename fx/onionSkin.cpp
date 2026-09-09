@@ -23,6 +23,39 @@
 
 #include "onionSkin.h"
 
+#include <stdarg.h>
+#include <time.h>
+
+/* ------------------------------------------------------------------ */
+/*  Diagnostics                                                        */
+/* ------------------------------------------------------------------ */
+
+static bool S_logB = false;
+
+void
+OS_Log(const char *fmt, ...)
+{
+	if (!S_logB) return;
+
+	static char pathZ[512] = {'\0'};
+	if (!pathZ[0]) {
+		const char *tmp = getenv("TEMP");
+		if (!tmp) tmp = getenv("TMP");
+		if (!tmp) tmp = ".";
+		sprintf(pathZ, "%s\\%s", tmp, OS_LOG_LEAF);
+	}
+
+	FILE *f = fopen(pathZ, "a");
+	if (!f) return;
+
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(f, fmt, ap);
+	va_end(ap);
+	fprintf(f, "\n");
+	fclose(f);
+}
+
 /* ------------------------------------------------------------------ */
 /*  Setup                                                              */
 /* ------------------------------------------------------------------ */
@@ -108,6 +141,11 @@ ParamsSetup(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *[], PF_LayerD
 	def.flags = PF_ParamFlag_SUPERVISE;
 	PF_ADD_BUTTON("Panel", "Open Onion Skin Panel", 0, PF_ParamFlag_SUPERVISE,
 					OS_OPEN_PANEL);
+
+	//	Appended in v1.1. Writes %TEMP%\onionskin_fx.txt describing what each
+	//	render actually received. Off by default.
+	AEFX_CLR_STRUCT(def);
+	PF_ADD_CHECKBOX("", "Debug Log", FALSE, 0, OS_DEBUG_LOG);
 
 	out_data->num_params = OS_NUM_PARAMS;
 	return err;
@@ -300,6 +338,12 @@ Render(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *params[], PF_Layer
 	double		tint_am	= params[OS_TINT_AMOUNT]->u.fs_d.value / 100.0;
 	A_Boolean	enabled	= params[OS_ENABLE]->u.bd.value;
 
+	S_logB = (params[OS_DEBUG_LOG]->u.bd.value != 0);
+	OS_Log("RENDER t=%ld step=%ld prev=%ld next=%ld fstep=%ld strength=%.2f deep=%d",
+			(long)in_data->current_time, (long)in_data->time_step,
+			(long)prev, (long)next, (long)step, strength,
+			(int)PF_WORLD_IS_DEEP(output));
+
 	//	Exact pass-through. Made an early exit rather than left to emerge from
 	//	the maths, because "zero strength returns the input untouched" is an
 	//	invariant the proto established and the port should be testable against.
@@ -318,24 +362,44 @@ Render(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *params[], PF_Layer
 
 	for (A_long s = 0; s < OS_MAX_SOURCES; s++) {
 		A_long idx = OS_SOURCE_1 + s;
+
+		OS_Log("  source param %ld: u.ld.data=%s  %ldx%ld",
+				(long)idx, params[idx]->u.ld.data ? "yes" : "NO",
+				(long)params[idx]->u.ld.width, (long)params[idx]->u.ld.height);
+
 		if (params[idx]->u.ld.data) {
 			sources[n_sources++] = idx;
 		}
 	}
 	if (n_sources == 0) {
+		//	Fall back to the effect's own input. On a drawing layer that is
+		//	right; on an adjustment layer over an opaque background it yields
+		//	nothing visible, which is the finding that put the Source params here.
 		sources[n_sources++] = OS_INPUT;
 	}
+	OS_Log("  resolved %ld source(s); first=%ld", (long)n_sources, (long)sources[0]);
 
 	//	Start empty, then lay skins farthest-first so nearer frames occlude
 	//	further ones, and C(t) lands last.
 	ERR(PF_FILL(NULL, NULL, output));
 
 	A_long maxd = MAX(prev, next);
+	A_long laid = 0;
 
-	for (A_long d = maxd; !err && d >= 1; d--) {
+	//	NOTE the loop conditions carry no !err guard, and that is the fix for
+	//	the v1.0 defect where ghosting stopped dead at the ends of the timeline
+	//	instead of thinning out. Run 1: at the last frame the FUTURE checkout
+	//	failed, err stuck, and every remaining skin -- including the PAST ones
+	//	at nearer distances, which were perfectly available -- was skipped, as
+	//	was the final C(t) composite.
+	//
+	//	The absence of a frame is not an error condition. A checkout that fails
+	//	off the end of the timeline means "no frame there", and the only correct
+	//	response is to lay nothing down and carry on.
+	for (A_long d = maxd; d >= 1; d--) {
 		//	At equal distance, past then future, so the future skin reads as
 		//	sitting on top of the past one.
-		for (int which = 0; !err && which < 2; which++) {
+		for (int which = 0; which < 2; which++) {
 			A_long k = (which == 0) ? -d : d;
 
 			if (k < 0 && d > prev) continue;
@@ -346,35 +410,47 @@ Render(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *params[], PF_Layer
 
 			A_long offset = k * step * in_data->time_step;
 
-			for (A_long s = 0; !err && s < n_sources; s++) {
-				PF_ParamDef checked;
+			for (A_long s = 0; s < n_sources; s++) {
+				PF_ParamDef	checked;
+				PF_Err		cerr = PF_Err_NONE;
+
 				AEFX_CLR_STRUCT(checked);
 
 				//	Exactly the SDK Checkout sample's move: a layer param pulled
 				//	at current_time + n * time_step.
-				ERR(PF_CHECKOUT_PARAM(in_data, sources[s],
-										in_data->current_time + offset,
-										in_data->time_step, in_data->time_scale,
-										&checked));
-				if (!err) {
+				cerr = PF_CHECKOUT_PARAM(in_data, sources[s],
+											in_data->current_time + offset,
+											in_data->time_step, in_data->time_scale,
+											&checked);
+
+				OS_Log("    k=%+ld src_param=%ld  checkout_err=%d  data=%s  %ldx%ld",
+						(long)k, (long)sources[s], (int)cerr,
+						(!cerr && checked.u.ld.data) ? "yes" : "NO",
+						(!cerr) ? (long)checked.u.ld.width  : 0L,
+						(!cerr) ? (long)checked.u.ld.height : 0L);
+
+				if (!cerr) {
 					if (checked.u.ld.data) {
+						//	A LayDown failure IS worth propagating - that is our
+						//	own compositing, not the timeline running out.
 						ERR(LayDown(in_data, output, &checked.u.ld, opacity,
 									(k < 0) ? pr : nr,
 									(k < 0) ? pg : ng,
 									(k < 0) ? pb : nb,
 									tint_am));
+						laid++;
 					}
-					//	Off the ends of the timeline AE hands back an empty
-					//	layer, which correctly contributes nothing. No wrapping.
 					PF_CHECKIN_PARAM(in_data, &checked);
 				}
+				//	cerr deliberately swallowed. See the note above the loop.
 			}
 		}
 	}
 
-	//	C(t) last, untouched: opacity 1, no tint.
+	//	C(t) last, untouched: opacity 1, no tint. Runs whatever happened above.
 	ERR(LayDown(in_data, output, &params[OS_INPUT]->u.ld, 1.0, 0, 0, 0, 0.0));
 
+	OS_Log("  laid %ld skin(s); final err=%d", (long)laid, (int)err);
 	return err;
 }
 

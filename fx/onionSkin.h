@@ -64,10 +64,10 @@
 #define OS_PANEL_MATCH_NAME	"OnionSkinPanel"
 
 #define OS_MAJOR	1
-#define OS_MINOR	0
+#define OS_MINOR	1
 #define OS_BUG		0
 #define OS_STAGE	PF_Stage_DEVELOP
-#define OS_BUILD	1
+#define OS_BUILD	2
 
 /*	Disk IDs are APPEND-ONLY. Inserting one renumbers the rest and silently
 	mis-maps every saved project ("effect control conversion required"). Add at
@@ -87,6 +87,7 @@ enum {
 	OS_SOURCE_2,
 	OS_SOURCE_3,
 	OS_OPEN_PANEL,
+	OS_DEBUG_LOG,		// appended for v1.1 - see the append-only note above
 	OS_NUM_PARAMS
 };
 
@@ -99,6 +100,14 @@ enum {
 #define OS_STRENGTH_DFLT	55.0
 #define OS_FALLOFF_DFLT		60.0
 #define OS_TINT_DFLT		100.0
+
+//	Diagnostic log, off by default. Writes one block per render describing what
+//	the effect actually SAW - how many sources it resolved, what each checkout
+//	returned, and the dimensions it got. Added because "selecting a source shows
+//	no ghost" is a question about what arrives, and guessing at that is how a
+//	morning disappears.
+#define OS_LOG_LEAF			"onionskin_fx.txt"
+void OS_Log(const char *fmt, ...);
 
 extern "C" {
 	DllExport PF_Err EffectMain(
