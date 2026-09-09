@@ -202,6 +202,7 @@ typedef struct {
 	double			opacity;		// 0..1, already includes falloff
 	double			tr, tg, tb;		// tint colour, 0..1
 	double			tint_amount;	// 0..1
+	A_long			off_x, off_y;	// where the skin's (0,0) sits in the output
 } SkinInfo;
 
 //	Straight-alpha source-over of one skin pixel onto the accumulator.
@@ -235,10 +236,14 @@ SkinOver8(void *refcon, A_long x, A_long y, PF_Pixel8 *, PF_Pixel8 *outP)
 	PF_EffectWorld *sw = siP->skinP;
 
 	//	Outside the skin world is transparent, not an error. A checked-out layer
-	//	need not match the output's dimensions.
-	if (x < 0 || y < 0 || x >= sw->width || y >= sw->height) return PF_Err_NONE;
+	//	need not match the output's dimensions - see LayDown for what off_x/off_y
+	//	mean and why they are only ever a fallback.
+	A_long sx = x - siP->off_x;
+	A_long sy = y - siP->off_y;
 
-	PF_Pixel8 *sP = (PF_Pixel8 *)((char *)sw->data + (size_t)y * sw->rowbytes) + x;
+	if (sx < 0 || sy < 0 || sx >= sw->width || sy >= sw->height) return PF_Err_NONE;
+
+	PF_Pixel8 *sP = (PF_Pixel8 *)((char *)sw->data + (size_t)sy * sw->rowbytes) + sx;
 
 	double ta = siP->tint_amount;
 	double sa = (sP->alpha / (double)PF_MAX_CHAN8) * siP->opacity;
@@ -293,6 +298,21 @@ SkinOver16(void *refcon, A_long x, A_long y, PF_Pixel16 *, PF_Pixel16 *outP)
 }
 
 //	Lay one world down onto the output.
+//	A checked-out layer param arrives at the LAYER'S OWN dimensions, not the
+//	comp's, and carries none of the layer's comp transform. Run 3 measured a
+//	24x24 skin against a 960x540 output: the effect was compositing correctly
+//	into a 24x24 patch in the top-left corner, which is indistinguishable from
+//	doing nothing.
+//
+//	There is no origin to recover here - PF_InData::pre_effect_source_origin
+//	describes the effect's OWN input, not a checked-out param, and the SDK's
+//	Checkout sample sidesteps the question entirely by PF_COPYing into a rect
+//	(which scales rather than positions).
+//
+//	So a mismatched source is CENTRED, as the least-wrong placement and the one
+//	AE itself reaches for elsewhere, and the mismatch is logged. The real answer
+//	is a comp-sized source - a precomp - and that is what the docs say to use.
+//	Centring is a fallback that makes the failure visible, not a fix.
 static PF_Err
 LayDown(PF_InData *in_data, PF_LayerDef *output, PF_EffectWorld *skinP,
 		double opacity, double tr, double tg, double tb, double tint_amount)
@@ -311,6 +331,19 @@ LayDown(PF_InData *in_data, PF_LayerDef *output, PF_EffectWorld *skinP,
 	si.tg			= tg;
 	si.tb			= tb;
 	si.tint_amount	= tint_amount;
+	si.off_x		= 0;
+	si.off_y		= 0;
+
+	if (skinP->width != output->width || skinP->height != output->height) {
+		si.off_x = (output->width  - skinP->width)  / 2;
+		si.off_y = (output->height - skinP->height) / 2;
+		OS_Log("    !! source %ldx%ld != output %ldx%ld - CENTRED at (%ld,%ld). "
+				"The layer's comp transform is NOT carried. Use a comp-sized "
+				"source (a precomp), or apply the effect to the drawing layer.",
+				(long)skinP->width, (long)skinP->height,
+				(long)output->width, (long)output->height,
+				(long)si.off_x, (long)si.off_y);
+	}
 
 	//	src and dst are both the output world: the callback ignores its input
 	//	pixel and reads the skin by index instead. See the file header.

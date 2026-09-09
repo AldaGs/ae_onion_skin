@@ -1,0 +1,2439 @@
+RENDER t=5120 step=1024 prev=2 next=2 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 4 skin(s); final err=0
+RENDER t=5120 step=1024 prev=2 next=2 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 4 skin(s); final err=0
+RENDER t=5120 step=1024 prev=2 next=2 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 4 skin(s); final err=0
+RENDER t=5120 step=1024 prev=2 next=2 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 4 skin(s); final err=0
+RENDER t=5120 step=1024 prev=2 next=2 fstep=1 strength=0.55 deep=1
+RENDER t=5120 step=1024 prev=5 next=2 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 7 skin(s); final err=0
+RENDER t=5120 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=4096 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=6144 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=3072 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=7168 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=2048 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=8192 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=1024 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=9216 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=0 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=10240 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=11264 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=12288 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=5120 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=4096 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=3072 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=2048 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=1024 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=0 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=6144 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=7168 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=8192 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=9216 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=10240 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=11264 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=12288 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=12288 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=23552 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=23552 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=23552 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=12288 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=16384 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+RENDER t=11264 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=10240 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=9216 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=8192 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=7168 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=6144 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=5120 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=21504 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=13312 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=15360 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=11264 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=10240 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=9216 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=8192 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=7168 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=6144 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=5120 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=4096 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=2048 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=3072 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=1024 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=0 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=3072 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=4096 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=2048 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=5120 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=0 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=7168 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=6144 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=1024 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=8192 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=10240 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=11264 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=9216 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=12288 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+5 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+4 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+3 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+2 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=-1 src_param=0  checkout_err=0  data=yes  1920x1080
+    k=+1 src_param=0  checkout_err=0  data=yes  1920x1080
+  laid 10 skin(s); final err=0
+RENDER t=12288 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=12288 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=9216 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=8192 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=7168 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=6144 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=4096 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=3072 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=2048 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=1024 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=5120 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=10240 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=11264 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=0 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: u.ld.data=NO  0x0
+  source param 11: u.ld.data=NO  0x0
+  source param 12: u.ld.data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=0 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  113x64
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  113x64
+    k=+5 src_param=10  checkout_err=0  data=yes  113x64
+    k=-4 src_param=10  checkout_err=0  data=yes  113x64
+    k=+4 src_param=10  checkout_err=0  data=yes  113x64
+    k=-3 src_param=10  checkout_err=0  data=yes  113x64
+    k=+3 src_param=10  checkout_err=0  data=yes  113x64
+    k=-2 src_param=10  checkout_err=0  data=yes  113x64
+    k=+2 src_param=10  checkout_err=0  data=yes  113x64
+    k=-1 src_param=10  checkout_err=0  data=yes  113x64
+    k=+1 src_param=10  checkout_err=0  data=yes  113x64
+  laid 10 skin(s); final err=0
+RENDER t=8192 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=1024 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=0 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=2048 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=3072 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=4096 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=5120 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=6144 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=7168 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=9216 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=10240 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=11264 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=12288 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=13312 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=14336 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=15360 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=16384 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=17408 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  960x540
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  960x540
+    k=+5 src_param=10  checkout_err=0  data=yes  960x540
+    k=-4 src_param=10  checkout_err=0  data=yes  960x540
+    k=+4 src_param=10  checkout_err=0  data=yes  960x540
+    k=-3 src_param=10  checkout_err=0  data=yes  960x540
+    k=+3 src_param=10  checkout_err=0  data=yes  960x540
+    k=-2 src_param=10  checkout_err=0  data=yes  960x540
+    k=+2 src_param=10  checkout_err=0  data=yes  960x540
+    k=-1 src_param=10  checkout_err=0  data=yes  960x540
+    k=+1 src_param=10  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=17408 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=17408 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=3072 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=2048 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=1024 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=0 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=4096 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=5120 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=6144 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=7168 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=8192 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=9216 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=10240 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=11264 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=12288 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=13312 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=14336 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=15360 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=16384 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=18432 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=19456 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=20480 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=21504 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=22528 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=23552 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=0 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=NO  0x0
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=0
+    k=-5 src_param=0  checkout_err=0  data=yes  960x540
+    k=+5 src_param=0  checkout_err=0  data=yes  960x540
+    k=-4 src_param=0  checkout_err=0  data=yes  960x540
+    k=+4 src_param=0  checkout_err=0  data=yes  960x540
+    k=-3 src_param=0  checkout_err=0  data=yes  960x540
+    k=+3 src_param=0  checkout_err=0  data=yes  960x540
+    k=-2 src_param=0  checkout_err=0  data=yes  960x540
+    k=+2 src_param=0  checkout_err=0  data=yes  960x540
+    k=-1 src_param=0  checkout_err=0  data=yes  960x540
+    k=+1 src_param=0  checkout_err=0  data=yes  960x540
+  laid 10 skin(s); final err=0
+RENDER t=0 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=1024 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=2048 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=3072 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=4096 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=5120 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=6144 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=7168 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=8192 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=9216 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=10240 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=11264 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=12288 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=13312 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=14336 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=15360 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=16384 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=17408 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=18432 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=19456 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=20480 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=21504 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=22528 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0
+RENDER t=23552 step=1024 prev=5 next=5 fstep=1 strength=0.55 deep=1
+  source param 10: probe_err=0  data=yes  24x24
+  source param 11: probe_err=0  data=NO  0x0
+  source param 12: probe_err=0  data=NO  0x0
+  resolved 1 source(s); first=10
+    k=-5 src_param=10  checkout_err=0  data=yes  24x24
+    k=+5 src_param=10  checkout_err=0  data=yes  24x24
+    k=-4 src_param=10  checkout_err=0  data=yes  24x24
+    k=+4 src_param=10  checkout_err=0  data=yes  24x24
+    k=-3 src_param=10  checkout_err=0  data=yes  24x24
+    k=+3 src_param=10  checkout_err=0  data=yes  24x24
+    k=-2 src_param=10  checkout_err=0  data=yes  24x24
+    k=+2 src_param=10  checkout_err=0  data=yes  24x24
+    k=-1 src_param=10  checkout_err=0  data=yes  24x24
+    k=+1 src_param=10  checkout_err=0  data=yes  24x24
+  laid 10 skin(s); final err=0

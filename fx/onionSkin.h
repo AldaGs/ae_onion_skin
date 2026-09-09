@@ -64,10 +64,10 @@
 #define OS_PANEL_MATCH_NAME	"OnionSkinPanel"
 
 #define OS_MAJOR	1
-#define OS_MINOR	2
+#define OS_MINOR	3
 #define OS_BUG		0
 #define OS_STAGE	PF_Stage_DEVELOP
-#define OS_BUILD	3
+#define OS_BUILD	4
 
 /*	Disk IDs are APPEND-ONLY. Inserting one renumbers the rest and silently
 	mis-maps every saved project ("effect control conversion required"). Add at

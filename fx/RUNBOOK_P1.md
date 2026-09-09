@@ -195,3 +195,68 @@ Noted here so it is not re-reported as a bug.
 | 4' | Past ghosts SURVIVE at the last frame | |
 | 4' | Mirror behaviour at frame 0 | |
 | 5' | Debug log captured and sent | |
+
+---
+
+# v1.3 — what run 3 actually measured
+
+Run 3: **ghost thinning is fixed** (`WIDE_TIME_INPUT` was the cause). Source
+Layers still showed nothing, and the log says exactly why:
+
+```
+source param 10: probe_err=0  data=yes  24x24     <- output is 960x540
+  laid 10 skin(s); final err=0
+```
+
+The probe now works and ten skins were composited. **They were composited into a
+24x24 patch in the top-left corner**, which is indistinguishable from doing
+nothing.
+
+## The constraint, stated plainly
+
+**A checked-out layer param arrives at the layer's own dimensions and carries
+none of its comp transform.** There is no origin to recover:
+`pre_effect_source_origin` describes the effect's *own* input, not a checked-out
+param, and the SDK's `Checkout` sample sidesteps the question by `PF_COPY`ing
+into a rect — which scales rather than positions.
+
+So a layer-param source ghosts the layer's **artwork**, not its **animated
+position**. For onion skinning, where the motion usually *is* the transform, that
+makes an arbitrary layer a poor source.
+
+v1.3 centres a mismatched source instead of parking it top-left, and logs the
+mismatch loudly. **Centring is a fallback that makes the failure visible, not a
+fix.**
+
+## The path that actually works — precomp
+
+The opaque-background problem was never "we need a layer param". It was "an
+adjustment layer sees an opaque composite". Applying the effect to a layer that
+has its own alpha sidesteps it with no new machinery:
+
+1. Select your drawing layers → **Layer ▸ Pre-compose** (move all attributes).
+2. The precomp layer is comp-sized and transparent where nothing is drawn.
+3. Apply **Onion Skin directly to the precomp layer**. Leave all Source Layers
+   **None**.
+4. The background solid can sit anywhere below. It is never sampled.
+
+This is the placement that already passed rows 1–3, and it is what I would ship.
+
+## Re-test
+
+**Redeploy** (v1.3.0 build 4 = 622596), purge the cache, then:
+
+| # | Test | Pass |
+|---|---|---|
+| A | Precomp the drawings, apply Onion Skin **to the precomp layer**, solid BG below → ghosts appear, correctly positioned, motion included | |
+| B | Same comp, scrub without purging → ghosts track live | |
+| C | Set Source Layer 1 to a **comp-sized** layer (a precomp or full-frame solid) → ghosts appear 1:1, no `!!` line in the log | |
+| D | Set Source Layer 1 to a **small** shape layer → ghosts appear CENTRED, and the log carries the `!!` mismatch line | |
+
+**A is the one that matters** — it is the shipping workflow. C and D only confirm
+the constraint is understood and reported rather than silent.
+
+If A works, Phase 1 is done and the Source Layer params become a documented
+sharp edge rather than a feature: useful for comp-sized sources, misleading for
+anything else. Whether they stay in the shipped product is a Phase 2 call, and I
+would lean toward keeping them with the mismatch warning surfaced in the UI.
