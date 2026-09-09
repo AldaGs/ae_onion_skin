@@ -1,5 +1,96 @@
 # Onion Skin — Phase 0 spike log
 
+## DECISION (2026-09-09): Option A is closed
+
+**Called by the user after watching A3f run 1 in AE:** the errors seen in normal
+use would cost the customer. Recorded here as a decision on evidence, not a
+change of heart, because the temptation later will be to remember it as
+"we ran out of patience".
+
+### The number that closed it is not 27.8%
+
+27.8% fully blind was a *fixable* number, and the fix was already costed. What
+closed Option A is the projection of the **fully repaired** detector — grid
+sampling plus the one-edge solve, both measured, neither built:
+
+| zoom | recoverable after every planned fix |
+|---|---|
+| 0.25 | 93.7% |
+| 0.50 | 95.2% |
+| 0.63 | 86.3% |
+| **1.00** | **65.3%** |
+| 1.50 | 49.2% |
+
+**100% zoom is where animators work,** and a third of pan positions there have no
+recoverable transform at all. With stage 2 behaving correctly that means the
+overlay *disappears* — unpredictably, in the primary use case. And stage 2 is the
+good branch; the alternative is the lying box the roadmap was written to forbid.
+
+So the ceiling, after all the remaining work, is a tool that is untrustworthy
+exactly where it is most needed. Further spikes cannot raise it, because the
+limit is geometric: at 100% zoom the comp is larger than the panel, and a
+transform recovered from the comp's own edges cannot be recovered when no edge is
+on screen.
+
+### The rest of the ledger, which the ceiling makes moot
+
+None of these were fatal alone; all of them were still outstanding.
+
+- **A2 viewer identity** never solved. Nothing can name AE's panels (A1a).
+- **PAR correction toggle unreadable.** `sx = zoom·PAR` when it is on, and
+  `ViewOptions` does not expose it — a second piece of transform-affecting state
+  that must be inferred.
+- **Occlusion.** The screen blit reads the desktop, so any window over the viewer
+  corrupts the read. WGC would fix it, and WGC was never the bottleneck.
+- **Self-capture** costs a permanent alpha gap on every sample line.
+- **macOS** needs the Screen Recording grant, and the app prompted is After
+  Effects, not the plug-in (A5, never run).
+
+### What Phase 0 actually bought
+
+The gate did its job. It cost Phase 0 and nothing else — exactly the trade the
+roadmap set up when it declared A and B to share almost no code.
+
+**Proved and kept:**
+
+- `screen = s·comp + t` is the right model, to 0.559 px worst residual (A1).
+- `views[i].options.zoom` is exact and readable *during a modal drag* at 0.19 ms
+  (A3b).
+- `SetTimer(NULL, 0, ...)` is dispatched by AE's modal loops; the idle hook is
+  not (A3a).
+- GDI screen capture costs one composition sync (16.7 ms); `GetDC(hwnd)` on AE's
+  viewer returns nothing; `PrintWindow` costs 50 ms (A3d2).
+- The overlay must be out of process, and `AEGP_ExecuteScript` pumps messages, so
+  a timer-driven plug-in is re-entrant by default (A3d).
+- The calibration comp, the capture tooling and the measurement harnesses — which
+  verify **B's** alignment too, for free.
+
+**Thrown away:** overlay window code, transform reconstruction, the strip/grid
+detector, per-axis fusion, viewer identity work.
+
+### Why the answer was never going to come from more capture engineering
+
+Three architectures were tried for `t`, and the failure was the same each time,
+wearing different clothes:
+
+1. **Infer from input** (A3c) — missed the wheel scroll, and would have missed
+   the next gesture too. Failed because it cannot see the causes it does not
+   enumerate.
+2. **Measure from the comp's edges** (A3d/A3e/A3f) — cannot see an edge that is
+   off screen.
+3. **Hold the last good `s`** — the zoom changed across 6 of 7 blind runs.
+   Blindness is *caused* by zooming.
+
+Each works when it is not needed and fails when it is. That is the signature of a
+missing input, not of an unfinished implementation: **AE does not expose the comp
+viewer's pan, and everything above was an attempt to reconstruct it from the
+outside.** Option B does not reconstruct it. AE applies it.
+
+
+---
+
+*Everything below is the Phase 0 record, kept as evidence. It is closed work.*
+
 Roadmap: `_aePlugins/onion-skin-roadmap.md`. Gate rule: A1–A3 are hard stops to
 Option B.
 
