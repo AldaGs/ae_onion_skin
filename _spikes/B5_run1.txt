@@ -1,0 +1,63 @@
+[2026-09-09 13:14:08]  STARTUP AE 126.3, plugin id 26
+[2026-09-09 13:14:08]  READY   4 commands registered (panel, toggle, more, fewer)
+[2026-09-09 13:15:30]  MENU    panel toggle requested
+[2026-09-09 13:15:30]  PANEL   created. hwnd=0000000000090BFE
+[2026-09-09 13:15:35]  CLICK   LIVE  #1  selection=one layer, index 4
+[2026-09-09 13:15:36]  CLICK   LIVE  #2  selection=one layer, index 4
+[2026-09-09 13:15:57]  CMD     TOGGLE  -> ON   selection=one layer, index 4
+[2026-09-09 13:16:07]  CMD     MORE    -> prev=2   selection=one layer, index 4
+[2026-09-09 13:16:11]  CMD     FEWER   -> prev=1   selection=one layer, index 4
+[2026-09-09 13:16:14]  CMD     FEWER   -> prev=0   selection=one layer, index 4
+[2026-09-09 13:16:16]  CMD     MORE    -> prev=1   selection=one layer, index 4
+[2026-09-09 13:16:18]  CMD     MORE    -> prev=2   selection=one layer, index 4
+[2026-09-09 13:16:20]  CMD     MORE    -> prev=3   selection=one layer, index 4
+[2026-09-09 13:16:23]  CLICK   LIVE  #3  selection=one layer, index 4
+[2026-09-09 13:16:34]  CMD     TOGGLE  -> OFF   selection=one layer, index 4
+[2026-09-09 13:17:01]  CMD     TOGGLE  -> ON   selection=one layer, index 4
+[2026-09-09 13:17:03]  CMD     TOGGLE  -> OFF   selection=one layer, index 4
+[2026-09-09 13:17:06]  CMD     MORE    -> prev=4   selection=one layer, index 4
+[2026-09-09 13:17:08]  CMD     TOGGLE  -> ON   selection=one layer, index 4
+[2026-09-09 13:18:02]  CMD     TOGGLE  -> OFF   selection=one layer, index 4
+[2026-09-09 13:18:02]  CMD     TOGGLE  -> ON   selection=one layer, index 4
+[2026-09-09 13:18:04]  CMD     MORE    -> prev=5   selection=one layer, index 4
+[2026-09-09 13:18:04]  CMD     MORE    -> prev=6   selection=one layer, index 4
+[2026-09-09 13:18:04]  CMD     FEWER   -> prev=5   selection=one layer, index 4
+[2026-09-09 13:18:04]  CMD     FEWER   -> prev=4   selection=one layer, index 4
+[2026-09-09 13:18:05]  CMD     FEWER   -> prev=3   selection=one layer, index 4
+[2026-09-09 13:18:16]  CMD     TOGGLE  -> OFF   selection=one layer, index 4
+[2026-09-09 13:18:16]  CMD     TOGGLE  -> ON   selection=one layer, index 4
+[2026-09-09 13:18:17]  CMD     TOGGLE  -> OFF   selection=one layer, index 4
+[2026-09-09 13:18:17]  CMD     TOGGLE  -> ON   selection=one layer, index 4
+[2026-09-09 13:18:17]  CMD     TOGGLE  -> OFF   selection=one layer, index 4
+[2026-09-09 13:18:18]  CMD     MORE    -> prev=4   selection=one layer, index 4
+[2026-09-09 13:18:18]  CMD     MORE    -> prev=5   selection=one layer, index 4
+[2026-09-09 13:18:18]  CMD     MORE    -> prev=6   selection=one layer, index 4
+[2026-09-09 13:18:18]  CMD     MORE    -> prev=7   selection=one layer, index 4
+[2026-09-09 13:18:19]  CMD     MORE    -> prev=8   selection=one layer, index 4
+[2026-09-09 13:18:19]  CMD     FEWER   -> prev=7   selection=one layer, index 4
+[2026-09-09 13:18:19]  CMD     FEWER   -> prev=6   selection=one layer, index 4
+[2026-09-09 13:18:19]  CMD     FEWER   -> prev=5   selection=one layer, index 4
+[2026-09-09 13:18:19]  CMD     FEWER   -> prev=4   selection=one layer, index 4
+[2026-09-09 13:18:19]  CMD     FEWER   -> prev=3   selection=one layer, index 4
+[2026-09-09 13:18:19]  CMD     FEWER   -> prev=2   selection=one layer, index 4
+[2026-09-09 13:18:20]  CMD     MORE    -> prev=3   selection=one layer, index 4
+[2026-09-09 13:18:20]  CMD     MORE    -> prev=4   selection=one layer, index 4
+[2026-09-09 13:18:20]  CMD     MORE    -> prev=5   selection=one layer, index 4
+[2026-09-09 13:18:20]  CMD     MORE    -> prev=6   selection=one layer, index 4
+[2026-09-09 13:18:20]  CMD     MORE    -> prev=7   selection=one layer, index 4
+[2026-09-09 13:18:20]  CMD     MORE    -> prev=8   selection=one layer, index 4
+[2026-09-09 13:18:20]  CMD     FEWER   -> prev=7   selection=one layer, index 4
+[2026-09-09 13:18:20]  CMD     MORE    -> prev=8   selection=one layer, index 4
+[2026-09-09 13:18:21]  CMD     MORE    -> prev=9   selection=one layer, index 4
+[2026-09-09 13:18:21]  CMD     MORE    -> prev=10   selection=one layer, index 4
+[2026-09-09 13:18:21]  CMD     MORE    -> prev=10 (at max, unchanged)   selection=one layer, index 4
+[2026-09-09 13:18:21]  CMD     FEWER   -> prev=9   selection=one layer, index 4
+[2026-09-09 13:18:21]  CMD     FEWER   -> prev=8   selection=one layer, index 4
+[2026-09-09 13:18:21]  CMD     FEWER   -> prev=7   selection=one layer, index 4
+[2026-09-09 13:18:21]  CMD     FEWER   -> prev=6   selection=one layer, index 4
+[2026-09-09 13:18:22]  CMD     FEWER   -> prev=5   selection=one layer, index 4
+[2026-09-09 13:18:22]  CMD     FEWER   -> prev=4   selection=one layer, index 4
+[2026-09-09 13:18:23]  CMD     FEWER   -> prev=3   selection=one layer, index 4
+[2026-09-09 13:18:23]  CMD     FEWER   -> prev=2   selection=one layer, index 4
+[2026-09-09 13:18:24]  CMD     FEWER   -> prev=1   selection=one layer, index 4
+[2026-09-09 13:18:24]  CMD     FEWER   -> prev=0   selection=one layer, index 4
