@@ -995,6 +995,134 @@ remaining blind frame was shown as blind. Stage 3 — correlation for the case
 where the comp covers the panel with no edge anywhere — is deliberately **not
 built**: ship degrading honestly there and let usage say whether it is worth it.
 
+#### A3f run 1 (2026-09-09) — stage 2 verified, stage 1 half right, and the ladder was in the wrong order
+
+60 s in AE, panel **1280x567**, comp 1920x1080, recorded at 15 fps (proxy).
+
+##### Stage 2 works, and the video says so independently
+
+| state | video | paint log |
+|---|---|---|
+| green (trusted) | 56.4% | 57.1% |
+| **amber (shown stale)** | **20.4%** | 20.7% |
+| **hidden (shown as nothing)** | **23.2%** | 22.2% |
+
+Three categories agreeing to within a point, measured two entirely different
+ways. **Blindness is now visible as blindness** — the run-1 failure where a
+confident box was drawn over a stale `t` is gone.
+
+##### Stage 1a works and is worth what it cost
+
+**657 captures — 18.3% of the run — were accepted on x alone.** Every one of
+those was *fully blind* under run 1's reject-the-whole-frame policy. Per-axis
+acceptance was the cheapest change in the ladder and it recovered the largest
+single block.
+
+(`y_only` is zero, and that is correct rather than suspicious: this panel is
+2.26:1 against a 16:9 comp, so height always overflows before width. There is no
+reachable state where y survives and x does not.)
+
+##### But A3f FAILS its gate: 27.8% fully blind
+
+| | |
+|---|---|
+| both axes | 1940 (53.9%) |
+| x only | 657 (18.3%) |
+| **fully blind** | **999 (27.8%)** — criterion was <1% |
+
+That is higher than run 1's 12.6%, and the comparison is **not** like for like —
+this matrix deliberately exercised the cases that broke run 1. The number that
+matters is not the change; it is that **none of it was the unrecoverable
+regime**. Zoom never exceeded 0.633 and this panel's width limit is 0.667, so the
+comp never covered both axes. *Every blind frame was in principle recoverable.*
+
+##### Why, in two parts — and the sampling half is the smaller one
+
+A pure-geometry sweep over every reachable pan position, asking when an axis is
+recoverable (worst axis shown):
+
+| zoom | comp | 5 lines, 2 edges | grid 16, 2 edges | **grid 16, 1 edge** |
+|---|---|---|---|---|
+| 0.05 | 96x54 | 0.0% | 82.1% | **91.4%** |
+| 0.10 | 192x108 | 0.0% | 67.5% | **92.1%** |
+| 0.25 | 480x270 | 35.0% | 35.0% | **93.7%** |
+| 0.50 | 960x540 | 2.0% | 2.0% | **95.2%** |
+| 0.63 | 1209x680 | 0.0% | 0.0% | **86.3%** |
+| 1.00 | 1920x1080 | 0.0% | 0.0% | **65.3%** |
+
+- **Below ~20% zoom the five lines are simply too sparse.** Confirmed on the
+  video: at 39 s the viewer is at **7.3%**, the comp is 140x79, no sample column
+  crosses it at all and only one row does — one line cannot vote, so the axis is
+  refused. A 16 px grid fixes this outright and costs nothing: the pixels are
+  already captured and A3d2 established the blit, not the scan, is the price.
+- **From 25% zoom upward the binding constraint is not sampling at all.** It is
+  the requirement that *both* ends of a line be background. Grid 16 changes
+  nothing there (35.0% → 35.0%, 2.0% → 2.0%); the one-edge solve changes
+  everything (35% → 94%, 2% → 95%).
+
+**So the ladder was in the wrong order.** "One edge instead of two" was written
+as stage 3, the expensive optional rung. It is the main event, and more sample
+lines — written as the cheap primary fix — only matters at extreme zoom-out.
+
+##### And the one-edge solve cannot be done without AE
+
+A single edge gives `t` only if `s` is known independently. The tempting no-AE
+source is the last capture where an axis had both edges. Measured against this
+run, it does not survive contact:
+
+| | |
+|---|---|
+| median age of the last two-edge `s` at a blind frame | **1463 ms** |
+| within 250 ms | 10.4% |
+| **blind runs across which the zoom actually changed** | **6 of 7 (86%)** |
+
+**Blindness is *caused* by zooming, so the zoom is precisely what changes while
+you are blind.** A held `s` is wrong exactly when it is needed. This is the same
+shape as the A3c lesson — an inference that works when it is not needed and fails
+when it is.
+
+So `s` must come from `views[i].options.zoom`, which A3b already measured at
+**0.19 ms, readable live during a modal drag**. The PAR ambiguity from A1 is
+survivable here: `sy = zoom` always, so the vertical axis is unambiguous, and the
+PAR factor on x can be calibrated in any frame where x has both edges.
+
+##### The architectural consequence, stated plainly
+
+The probe was built to need **no AE at all**, and that was load-bearing — two
+in-process A3d runs took After Effects down. The one-edge solve reverses part of
+it: a component inside AE must publish the zoom to the overlay process.
+
+It is a smaller reversal than it sounds. The **overlay stays out of process**;
+what goes back in is a read A3b already proved safe and cheap, publishing one
+double through shared memory or a pipe. What must not come back is the *drawing*
+and the *capture* on AE's UI thread, which is what actually caused the freezes.
+
+But it is a real decision and it belongs to the roadmap, not to a commit message.
+
+##### Status
+
+- Stage 2: **PASS**, verified two ways.
+- Stage 1a: **PASS**, 18.3% recovered.
+- Stage 1b: **INSUFFICIENT** as built — needs a dense grid, not five lines.
+- **A3f gate: FAIL at 27.8% blind**, with the cause measured and the fix costed.
+- Next: grid sampling (free, no AE) + the one-edge solve (needs a zoom feed).
+  Projected together: **86–95% recoverable across the working range**, and still
+  65% at 100% zoom.
+
+##### A fourth instance of the same tracker fault, for the record
+
+The first video classification reported **99.1% green, 0% amber, 0.9% hidden** —
+flatly contradicting the paint log. Cause: it searched the **whole screen**, and
+AE's timeline draws a long green render bar. It was measuring After Effects' UI,
+not the overlay. Restricting the search to the viewer panel rect produced the
+agreement tabled above.
+
+That is the fourth time in this spike that a measuring instrument, not the thing
+measured, was the wrong party — and the third time specifically from **not
+bounding the search to the panel**. The rule has earned its place:
+**bound the instrument to the region you are making a claim about, and check it
+against an independent count before believing either.**
+
 ### A5 — the macOS capture-permission gate (not started, and it outranks A4)
 
 **Why it jumped the queue.** The product is meant to work on macOS. Everything
@@ -1050,12 +1178,17 @@ window and local event monitor being the same shape on both platforms — does
 | A3d strip-measured `t` | method works; 0 false positives in 710 samples |
 | A3d2 capture cost | **16.7 ms = one composition sync.** `GetDC(hwnd)` is blank |
 | **A3e slip** | **run 1 done. Latency is NOT the problem; the detector goes BLIND 12.6% of the time** |
-| **A3f blindness** | **stages 1+2 BUILT and self-tested offline; awaiting a run in AE** |
+| **A3f blindness** | **run 1: stage 2 PASSES (verified 2 ways), stage 1a PASSES (+18.3%), GATE FAILS at 27.8% blind. Fix measured: grid sampling + a ONE-EDGE solve needing AE's zoom** |
 | **A5 macOS capture permission** | **not started — and it now outranks A4** |
 | A4 render cost | not started |
 
-**Order from here: A3f run 1 + A3e run 2 (ONE sitting in AE - the same recording
-answers both) -> A5 (a mac session) -> A2 -> A4.** WGC has dropped further down: run 1
+**Order from here: A3f stage 3 (grid sampling, then the one-edge solve and the
+zoom feed it needs) -> A3e run 2 -> A5 -> A2 -> A4.**
+
+**The open decision** is whether to put a zoom-publishing component back inside
+AE. The overlay stays out of process either way; what returns is a read A3b
+already measured at 0.19 ms live. Without it the one-edge solve is impossible,
+and without the one-edge solve A3f cannot pass above 25% zoom. WGC has dropped further down: run 1
 showed the typical slip sitting on the quantisation floor that WGC shares, so its
 case rests entirely on occlusion and self-capture.
 
