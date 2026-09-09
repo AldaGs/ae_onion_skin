@@ -1,0 +1,310 @@
+[13:34:35.240]  FX      GLOBAL_SETUP - the effect half loaded
+[13:39:57.678]  STARTUP AEGP half loaded. AE 126.3, plugin id 26
+[13:39:57.678]  READY   AEGP half registered
+[13:40:40.985]  FX      GLOBAL_SETUP - the effect half loaded
+[13:41:02.782]  FX      Open Panel button pressed
+[13:41:02.792]  PANEL   created. hwnd=0000000000041010
+[13:41:12.283]  WRITE   PLUS   layer_idx=1  0.0 -> 10.0  readback=-999.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:41:12.283]  WRITE   PLUS   err=3
+[13:41:18.565]  WRITE   NOOP   layer_idx=1  0.0 -> 0.0  readback=-999.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:41:18.565]  WRITE   NOOP   err=3
+[13:43:33.261]  STARTUP AEGP half loaded. AE 126.3, plugin id 26
+[13:43:33.262]  READY   AEGP half registered
+[13:43:46.381]  FX      GLOBAL_SETUP - the effect half loaded
+[13:44:29.523]  FX      Open Panel button pressed
+[13:44:29.538]  PANEL   created. hwnd=0000000000530B20
+[13:44:40.258]  FX      Open Panel button pressed
+[13:44:40.758]  FX      Open Panel button pressed
+[13:45:07.054]  WRITE   PLUS   layer_idx=1  0.0 -> 10.0  readback=-999.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:45:07.054]  WRITE   PLUS   err=3
+[13:45:12.260]  WRITE   PLUS   layer_idx=1  0.0 -> 10.0  readback=-999.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:45:12.260]  WRITE   PLUS   err=3
+[13:49:16.765]  STARTUP AEGP half loaded. AE 126.3, plugin id 26
+[13:49:16.765]  READY   AEGP half registered
+[13:49:18.781]  PANEL   created. hwnd=0000000000081020
+[13:49:40.834]  FX      GLOBAL_SETUP - the effect half loaded
+[13:49:43.922]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:43.956]  WRITE   PLUS   layer_idx=1  100.0 -> 110.0  readback=110.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:45.379]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:45.416]  WRITE   PLUS   layer_idx=1  110.0 -> 120.0  readback=120.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:46.243]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:46.250]  WRITE   PLUS   layer_idx=1  120.0 -> 130.0  readback=130.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:57.631]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:57.676]  WRITE   PLUS   layer_idx=1  130.0 -> 140.0  readback=140.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:57.846]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:57.866]  WRITE   PLUS   layer_idx=1  140.0 -> 150.0  readback=150.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:58.032]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:58.054]  WRITE   PLUS   layer_idx=1  150.0 -> 160.0  readback=160.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:58.268]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:58.286]  WRITE   PLUS   layer_idx=1  160.0 -> 170.0  readback=170.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:58.511]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:58.522]  WRITE   PLUS   layer_idx=1  170.0 -> 180.0  readback=180.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:58.786]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:58.810]  WRITE   PLUS   layer_idx=1  180.0 -> 190.0  readback=190.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:59.030]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:59.031]  WRITE   PLUS   layer_idx=1  190.0 -> 200.0  readback=200.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:59.341]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:59.359]  WRITE   PLUS   layer_idx=1  200.0 -> 200.0  readback=200.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:59.626]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:59.642]  WRITE   PLUS   layer_idx=1  200.0 -> 200.0  readback=200.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:49:59.899]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:49:59.928]  WRITE   PLUS   layer_idx=1  200.0 -> 200.0  readback=200.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:00.922]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:00.958]  WRITE   MINUS  layer_idx=1  200.0 -> 190.0  readback=190.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:01.146]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:01.191]  WRITE   MINUS  layer_idx=1  190.0 -> 180.0  readback=180.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:01.365]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:01.379]  WRITE   MINUS  layer_idx=1  180.0 -> 170.0  readback=170.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:01.565]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:01.566]  WRITE   MINUS  layer_idx=1  170.0 -> 160.0  readback=160.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:01.794]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:01.801]  WRITE   MINUS  layer_idx=1  160.0 -> 150.0  readback=150.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:02.006]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:02.031]  WRITE   MINUS  layer_idx=1  150.0 -> 140.0  readback=140.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:02.244]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:02.274]  WRITE   MINUS  layer_idx=1  140.0 -> 130.0  readback=130.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:02.506]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:02.551]  WRITE   MINUS  layer_idx=1  130.0 -> 120.0  readback=120.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:02.730]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:02.736]  WRITE   MINUS  layer_idx=1  120.0 -> 110.0  readback=110.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:02.964]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:02.967]  WRITE   MINUS  layer_idx=1  110.0 -> 100.0  readback=100.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:03.237]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:03.251]  WRITE   MINUS  layer_idx=1  100.0 -> 90.0  readback=90.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:03.459]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:03.488]  WRITE   MINUS  layer_idx=1  90.0 -> 80.0  readback=80.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:03.700]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:03.726]  WRITE   MINUS  layer_idx=1  80.0 -> 70.0  readback=70.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:03.960]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:04.006]  WRITE   MINUS  layer_idx=1  70.0 -> 60.0  readback=60.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:04.216]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:04.244]  WRITE   MINUS  layer_idx=1  60.0 -> 50.0  readback=50.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:04.481]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:04.529]  WRITE   MINUS  layer_idx=1  50.0 -> 40.0  readback=40.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:04.749]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:04.751]  WRITE   MINUS  layer_idx=1  40.0 -> 30.0  readback=30.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:05.017]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:05.047]  WRITE   MINUS  layer_idx=1  30.0 -> 20.0  readback=20.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:05.257]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:05.265]  WRITE   MINUS  layer_idx=1  20.0 -> 10.0  readback=10.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:05.466]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:05.500]  WRITE   MINUS  layer_idx=1  10.0 -> 0.0  readback=0.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:06.604]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:06.637]  WRITE   PLUS   layer_idx=1  0.0 -> 10.0  readback=10.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:06.765]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:06.767]  WRITE   PLUS   layer_idx=1  10.0 -> 20.0  readback=20.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:06.970]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:07.011]  WRITE   PLUS   layer_idx=1  20.0 -> 30.0  readback=30.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:07.150]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:07.152]  WRITE   PLUS   layer_idx=1  30.0 -> 40.0  readback=40.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:07.344]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:07.386]  WRITE   PLUS   layer_idx=1  40.0 -> 50.0  readback=50.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:07.531]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:07.575]  WRITE   PLUS   layer_idx=1  50.0 -> 60.0  readback=60.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:07.721]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:07.760]  WRITE   PLUS   layer_idx=1  60.0 -> 70.0  readback=70.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:07.916]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:07.950]  WRITE   PLUS   layer_idx=1  70.0 -> 80.0  readback=80.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:08.107]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:08.134]  WRITE   PLUS   layer_idx=1  80.0 -> 90.0  readback=90.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:08.291]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:08.322]  WRITE   PLUS   layer_idx=1  90.0 -> 100.0  readback=100.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:08.468]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:08.506]  WRITE   PLUS   layer_idx=1  100.0 -> 110.0  readback=110.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:08.663]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:08.691]  WRITE   PLUS   layer_idx=1  110.0 -> 120.0  readback=120.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:08.846]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:08.881]  WRITE   PLUS   layer_idx=1  120.0 -> 130.0  readback=130.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:09.021]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:09.022]  WRITE   PLUS   layer_idx=1  130.0 -> 140.0  readback=140.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:09.953]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:09.954]  WRITE   MINUS  layer_idx=1  140.0 -> 130.0  readback=130.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:10.130]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:10.153]  WRITE   MINUS  layer_idx=1  130.0 -> 120.0  readback=120.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:10.318]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:10.339]  WRITE   MINUS  layer_idx=1  120.0 -> 110.0  readback=110.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:10.498]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:10.528]  WRITE   MINUS  layer_idx=1  110.0 -> 100.0  readback=100.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:10.739]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:10.763]  WRITE   MINUS  layer_idx=1  100.0 -> 90.0  readback=90.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:10.928]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:10.948]  WRITE   MINUS  layer_idx=1  90.0 -> 80.0  readback=80.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:12.185]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:12.220]  WRITE   MINUS  layer_idx=1  80.0 -> 70.0  readback=70.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:12.371]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:12.404]  WRITE   MINUS  layer_idx=1  70.0 -> 60.0  readback=60.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:12.557]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:12.591]  WRITE   MINUS  layer_idx=1  60.0 -> 50.0  readback=50.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:12.724]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:12.726]  WRITE   MINUS  layer_idx=1  50.0 -> 40.0  readback=40.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:13.231]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:13.234]  WRITE   PLUS   layer_idx=1  40.0 -> 50.0  readback=50.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:13.412]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:13.422]  WRITE   PLUS   layer_idx=1  50.0 -> 60.0  readback=60.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:13.599]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:13.609]  WRITE   PLUS   layer_idx=1  60.0 -> 70.0  readback=70.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:13.782]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:13.798]  WRITE   PLUS   layer_idx=1  70.0 -> 80.0  readback=80.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:14.594]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:14.638]  WRITE   PLUS   layer_idx=1  80.0 -> 90.0  readback=90.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:15.002]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:15.004]  WRITE   PLUS   layer_idx=1  90.0 -> 100.0  readback=100.0  set_ms=0  sel 23 -> 23  SELECTION INTACT
+[13:50:25.689]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:25.732]  WRITE   PLUS   layer_idx=1  100.0 -> 110.0  readback=110.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:25.982]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:26.001]  WRITE   PLUS   layer_idx=1  110.0 -> 120.0  readback=120.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:26.195]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:26.234]  WRITE   PLUS   layer_idx=1  120.0 -> 130.0  readback=130.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:26.458]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:26.469]  WRITE   PLUS   layer_idx=1  130.0 -> 140.0  readback=140.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:27.005]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:27.036]  WRITE   MINUS  layer_idx=1  140.0 -> 130.0  readback=130.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:27.182]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:27.218]  WRITE   MINUS  layer_idx=1  130.0 -> 120.0  readback=120.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:27.551]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:27.605]  WRITE   MINUS  layer_idx=1  120.0 -> 110.0  readback=110.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:27.757]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:27.794]  WRITE   MINUS  layer_idx=1  110.0 -> 100.0  readback=100.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:27.974]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:27.976]  WRITE   MINUS  layer_idx=1  100.0 -> 90.0  readback=90.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:28.190]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:28.215]  WRITE   MINUS  layer_idx=1  90.0 -> 80.0  readback=80.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:28.414]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:28.449]  WRITE   MINUS  layer_idx=1  80.0 -> 70.0  readback=70.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:28.633]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:28.635]  WRITE   MINUS  layer_idx=1  70.0 -> 60.0  readback=60.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:28.835]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:28.869]  WRITE   MINUS  layer_idx=1  60.0 -> 50.0  readback=50.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:29.029]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:29.057]  WRITE   MINUS  layer_idx=1  50.0 -> 40.0  readback=40.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:29.376]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:29.378]  WRITE   MINUS  layer_idx=1  40.0 -> 30.0  readback=30.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:29.679]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:50:29.712]  WRITE   MINUS  layer_idx=1  30.0 -> 20.0  readback=20.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:50:48.289]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:48.310]  WRITE   PLUS   layer_idx=1  20.0 -> 30.0  readback=30.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:50:48.703]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:48.729]  WRITE   PLUS   layer_idx=1  30.0 -> 40.0  readback=40.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:50:49.133]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:49.147]  WRITE   PLUS   layer_idx=1  40.0 -> 50.0  readback=50.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:50:49.525]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:49.568]  WRITE   PLUS   layer_idx=1  50.0 -> 60.0  readback=60.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:50:51.013]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:50:51.019]  WRITE   PLUS   layer_idx=1  60.0 -> 70.0  readback=70.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:00.380]  QUEUE   NOOP  requested from the panel; waiting for idle
+[13:51:00.395]  WRITE   NOOP   layer_idx=1  70.0 -> 70.0  readback=70.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:00.844]  QUEUE   NOOP  requested from the panel; waiting for idle
+[13:51:00.864]  WRITE   NOOP   layer_idx=1  70.0 -> 70.0  readback=70.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:01.289]  QUEUE   NOOP  requested from the panel; waiting for idle
+[13:51:01.332]  WRITE   NOOP   layer_idx=1  70.0 -> 70.0  readback=70.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:01.761]  QUEUE   NOOP  requested from the panel; waiting for idle
+[13:51:01.806]  WRITE   NOOP   layer_idx=1  70.0 -> 70.0  readback=70.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:02.207]  QUEUE   NOOP  requested from the panel; waiting for idle
+[13:51:02.229]  WRITE   NOOP   layer_idx=1  70.0 -> 70.0  readback=70.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:11.438]  DIRECT  calling DoWrite straight from the wndproc
+[13:51:13.448]  WRITE   PLUS   layer_idx=1  0.0 -> 10.0  readback=-999.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:13.448]  WRITE   PLUS   err=3
+[13:51:42.957]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:51:42.979]  WRITE   MINUS  layer_idx=1  70.0 -> 60.0  readback=60.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:43.520]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:51:43.545]  WRITE   PLUS   layer_idx=1  60.0 -> 70.0  readback=70.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:50.678]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:51:50.718]  WRITE   MINUS  layer_idx=1  70.0 -> 60.0  readback=60.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:50.975]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:51:51.014]  WRITE   MINUS  layer_idx=1  60.0 -> 50.0  readback=50.0  set_ms=16  sel -1 -> -1  SELECTION INTACT
+[13:51:51.273]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:51:51.297]  WRITE   MINUS  layer_idx=1  50.0 -> 40.0  readback=40.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:51:51.880]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:51:51.894]  WRITE   MINUS  layer_idx=1  40.0 -> 30.0  readback=30.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:52:16.848]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:52:16.877]  WRITE   PLUS   layer_idx=1  50.0 -> 60.0  readback=60.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:17.268]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:52:17.301]  WRITE   PLUS   layer_idx=1  60.0 -> 70.0  readback=70.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:23.080]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:52:23.116]  WRITE   PLUS   layer_idx=1  60.0 -> 70.0  readback=70.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:23.485]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:52:23.486]  WRITE   PLUS   layer_idx=1  70.0 -> 80.0  readback=80.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:33.139]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:33.158]  WRITE   MINUS  layer_idx=1  50.0 -> 40.0  readback=40.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:52:33.501]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:33.536]  WRITE   MINUS  layer_idx=1  40.0 -> 30.0  readback=30.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:52:39.409]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:52:39.448]  WRITE   PLUS   layer_idx=1  140.0 -> 150.0  readback=150.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:39.595]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:52:39.636]  WRITE   PLUS   layer_idx=1  150.0 -> 160.0  readback=160.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:39.782]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:52:39.824]  WRITE   PLUS   layer_idx=1  160.0 -> 170.0  readback=170.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:40.479]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:52:40.515]  WRITE   PLUS   layer_idx=1  170.0 -> 180.0  readback=180.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:40.665]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:52:40.667]  WRITE   PLUS   layer_idx=1  180.0 -> 190.0  readback=190.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:41.258]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:41.276]  WRITE   MINUS  layer_idx=1  190.0 -> 180.0  readback=180.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:41.435]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:41.463]  WRITE   MINUS  layer_idx=1  180.0 -> 170.0  readback=170.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:41.599]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:41.601]  WRITE   MINUS  layer_idx=1  170.0 -> 160.0  readback=160.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:41.933]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:41.977]  WRITE   MINUS  layer_idx=1  160.0 -> 150.0  readback=150.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:42.127]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:42.164]  WRITE   MINUS  layer_idx=1  150.0 -> 140.0  readback=140.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:42.422]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:42.446]  WRITE   MINUS  layer_idx=1  140.0 -> 130.0  readback=130.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:42.746]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:42.774]  WRITE   MINUS  layer_idx=1  130.0 -> 120.0  readback=120.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:43.054]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:43.101]  WRITE   MINUS  layer_idx=1  120.0 -> 110.0  readback=110.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:43.369]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:43.384]  WRITE   MINUS  layer_idx=1  110.0 -> 100.0  readback=100.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:43.718]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:43.758]  WRITE   MINUS  layer_idx=1  100.0 -> 90.0  readback=90.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:43.978]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:43.985]  WRITE   MINUS  layer_idx=1  90.0 -> 80.0  readback=80.0  set_ms=0  sel 25 -> 25  SELECTION INTACT
+[13:52:45.055]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:45.070]  WRITE   MINUS  layer_idx=1  80.0 -> 70.0  readback=70.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:52:45.237]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:45.261]  WRITE   MINUS  layer_idx=1  70.0 -> 60.0  readback=60.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:52:45.406]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:45.449]  WRITE   MINUS  layer_idx=1  60.0 -> 50.0  readback=50.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:52:45.578]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:45.580]  WRITE   MINUS  layer_idx=1  50.0 -> 40.0  readback=40.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:52:45.880]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:45.918]  WRITE   MINUS  layer_idx=1  40.0 -> 30.0  readback=30.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:52:46.036]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:46.062]  WRITE   MINUS  layer_idx=1  30.0 -> 20.0  readback=20.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:52:46.445]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:52:46.480]  WRITE   MINUS  layer_idx=1  20.0 -> 10.0  readback=10.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:53:00.488]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:00.530]  WRITE   PLUS   REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:01.540]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:01.562]  WRITE   PLUS   REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:02.078]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:02.131]  WRITE   PLUS   REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:02.619]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:02.649]  WRITE   PLUS   REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:03.890]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:03.915]  WRITE   PLUS   REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:04.359]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:04.384]  WRITE   PLUS   REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:04.737]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:04.758]  WRITE   PLUS   REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:05.275]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:53:05.320]  WRITE   MINUS  REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:05.704]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:53:05.747]  WRITE   MINUS  REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:06.109]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:53:06.125]  WRITE   MINUS  REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:06.593]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:53:06.594]  WRITE   MINUS  REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:06.849]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:53:06.883]  WRITE   MINUS  REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:07.181]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:07.211]  WRITE   PLUS   REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:07.392]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:07.394]  WRITE   PLUS   REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:07.595]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:07.629]  WRITE   PLUS   REFUSED: stream has 1 keyframes; SetStreamValue is illegal here
+[13:53:24.087]  QUEUE   MINUS requested from the panel; waiting for idle
+[13:53:24.101]  WRITE   MINUS  layer_idx=1  60.0 -> 50.0  readback=50.0  set_ms=0  sel -1 -> -1  SELECTION INTACT
+[13:53:24.778]  QUEUE   PLUS  requested from the panel; waiting for idle
+[13:53:24.811]  WRITE   PLUS   layer_idx=1  50.0 -> 60.0  readback=60.0  set_ms=0  sel -1 -> -1  SELECTION INTACT

@@ -213,13 +213,28 @@ DoWrite(WriteKind kind)
 	//	One undo group around one write, so Ctrl+Z is one step. Without this AE
 	//	may or may not coalesce, and "undo took three presses" is a real defect
 	//	for a control the user will nudge repeatedly.
-	ERR(suites.UtilitySuite3()->AEGP_StartUndoGroup("Onion Skin B3 write"));
+	//
+	//	The group is tracked, NOT wrapped in ERR on both sides. ERR(FUNC) is
+	//	"if (!err) err = FUNC", so on an already-failed write it SKIPS the Start
+	//	while an unconditional End still runs -- an unbalanced group, which AE
+	//	reports as "Group Mismatch" on the next Ctrl+Z. Run 1 hit exactly that,
+	//	once, right after the Direct button failed with err=3. Balance is the
+	//	invariant, so it is expressed as one flag rather than left to luck.
+	A_Boolean group_openedB = FALSE;
+
+	if (!err) {
+		if (!suites.UtilitySuite3()->AEGP_StartUndoGroup("Onion Skin B3 write")) {
+			group_openedB = TRUE;
+		}
+	}
 
 	DWORD t0 = GetTickCount();
 	ERR(suites.StreamSuite5()->AEGP_SetStreamValue(S_my_id, streamH, &val));
 	DWORD t1 = GetTickCount();
 
-	suites.UtilitySuite3()->AEGP_EndUndoGroup();
+	if (group_openedB) {
+		suites.UtilitySuite3()->AEGP_EndUndoGroup();
+	}
 
 	//	Read back rather than trusting the write. A SetStreamValue that returns
 	//	no error but does not stick would otherwise look like a pass.
