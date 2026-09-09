@@ -30,3 +30,7 @@ A1a_run1.txt
 # Python bytecode
 __pycache__/
 *.pyc
+
+# A3e video-tracker cache. Tens of MB, regenerable from the recording in one
+# pass, and meaningless without it.
+A3e_video_cache*.npz

@@ -726,6 +726,168 @@ Built, self-tested offline, **awaiting a real run in AE with a screen recording*
 Hover the comp viewer for the countdown, start recording, then: hold still ~10 s,
 wheel-scroll ~15 s, hand-drag hard ~15 s, hold still ~10 s.
 
+#### A3e run 1 (2026-09-09) — the latency question is answered; a bigger one opens
+
+60 s in AE, 1592x729 panel, comp 1920x1080, recorded at 60 fps.
+
+##### The capture is healthy, and that was the thing in doubt
+
+| | |
+|---|---|
+| captures | 3600 in 60 s |
+| accepted | 3124 (86.8%) |
+| cost mean | 19.2 ms, **worst 25.3 ms** |
+| axes disagree | 62 (1.7%) — caught, not believed |
+
+No stall, no drift, no thermal tail. **The dedicated capture thread does what
+A3d2 predicted**: one composition sync per frame and the pixels free.
+
+##### Pipeline slip, from the paint log — a lower bound, as designed
+
+| bin | n | median | p95 | worst | 100 ms control p95 | quantisation floor |
+|---|---|---|---|---|---|---|
+| at rest | 1002 | 0.00 | 0.00 | 0.82 | 39.6 | 0.00 |
+| wheel | 371 | 2.84 | 7.48 | 29.2 | 112.0 | 2.14 |
+| drag | 711 | 13.73 | 42.83 | 85.0 | 216.8 | 8.74 |
+
+The control separates cleanly in every moving bin, so **the instrument is
+valid** — it had the power to detect a lag problem.
+
+And the medians sit **on the quantisation floor**: 2.84 against 2.14, 13.73
+against 8.74. That is the half-capture-interval term that no capture method
+avoids, WGC included. What exceeds budget is the **p95 tail**, not the typical
+case — and the tail is where the next finding lives.
+
+##### The tail is not lag. It is blindness.
+
+**12.6% of the run — 7.55 s across 23 runs, the longest 2.70 s — every capture
+was rejected.** The overlay held its last good `t` and sat still while the
+picture moved. That is not latency and must never be averaged into it.
+
+It is also, exactly, the failure the user reported: *"what still doesn't work is
+when the comp bounds are out of the view."*
+
+**Two distinct causes, and the geometry log alone could not tell them apart.**
+Both were read off the screen recording:
+
+1. **The comp is larger than the panel.** At 43.3 s the viewer is at **69%**, so
+   the comp is drawn 1325x745 in a 729-tall panel. Top and bottom edges are off
+   screen, the vertical scan finds background at neither end, and the line is
+   correctly rejected. The threshold is exact and known: the comp outgrows this
+   panel in height at **s > 0.675**.
+2. **The sample line misses the comp.** At 29.4 s the viewer is at **21.9%** — the
+   comp is a 420x236 rectangle — and the single fixed sample column at panel
+   x=849 falls just outside its right edge at x≈838. Nothing crosses the line, so
+   there is nothing to find. Cause 2 needs no zoom limit at all; it needs only a
+   small comp that is not under the line.
+
+##### A methodological trap this ran into, worth naming
+
+The first attempt to attribute the blind runs used the **last accepted sample**
+before each one — and concluded "none of the known modes", because at 21.9% the
+comp is comfortably inside the panel and at 61% it still fits.
+
+That test cannot work. The last accepted sample is *by definition* the state in
+which detection still succeeded; the state that broke it is the one the log does
+not contain. **Diagnosing a blind spot from the last thing seen before going
+blind will always exonerate the cause.** The video had the answer because it kept
+recording through the gap.
+
+##### What this costs, and what fixes it
+
+Neither cause argues for Windows.Graphics.Capture. Both are properties of the
+**detector**, not of how the pixels were obtained.
+
+- **Cause 2 is cheap to kill.** Sample a *set* of rows and columns rather than
+  one of each, and take the first consistent answer. The pixels are already
+  captured and the scan is O(w+h) per line, so five of each costs nothing
+  measurable.
+- **Cause 1 needs one edge, not two.** The current scan demands both ends of a
+  line be background, so it needs *both* comp edges on that axis. With `s` known
+  independently — `views[i].options.zoom`, A3b-measured at 0.19 ms and readable
+  in motion — a single visible edge gives `t`: `tx = x_left`, or
+  `tx = x_right - s*comp_w`. That turns "either edge off ⇒ blind" into "both
+  edges off ⇒ blind".
+- **The residual is real.** When the comp covers the panel entirely, no edge
+  exists anywhere and nothing in the picture can anchor `t`. Two options, and
+  they are not equivalent: frame-to-frame correlation of the captured panel
+  (anchor + delta — integrating *pixels*, so unlike A3c it cannot miss a
+  gesture), or degrade honestly.
+
+##### And a product defect the run exposed regardless
+
+**While blind, the probe kept drawing a confident box.** The roadmap's founding
+premise is that a misaligned onion skin is *worse* than none, because it lies
+about where the previous drawing was. Holding the last good `t` was the right
+call for a measurement spike — a jumping box would have been harder to read —
+but it is the wrong behaviour for the product. **Blind must be visible as
+blind.** That is the minimum correct behaviour whatever else is built.
+
+##### Why this matters more than the latency answer
+
+High zoom is precisely when animators want onion skinning. So cause 1 is not a
+corner case; it is the main case, arriving from the direction nobody was
+watching. If the fixes above do not hold at high zoom, the honest reading is
+that **Option A is weaker than Option B on the merits** — B gets the transform
+from AE and is never blind, at any zoom, for free.
+
+That is now the live question, and it outranks WGC.
+
+##### The video half: at rest confirmed, the moving bins still owed
+
+`A3e_video.py` reads the overlay and the comp out of the *same* frame, through
+the alpha gap the probe already leaves for its own detector. Time sync is derived
+rather than asserted — `green_x = panel_origin_x + tx` — and it lands cleanly:
+**frame 840 = probe start, panel_origin_x = 327, MAD 1.0 px.**
+
+**At rest the overlay is exact.** 1208 frames, and the slip distribution is a
+spike: 1047 frames at exactly 2 px, 188 at 0. A quantised constant like that is
+an edge convention — the box is drawn 3 px thick and the detector takes the first
+non-background pixel — not a tracking error. The paint log agrees independently
+(at-rest median 0.00 px, worst 0.82).
+
+**The moving bins are not measured yet,** and the reason is a control doing its
+job on a bad reference. The width control compares the detected comp width
+against `s·comp_w` with `s` from the log; while the user is zooming, the drawn
+width changes continuously and the log's `s` is quantised, so the check misses
+and the frame is refused — 1856 of them, and they are exactly the moving frames.
+Left strict rather than loosened, because a wider tolerance would begin accepting
+wrong edges. The fix is to stop consulting the log and adopt the probe's own
+control: scan a column as well as a row and require both axes to imply the same
+zoom.
+
+So for now: **at rest, measured on the video and passing. Wheel and drag, covered
+only by the paint log's lower bound.**
+
+##### Four faults in the video tracker, all of them mine, and what each taught
+
+Recorded because three of them produced *plausible* numbers rather than errors.
+
+1. **No panel bound.** The background test ran off into AE's project and timeline
+   panels and reported 72.3% blind against the probe's own 11.5%. Fixed with a
+   24 px inset.
+2. **No control.** It reported a 562 px "slip" at rest — a detector locked onto a
+   panel divider, wearing a result's clothing. The probe had a width control from
+   the start; the tracker had none, which is why the tracker was the thing that
+   was wrong. **A measuring instrument needs the same controls as the thing it
+   measures.**
+3. **Colour matching cannot separate these two greens.** The authored overlay
+   green (40,255,40) reaches the recording as **(94,255,65)** after OBS's colour
+   conversion, and the calibration comp contains a `cal_green` solid at
+   **(19,255,8)**. No tolerance admits the first and rejects the second. Replaced
+   with structure: the box's edges are lines hundreds of pixels long, the marker
+   is a 40 px blob. Detection went from 805 frames to 3595.
+4. **A sync criterion that scored the thing it was correcting for.** Sync was
+   graded on the fraction of samples agreeing within 2 px — but green and `tx`
+   disagree during motion *by exactly the slip being measured*, so the score was
+   really "what fraction of the run was at rest", and it refused the correct
+   offset for having too few. Regraded on MAD, which is robust to that tail and
+   still collapses when the alignment is genuinely wrong. The correct offset was
+   being found all along and thrown away.
+
+Fault 4 is the one worth carrying: **do not grade an instrument on a statistic
+that the measurand degrades.**
+
 ### A5 — the macOS capture-permission gate (not started, and it outranks A4)
 
 **Why it jumped the queue.** The product is meant to work on macOS. Everything
@@ -780,13 +942,20 @@ window and local event monitor being the same shape on both platforms — does
 | A3c pan inference | **FAIL — architecture abandoned.** `t` is measured, not inferred |
 | A3d strip-measured `t` | method works; 0 false positives in 710 samples |
 | A3d2 capture cost | **16.7 ms = one composition sync.** `GetDC(hwnd)` is blank |
-| **A3e slip** | **built, self-tested offline, awaiting a run in AE + video** |
+| **A3e slip** | **run 1 done. Latency is NOT the problem; the detector goes BLIND 12.6% of the time** |
+| **A3f blindness** | **new, and it now outranks everything: multi-line sampling + one-edge solve + honest degradation** |
 | **A5 macOS capture permission** | **not started — and it now outranks A4** |
 | A4 render cost | not started |
 
-**Order from here: A3e (a sitting with AE and a screen recorder) -> A5 (a mac
-session) -> A2 -> A4.** WGC is built only if A3e fails, or later as the occlusion
-and self-capture fix once the thing works.
+**Order from here: A3f (fix blindness) -> A3e run 2 (the moving bins, on the
+video) -> A5 (a mac session) -> A2 -> A4.** WGC has dropped further down: run 1
+showed the typical slip sitting on the quantisation floor that WGC shares, so its
+case rests entirely on occlusion and self-capture.
+
+**And A3f is a gate, not a chore.** High zoom is when onion skinning is wanted
+most, and it is exactly where the detector is blind. If it cannot be fixed there,
+Option B wins on the merits - it takes the transform from AE and is never blind,
+at any zoom, for free.
 
 ### A1c — Pan by correlation (historical section below)
 

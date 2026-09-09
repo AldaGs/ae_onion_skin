@@ -122,6 +122,7 @@ static LARGE_INTEGER	g_freq, g_t0;
 
 //	Capture-thread tallies, read only after the join.
 static long		g_cap_total = 0, g_cap_ok = 0, g_cap_noedge = 0, g_cap_axis = 0;
+static long		g_cap_ends = 0, g_cap_notrans = 0;
 static double	g_cap_cost_sum = 0.0, g_cap_cost_worst = 0.0;
 
 //	The scan line and column, recomputed per capture from the panel size. The
@@ -189,31 +190,55 @@ PixDiff(const BYTE *a, const BYTE *b)
 	return d;
 }
 
+//	Why a scan failed. "no_edge" lumped three different causes together, and the
+//	first run's 12.6% blind time could not be attributed to any of them: the comp
+//	was fully inside the panel, both edges on screen, and the sample lines
+//	crossing it, on every single blind run. So the probe must say WHICH test
+//	rejected the line rather than leave the cause to be inferred from geometry
+//	that has already been ruled out.
+enum {
+	kScanOK = 0,
+	kScanTooShort,		//	line shorter than the minimum
+	kScanEndsDiffer,	//	the two ends are not the same colour: comp runs off
+	kScanNoTransition,	//	the whole line is background: comp misses this line
+	kScanDegenerate		//	found a start but no end past it
+};
+
 //	First and last pixel on the line differing from the line's own background.
 //	step is the byte distance between consecutive pixels: 3 along a row, the
 //	stride down a column.
-static bool
+static int
 Scan(const BYTE *bits, int n, int step, int *loP, int *hiP)
 {
-	if (n < 16) return false;
+	if (n < 16) return kScanTooShort;
 
 	const BYTE *a = bits + (size_t)2 * step;
 	const BYTE *b = bits + (size_t)(n - 3) * step;
 
 	//	Both ends must be background, or the comp runs off that side and no edge
 	//	is on screen. At high zoom that is the CORRECT answer, not a failure.
-	if (PixDiff(a, b) > BG_TOL) return false;
+	if (PixDiff(a, b) > BG_TOL) return kScanEndsDiffer;
 
 	int lo = -1, hi = -1;
 	for (int i = 2; i < n - 2; ++i)
 		if (PixDiff(bits + (size_t)i * step, a) > BG_TOL) { lo = i; break; }
-	if (lo < 0) return false;
+	if (lo < 0) return kScanNoTransition;
 	for (int i = n - 3; i > lo; --i)
 		if (PixDiff(bits + (size_t)i * step, a) > BG_TOL) { hi = i; break; }
-	if (hi <= lo) return false;
+	if (hi <= lo) return kScanDegenerate;
 
 	*loP = lo; *hiP = hi;
-	return true;
+	return kScanOK;
+}
+
+static const char *
+ScanWhy(int h, int v)
+{
+	static const char *names[] = {"ok", "short", "ends_differ", "no_transition",
+	                              "degenerate"};
+	static char buf[64];
+	sprintf(buf, "h_%s/v_%s", names[h], names[v]);
+	return buf;
 }
 
 /* ------------------------------------------------------------------ */
@@ -247,6 +272,7 @@ CaptureThread(LPVOID)
 		int x0 = 0, x1 = 0, y0 = 0, y1 = 0;
 		const char *status = "ok";
 		bool got = false;
+		int why_h = kScanOK, why_v = kScanOK;
 
 		if (EnsureCapture(screenDC, pw, ph)) {
 			HGDIOBJ old = SelectObject(g_capDC, g_capBmp);
@@ -256,9 +282,9 @@ CaptureThread(LPVOID)
 			BitBlt(g_capDC, 0, 0, pw, ph, screenDC, origin.x, origin.y, SRCCOPY);
 			SelectObject(g_capDC, old);
 
-			bool okh = Scan(g_capBits + (size_t)row * g_capStride, pw, 3, &x0, &x1);
-			bool okv = Scan(g_capBits + (size_t)col * 3, ph, g_capStride, &y0, &y1);
-			if (!okh || !okv) status = "no_edge";
+			why_h = Scan(g_capBits + (size_t)row * g_capStride, pw, 3, &x0, &x1);
+			why_v = Scan(g_capBits + (size_t)col * 3, ph, g_capStride, &y0, &y1);
+			if (why_h != kScanOK || why_v != kScanOK) status = ScanWhy(why_h, why_v);
 			else got = true;
 		} else {
 			status = "no_capture";
@@ -281,8 +307,10 @@ CaptureThread(LPVOID)
 			diff = (sy > 0) ? fabs(sx - sy) / sy : 1.0;
 			if (diff > AXIS_TOL) { status = "axis_disagree"; got = false; ++g_cap_axis; }
 			else { tx = (double)x0; ty = (double)y0; ++g_cap_ok; }
-		} else if (status[0] == 'n' && status[3] == 'e') {
+		} else if (why_h != kScanOK || why_v != kScanOK) {
 			++g_cap_noedge;
+			if (why_h == kScanEndsDiffer || why_v == kScanEndsDiffer) ++g_cap_ends;
+			if (why_h == kScanNoTransition || why_v == kScanNoTransition) ++g_cap_notrans;
 		}
 
 		++g_cap_total;

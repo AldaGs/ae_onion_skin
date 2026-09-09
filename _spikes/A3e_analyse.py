@@ -117,9 +117,24 @@ def main():
         print("\nINVALID: not enough accepted samples to say anything.")
         return 2
 
+    #	Gaps in the ACCEPTED stream, which is not the same thing as the capture
+    #	thread's cadence: a gap here can mean the thread stalled OR that every
+    #	capture in that window was rejected because a comp edge was off-panel.
+    #	Reporting the maximum as "cadence" said the thread stalled for 2.7 s when
+    #	in fact it never missed a beat and the DETECTOR was blind. Two different
+    #	defects with two different fixes, and the label chose the wrong one.
+    #	So the blind gaps are now split out and named.
     gaps = [stream[i + 1][0] - stream[i][0] for i in range(len(stream) - 1)]
+    live = [g for g in gaps if g < 100.0]
+    blind = [g for g in gaps if g >= 100.0]
     print("capture cadence  mean %.2f ms   p95 %.2f ms   worst %.2f ms"
-          % (sum(gaps) / len(gaps), pct(gaps, 95), max(gaps)))
+          % (sum(live) / len(live), pct(live, 95), max(live))
+          if live else "capture cadence  (no unbroken samples)")
+    if blind:
+        print("BLIND GAPS       %d, totalling %.2f s, longest %.2f s"
+              % (len(blind), sum(blind) / 1000.0, max(blind) / 1000.0))
+        print("                 (every capture rejected - a comp edge was off-panel.")
+        print("                 NOT a stalled thread, and NOT latency.)")
 
     bins = {"at rest": [], "wheel": [], "drag": []}
     ctrl = {"at rest": [], "wheel": [], "drag": []}
