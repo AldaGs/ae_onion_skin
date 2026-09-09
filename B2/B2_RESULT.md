@@ -6,13 +6,13 @@ Log: `_spikes/B2_run1.txt` (copied from `%TEMP%\onionskin_B2.txt`).
 |---|---|---|---|
 | 1 | Panel appears under Window and docks | **pass** | user report; `MENU`→`PANEL created` at lines 3–4 |
 | 2 | Live button reaches our code | **pass** | 14 `CLICK LIVE` lines |
-| 3 | Dead button logs nothing | **see note** | no `DEAD` lines — pending confirmation the button was clicked |
+| 3 | Dead button logs nothing | **pass** | operator confirmed it was clicked; no `DEAD` lines |
 | 4 | Live works with a different layer selected | **pass** | indices 0, 1, 2, 4, 5 (lines 11–15) |
 | 4 | Live works with **no** layer selected | **pass** | `none-or-multiple` at lines 5–10, 16–17, 22 |
 | 5 | Survives a workspace switch | **pass** | line 18: `PANEL created` with no preceding `MENU` |
 | 5 | Survives an AE restart | **pass** | line 19 `STARTUP`, line 21 `PANEL created`, no `MENU` between |
 
-**The gate row is 4.** A click reaches the panel regardless of what is selected,
+**All seven rows pass. B2 is closed.** The gate row is 4: A click reaches the panel regardless of what is selected,
 including nothing. That is Option B's premise — reach, not pixels — and it holds.
 
 ## A defect in this runbook, recorded rather than quietly fixed
