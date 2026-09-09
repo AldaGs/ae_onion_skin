@@ -26,3 +26,7 @@ x64/
 # 3219 and blew the finding caps). Kept out so nobody reads it as a result;
 # the correction is described in SPIKES.md and run 2 is committed.
 A1a_run1.txt
+
+# Python bytecode
+__pycache__/
+*.pyc
