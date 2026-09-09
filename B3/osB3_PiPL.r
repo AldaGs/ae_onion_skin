@@ -46,8 +46,14 @@ resource 'PiPL' (16000) {
 			PF_PLUG_IN_VERSION,
 			PF_PLUG_IN_SUBVERS
 		},
+		/*	PF_VERSION bit-packing, NOT the AEGP 'Version' convention. The two
+			look alike and are not: AEGP Version 65536 means 1.0, but the same
+			number here decodes as vers 0 / subvers 2, and AE refuses to apply
+			the effect with "version mismatch ... PiPL version is 0.2".
+			1.0.0 = 1 << PF_Vers_VERS_SHIFT(19) = 524288.
+			This MUST be bumped in lockstep with PF_VERSION() in GlobalSetup. */
 		AE_Effect_Version {
-			65536	/* 1.0 */
+			524288	/* 1.0 */
 		},
 		AE_Effect_Info_Flags {
 			0
