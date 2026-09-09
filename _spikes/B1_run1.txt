@@ -1,0 +1,1 @@
+[13:34:35.240]  FX      GLOBAL_SETUP - the effect half loaded

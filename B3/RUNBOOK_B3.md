@@ -1,46 +1,60 @@
 # B3 runbook — the remaining gate
 
-Three questions in one binary: **B3** (does a panel write re-render AE without
+Three questions, two binaries: **B3** (does a panel write re-render AE without
 stealing the selection?), **B1** (one `.aex` or two?), and the **effect-side
 launcher**.
 
-**Built:** `C:\_build_out\AEGP\osB3.aex`. Exports **both** `EffectMain` and
-`EntryPointFunc`; the generated resource script carries **both** PiPLs (16000
-effect, 16001 AEGP). So B1 is already half-answered at build time — the remaining
-half is whether AE *loads* it that way.
+**B1 is answered: TWO BINARIES.** Run 1 installed a single `.aex` declaring both
+PiPLs. AE loaded the effect and never called `EntryPointFunc` — the log held only
+`FX GLOBAL_SETUP` and the Window menu item never appeared. One `.aex` is claimed
+by one kind. The mechanism is not pinned down (`first PiPL wins` and `a file
+already claimed as an effect is skipped by the AEGP scan` predict the same
+observable) and does not need to be: the remedy is the same, B1 was always
+informational, and the product is unchanged. Only the file count moved.
 
-**Log:** `%TEMP%\onionskin_B3.txt`, appended, millisecond stamps.
+**Built:** two files, each exporting only its own entry point (verified):
+
+| File | Exports | Half |
+|---|---|---|
+| `C:\_build_out\AEGP\osB3fx.aex` | `EffectMain` | the effect |
+| `C:\_build_out\AEGP\osB3panel.aex` | `EntryPointFunc` | the panel |
+
+They find each other by name, not by being in one file: the effect calls the
+panel by its **match name** `OnionSkinB3Panel`, and the panel finds the effect by
+its **match name** `aldai OnionSkinB3`. That is exactly how Phase 2 will work, so
+the split costs nothing architecturally.
+
+**Log:** `%TEMP%\onionskin_B3.txt` — both binaries append to the *same* file, so
+the interleaving shows the two halves acting on one param. The prefix says which
+wrote each line.
 
 ---
 
 ## Deploy (admin, AE closed)
 
-```
-Copy-Item "C:\_build_out\AEGP\osB3.aex" "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\osB3.aex" -Force
-```
+**Delete the old combined binary first.** It registers the same effect match name
+and two plug-ins claiming one match name is its own bug:
 
-> **One file, one folder — on purpose.** AE scans `Support Files\Plug-ins`
-> recursively, so a dual-kind binary in `AGS\` should register both halves.
-> Whether it actually does is part of what step 1 measures. If the effect does
-> not appear in the Effect menu, try the MediaCore path instead and note that the
-> two kinds want different homes — that is a real finding, not a mistake.
+```
+Remove-Item "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\osB3.aex" -Force
+Copy-Item "C:\_build_out\AEGP\osB3fx.aex"    "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\osB3fx.aex" -Force
+Copy-Item "C:\_build_out\AEGP\osB3panel.aex" "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\osB3panel.aex" -Force
+```
 
 ---
 
-## 1 — B1: does one binary carry both halves?
+## 1 — Both halves load (now from two files)
 
 1. Launch AE.
-2. `type %TEMP%\onionskin_B3.txt` — expect **both** of these lines:
+2. `type %TEMP%\onionskin_B3.txt` — expect **both**:
    - `FX      GLOBAL_SETUP - the effect half loaded`
    - `STARTUP AEGP half loaded.`
-3. **Window ▸ Onion Skin B3 (Write Spike)** should exist.
-4. **Effect ▸ ags_utilities ▸ Onion Skin B3** should exist.
+3. **Window ▸ Onion Skin B3 (Write Spike)** exists.
+4. **Effect ▸ ags_utilities ▸ Onion Skin B3** exists.
 
-| Result | Meaning |
-|---|---|
-| both lines, both menus | **B1 = one binary.** |
-| only one | B1 = two binaries; split the project, no harm done |
-| neither / AE won't start | remove the .aex, tell me, we split |
+If the Window item is *still* missing with a dedicated AEGP binary, that is a new
+and much more interesting finding than B1 — stop and say so, because B2 and B5
+both registered panels from this same folder without trouble.
 
 ## 2 — Set up the comp
 
@@ -123,7 +137,7 @@ What matters is that the number is **the same either side of the arrow**.
 
 | # | Claim | Pass |
 |---|---|---|
-| 1 | Both halves load from one binary (B1) | |
+| 1 | Both halves load, from two binaries | |
 | 2 | Brightness visibly changes the render | |
 | 3 | Effect-controls button opens the panel | |
 | 3 | Clicking it again does not close it | |

@@ -40,84 +40,9 @@ static AEGP_PluginID		S_my_id		= 0L;
 static SPBasicSuite			*sP			= NULL;
 static AEGP_PanelSuite1		*S_panelP	= NULL;
 static AEGP_Command			S_cmd_panel	= 0L;
-static char					S_log_path[AEGP_MAX_PATH_SIZE] = {'\0'};
 
 static const A_u_char *S_match_nameZ =
 	reinterpret_cast<const A_u_char *>(OS_B3_MATCH_NAME);
-
-/* ------------------------------------------------------------------ */
-/*  Log - shared with the effect half                                  */
-/* ------------------------------------------------------------------ */
-
-void
-OSB3_ResolveLogPath()
-{
-	if (S_log_path[0]) return;			// whichever half loads first wins
-
-	const char *tmp = getenv("TEMP");
-	if (!tmp) tmp = getenv("TMP");
-	if (!tmp) tmp = ".";
-	sprintf(S_log_path, "%s\\%s", tmp, OS_B3_LOG_LEAF);
-}
-
-void
-OSB3_Log(const char *fmt, ...)
-{
-	if (!S_log_path[0]) OSB3_ResolveLogPath();
-
-	FILE *f = fopen(S_log_path, "a");
-	if (!f) return;
-
-	time_t		now = time(NULL);
-	struct tm	*lt = localtime(&now);
-	char		stamp[32] = {'\0'};
-	if (lt) strftime(stamp, sizeof(stamp), "%H:%M:%S", lt);
-
-	//	Millisecond resolution matters here in a way it did not in B2 or B5:
-	//	one of the measurements is how long AE takes to come back from a write.
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	fprintf(f, "[%s.%03d]  ", stamp, (int)st.wMilliseconds);
-
-	va_list ap;
-	va_start(ap, fmt);
-	vfprintf(f, fmt, ap);
-	va_end(ap);
-
-	fprintf(f, "\n");
-	fclose(f);
-}
-
-/* ------------------------------------------------------------------ */
-/*  Panel visibility - called by BOTH halves                           */
-/* ------------------------------------------------------------------ */
-
-A_Err
-OSB3_ShowPanel(SPBasicSuite *pica_basicP)
-{
-	A_Err				err			= A_Err_NONE;
-	AEGP_PanelSuite1	*panelP		= NULL;
-	A_Boolean			shownB = FALSE, frontB = FALSE;
-
-	//	Acquire locally rather than reusing S_panelP: when this is called from
-	//	the EFFECT half we may be on a different suite scope, and reusing a
-	//	pointer cached by the AEGP half would be the kind of thing that works
-	//	until it does not.
-	ERR(pica_basicP->AcquireSuite(kAEGPPanelSuite, kAEGPPanelSuiteVersion1,
-									(const void **)&panelP));
-	if (err || !panelP) return err;
-
-	ERR(panelP->AEGP_IsShown(S_match_nameZ, &shownB, &frontB));
-
-	//	Only toggle when it is not already up. AEGP_ToggleVisibility would CLOSE
-	//	an open panel, which is the wrong thing for a button labelled "Open".
-	if (!err && !(shownB && frontB)) {
-		ERR(panelP->AEGP_ToggleVisibility(S_match_nameZ));
-	}
-
-	pica_basicP->ReleaseSuite(kAEGPPanelSuite, kAEGPPanelSuiteVersion1);
-	return err;
-}
 
 /* ------------------------------------------------------------------ */
 /*  Selection, read only                                               */
