@@ -1,0 +1,28 @@
+# Build output
+x64/
+*.obj
+*.exe
+*.aex
+*.pdb
+*.bsc
+*.sbr
+*.ilk
+*.exp
+*.lib
+*.res
+*.rr
+*.rrc
+*_temp.rc
+*.tlog/
+*.recipe
+
+# Captured frames. Large, regenerable, and only meaningful alongside the run
+# that produced them - the SOLVED numbers are what the findings rest on, and
+# those live in SPIKES.md.
+*.bmp
+*.png
+
+# A1a run 1 was invalid (EnumChildWindows recursion inflated 149 windows to
+# 3219 and blew the finding caps). Kept out so nobody reads it as a result;
+# the correction is described in SPIKES.md and run 2 is committed.
+A1a_run1.txt

@@ -1,0 +1,6 @@
+{
+  "_note": "INFERRED for run 2, whose zoom log predates per-reading geometry. Set B (captures 9-12) used the 640x360 comp per RUNBOOK_A1c1.md; everything else used 1920x1080. Falsifiable: applying this must leave every residual unchanged AND make the zoom cross-check agree on 9-12. If it does not, the inference is wrong.",
+  "1-8": [1920, 1080],
+  "9-12": [640, 360],
+  "13-14": [1920, 1080]
+}

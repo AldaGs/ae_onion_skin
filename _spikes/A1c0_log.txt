@@ -1,0 +1,50 @@
+A1c0 signature sweep - Tue Sep 08 2026 16:52:44 GMT-0600
+AE version: 26.3x87
+zoom = 0.14272835850716
+comp = "Comp 1"  6656 x 2270  par=1  res=1,1
+whole-comp*zoom would be 950 x 324
+
+reported arity check:
+  0 args: NO THROW (unexpected)
+
+sweep (b1, File, n, b2):
+  (false, f, 0, false) returned but wrote NO FILE
+  (false, f, 0, true ) returned but wrote NO FILE
+  (false, f, 1, false) returned but wrote NO FILE
+  (false, f, 1, true ) returned but wrote NO FILE
+  (false, f, 2, false) returned but wrote NO FILE
+  (false, f, 2, true ) returned but wrote NO FILE
+  (false, f, 3, false) returned but wrote NO FILE
+  (false, f, 3, true ) returned but wrote NO FILE
+  (false, f, 4, false) returned but wrote NO FILE
+  (false, f, 4, true ) returned but wrote NO FILE
+  (false, f, 5, false) returned but wrote NO FILE
+  (false, f, 5, true ) returned but wrote NO FILE
+  (false, f, 6, false) returned but wrote NO FILE
+  (false, f, 6, true ) returned but wrote NO FILE
+  (false, f, 7, false) returned but wrote NO FILE
+  (false, f, 7, true ) returned but wrote NO FILE
+  (true , f, 0, false) returned but wrote NO FILE
+  (true , f, 0, true ) returned but wrote NO FILE
+  (true , f, 1, false) returned but wrote NO FILE
+  (true , f, 1, true ) returned but wrote NO FILE
+  (true , f, 2, false) returned but wrote NO FILE
+  (true , f, 2, true ) returned but wrote NO FILE
+  (true , f, 3, false) returned but wrote NO FILE
+  (true , f, 3, true ) returned but wrote NO FILE
+  (true , f, 4, false) returned but wrote NO FILE
+  (true , f, 4, true ) returned but wrote NO FILE
+  (true , f, 5, false) returned but wrote NO FILE
+  (true , f, 5, true ) returned but wrote NO FILE
+  (true , f, 6, false) returned but wrote NO FILE
+  (true , f, 6, true ) returned but wrote NO FILE
+  (true , f, 7, false) returned but wrote NO FILE
+  (true , f, 7, true ) returned but wrote NO FILE
+
+ok=0  failed=32
+
+distinct error messages:
+  none
+
+NEXT: run A1c0_analyse.py - it compares dimensions and hashes across
+the surviving combinations to say what each parameter actually does.

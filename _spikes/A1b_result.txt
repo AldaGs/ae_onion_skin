@@ -1,0 +1,64 @@
+A1b viewer reflection - Tue Sep 08 2026 15:00:10 GMT-0600
+AE version: 26.3x87
+
+=== app.activeViewer ===
+  typeof: object
+  toString: [object Viewer]
+  6 properties:
+    active = false
+    activeViewIndex = 0
+    maximized = false
+    type = 7612
+    views = [object] [object View]
+  methods: setActive
+
+viewer type: 7612
+
+views.length = 1
+
+=== views[0] ===
+  typeof: object
+  toString: [object View]
+  3 properties:
+    active = true
+    options = [object] [object ViewOptions]
+  methods: onSync, saveBlittedImageToPng, setActive, startPlayback, stopPlayback
+
+=== views[0].options ===
+  typeof: object
+  toString: [object ViewOptions]
+  10 properties:
+    channels = 7812
+    checkerboards = false
+    exposure = 0
+    fastPreview = 8012
+    guidesLocked = false
+    guidesSnap = true
+    guidesVisibility = true
+    rulers = false
+    zoom = 0.14272835850716
+  methods: 
+
+=== activeViewer.activeViewIndex holder ===
+  typeof: object
+  toString: [object View]
+  3 properties:
+    active = true
+    options = [object] [object ViewOptions]
+  methods: onSync, saveBlittedImageToPng, setActive, startPlayback, stopPlayback
+
+================ HOW TO READ THIS ================
+Scan the property dumps for anything holding:
+  - the current magnification (e.g. 0.5, 50, '50%')
+  - a scroll / pan offset (a pair of numbers, comp pixels or screen)
+  - a rect or size for the drawn image inside the panel
+
+FOUND -> the analytic route for A1 is ALIVE: AEGP can reach it via
+         AEGP_ExecuteScript, and A1 becomes cheap.
+NOT FOUND -> all three analytic sources are now exhausted (AEGP,
+         the OS window tree, ExtendScript). A1 falls to the
+         EMPIRICAL route, or Option A fails its gate.
+
+Absence here is only as good as the state AE was in: this must be
+run with a comp open, the comp viewer focused, at a magnification
+other than 100%.

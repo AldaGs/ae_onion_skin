@@ -1,0 +1,11 @@
+capture 4
+hwnd          = 00000000000C0C68
+class         = DroverLord - Window Class
+cursor        = 1335,600
+window rect   = 326,149 1288x697
+client size   = 1288 x 697
+client origin = 326,149   (screen coords)
+dpi           = 96
+method        = PrintWindow(PW_RENDERFULLCONTENT)
+GetDIBits rows= 697 of 697
+uniform colour= no

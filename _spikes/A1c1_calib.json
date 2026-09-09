@@ -1,0 +1,16 @@
+{
+  "comp": "A1_CALIB",
+  "width": 1920,
+  "height": 1080,
+  "pixelAspect": 1,
+  "markerSize": 48,
+  "viewerType": 7612,
+  "zoomAtBuild": 0.5,
+  "markers": [
+    {"name": "cal_red", "x": 160, "y": 160, "rgb": [1, 0, 0]},
+    {"name": "cal_green", "x": 1760, "y": 160, "rgb": [0, 1, 0]},
+    {"name": "cal_blue", "x": 160, "y": 920, "rgb": [0, 0, 1]},
+    {"name": "cal_yellow", "x": 1760, "y": 920, "rgb": [1, 1, 0]},
+    {"name": "cal_magenta", "x": 960, "y": 540, "rgb": [1, 0, 1]}
+  ]
+}

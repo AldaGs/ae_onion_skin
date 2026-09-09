@@ -1,0 +1,806 @@
+# Onion Skin — Phase 0 spike log
+
+Roadmap: `_aePlugins/onion-skin-roadmap.md`. Gate rule: A1–A3 are hard stops to
+Option B.
+
+---
+
+## A1 — Transform: can we know where comp (x, y) lands on screen?
+
+Three possible analytic sources, cheapest first. Each is a separate sub-spike so
+that a dead end costs only itself.
+
+### A1-0 — AEGP headers (desk check) — **NOTHING THERE**
+
+`AEGP_ItemViewSuite1` (`AE_GeneralPlug.h:554`, frozen AE 13.6) contains exactly
+one call: `AEGP_GetItemViewPlaybackTime`. The only other API taking an
+`AEGP_ItemViewP` is `AEGP_ColorSettingsSuite6`'s
+`AEGP_DoesViewHaveColorSpaceXform` / `AEGP_XformWorkingToViewColorSpace`.
+
+There is **no AEGP source for viewer zoom, scroll offset, or drawn-image rect.**
+
+### A1a — OS window tree — **DEAD** (2026-09-08)
+
+`A1a_WindowProbe.cpp` → `os_A1a.exe`. Walks AE's visible top-level windows and
+every descendant, printing class / text / rect, and flags three things:
+zoom-like text, scrollbar-like classes, and everything that is not AE's own
+`DroverLord - Window Class`.
+
+Run 2 (the valid one): 3 top-level windows, **149 windows total**.
+
+| Finding | Hits |
+|---|---|
+| [1] zoom-like text | **0** |
+| [2] scrollbar-like classes | **0** |
+| [3] non-`DroverLord` classes | 52 |
+
+All 52 of [3] belong to CEP extensions (`WC_PLUGPLUG_HTMLEXTENSION_CLASS_` and
+their `CefBrowserWindow` / `Chrome_WidgetWin_0` subtrees — MTAG Color, MTAG
+Easing, MTAG Toolbar, MTAG Secondary, Declutter, mattetool2), expression editors
+(`Scintilla`), stray `Edit` boxes belonging to those panels, `SysShadow`, and
+AE's own `AE_CApplication_26.3` frame.
+
+**Nothing in AE's native UI is an OS control.** AE draws its magnification popup
+itself, so there is no window text to read and no `GetScrollInfo` to call.
+Confirms and extends pieFX S2: not only can we not *name* AE's panels, we cannot
+*read* anything inside them.
+
+#### Two corrections made before the result was trusted
+
+- **Run 1 was invalid and looked fine.** `EnumChildWindows` already enumerates
+  every descendant, not just immediate children, so recursing into it re-walked
+  each subtree at every level: 3219 "windows" for a tree of 149, almost all
+  duplicates. That blew the 256-entry cap on finding [3] — which meant an empty
+  finding would have been indistinguishable from a *truncated* one. Fixed by
+  enumerating once per top-level window and deriving depth from the parent chain;
+  caps raised to 4096.
+- **Added a matcher self-test** (9 cases, including negatives: `""`,
+  `"Composition"`, bare `"%"`). Reports 9/9 and aborts on failure. Without it,
+  "no zoom control found" and "my matcher is broken" produce identical output —
+  and zero was the expected result, which is exactly when a silent matcher bug
+  would have been believed.
+
+DPI: the probe sets `PER_MONITOR_AWARE_V2` dynamically, falling back to
+`SetProcessDPIAware`. Without it every rect comes back virtualised and every
+later transform is silently wrong by the DPI scale.
+
+### A1b — ExtendScript object model — **ZOOM YES, PAN NO** (2026-09-08)
+
+`A1b_ViewerReflect.jsx`, run on AE 26.3x87. Reflects (does not guess) over
+`app.activeViewer`, its `views[]`, and each view's `options`.
+
+**`views[0].options.zoom = 0.14272835850716`.** A live magnification, not a
+round default — the viewer was on a Fit value, which is exactly why the run was
+specified at a non-100% zoom. Zoom is readable, exactly, as a float.
+
+Everything `ViewOptions` has: `channels`, `checkerboards`, `exposure`,
+`fastPreview`, `guidesLocked`, `guidesSnap`, `guidesVisibility`, `rulers`,
+`zoom`. **No scroll offset, no pan, no drawn-image rect.** `Viewer` itself has
+only `active`, `activeViewIndex`, `maximized`, `type`, `views`; `View` has only
+`active` and `options`.
+
+So the transform decomposes into:
+
+| Component | Source | Status |
+|---|---|---|
+| scale | `views[i].options.zoom` | **solved, exact** |
+| translation (pan) | nothing exposes it | **2 unknowns remain** |
+
+This is a much better position than "empirical solve of the whole transform".
+With zoom known and the panel rect known from A1a, the only unknown is a 2-DOF
+translation — and 2 DOF is tractable by correlation, where a full similarity
+solve would not have been.
+
+#### Two unplanned finds in the same dump
+
+- **`views[i].saveBlittedImageToPng`** — writes out what the viewer is actually
+  displaying. A better instrument than screen capture for recovering pan: correlate
+  the blit against our own render of the comp scaled by the known `zoom`, and the
+  crop offset *is* the pan. Offline, in numpy, per [[verify-offline-before-rebuild]].
+  Also usable as A1's own verifier, with no screen capture in the loop at all.
+- **`Viewer.type` = 7612** and `app.activeViewer` — AE will name its own viewer
+  kind and hand us the active one. This is a lead on **A2** (identity), which was
+  scoped assuming window-tree archaeology after pieFX S2. May be much cheaper than
+  planned. Not yet tested against multiple viewers or a floating viewer.
+
+Both are leads, not results. Neither has been measured.
+
+---
+
+## A3 — Sync: does it stay glued under motion?
+
+### The question, sharpened (2026-09-09)
+
+The roadmap framed A3 as "can we repaint fast enough". That is the easy half, and
+framing it that way would have measured the wrong thing.
+
+**Repaint cadence is nearly free if the overlay is out of process.** pieFX S3B
+already proved an out-of-process layered window wins AE's z-order, and a separate
+process has its own message loop — AE's modal drag loop cannot starve it.
+
+**The hard half is knowing WHAT to paint.** A1 established the transform is
+`screen = s·comp + t`. During a drag both terms change continuously, and pieFX S2
+established that **AE sits in a modal loop for the whole duration of a mouse
+press and does not pump AEGP idle time**. So at exactly the moment the transform
+is changing fastest, the two ways we know of reading it — an AEGP idle hook and
+ExtendScript's `views[i].options.zoom` — may both be unavailable.
+
+So A3 is really: **can we know the transform while the user is dragging?** If
+not, the overlay must *infer* it from raw input (pan = mouse delta, zoom = wheel
+ticks), which drifts, and drift in this transform is visible misalignment — the
+exact failure that makes an onion skin worse than none.
+
+### Decomposition, riskiest first
+
+| | question | kills A3 if |
+|---|---|---|
+| **A3a** | Does anything inside AE run during a modal drag, and at what cadence? | nothing ticks |
+| **A3b** | Can the transform be READ from a tick during motion, and how fast? | reads block or are too slow |
+| **A3c** | Does a real overlay stay glued, judged on video? | it visibly smears |
+
+pieFX S2 already found the likely answer to A3a: a `SetTimer(NULL, 0, ...)`
+thread timer **is** dispatched by AE's modal loops where the idle path is not.
+A3a re-measures that for this purpose and logs the actual cadence; A3b is the
+open question and the real gate.
+
+A3a and A3b need a minimal AEGP plug-in. That is justified now A1 has passed, and
+the scaffolding is the same one Phase 1 needs.
+
+### Tooling (built 2026-09-09, awaiting an AE session)
+
+`OnionSkin/A3/` — `osA3.aex`, cloned from the pieFX Phase 0 spike scaffolding.
+Two menu toggles under Window; no drawing, no project changes.
+
+- **Timestamp before any AE call.** A slow read and a late tick are different
+  failures — one means AE starved us, the other means AE answered too slowly —
+  and the log has to tell them apart.
+- **A3a and A3b are separate commands.** Doing the zoom read inside the cadence
+  measurement would perturb the thing being measured: if a read costs 40 ms,
+  cadence collapses and the two facts become indistinguishable.
+- **Both paths logged side by side.** The idle hook is half the A3a measurement,
+  not a fallback — the question is precisely whether it goes quiet while the
+  timer keeps running.
+- Samples buffered in memory (writing from a tick would measure the file system);
+  the timer kills itself after 60 s so a forgotten toggle cannot leave one
+  running.
+
+`_spikes/A3_analyse.py` judges it. **The measurement is the worst GAP, not the
+mean rate** — 60 ticks/second averages fine while delivering 120 in one second
+and none in the next, and "none in the next" is exactly what a modal drag does.
+A per-second timeline makes the phases self-evident without labelling them: idle
+going silent while the timer keeps ticking *is* the drag.
+
+Build notes for this tree: the project sits one directory shallower than the
+pieFX spike it was cloned from, so every SDK-relative path needed one level
+removed. `dumpbin /EXPORTS osA3.aex` shows a bare `EntryPointFunc` — the
+ten-second check that catches the whole class of AEGP load failures.
+
+### Results (2026-09-09) — **A3a MARGINAL, A3b PASS**
+
+A3a: 3822 samples over 60 s. A3b: 1780 samples over 34 s.
+
+| path | p50 gap | p99 gap | worst gap |
+|---|---|---|---|
+| thread timer (A3a) | 30.56 | 45.18 | **94.35 ms** |
+| idle hook (A3a) | 46.99 | 62.42 | **9175.94 ms** |
+| thread timer (A3b) | 30.28 | 45.52 | 81.75 ms |
+| idle hook (A3b) | 46.95 | 63.14 | 7941.91 ms |
+
+**The decisive window is A3b seconds 11–24.** Idle ticks: **0**. Timer ticks:
+~40/s, unbroken. Zoom reads: ~40 per second, **every one succeeding**, worst
+0.29 ms. A 14-second sustained modal drag in which AE answered ExtendScript
+30 times a second while never once pumping the idle hook.
+
+- **`views[i].options.zoom` is readable during a drag, and it is cheap.** 1780
+  attempts, **100% success**, p50 0.186 ms, p95 0.289 ms, worst 1.856 ms. 33
+  distinct zoom values, so the transform really was changing — this is not the
+  inconclusive "read the same number 1780 times" case.
+- **The idle hook is unusable and the thread timer is not.** 9.2 s and 7.9 s of
+  total idle silence against a worst timer gap of 94 ms — a factor of ~100.
+  pieFX S2 confirmed on a different AE version, for a different purpose.
+  **Architecture: build on `SetTimer(NULL, 0, ...)`, never on idle.**
+
+#### Two things the numbers say that the verdict line does not
+
+- **The cadence is ~33 Hz, not the 60 Hz requested.** p50 gap 30.5 ms against a
+  16 ms request. That is Windows' default 15.6 ms timer resolution rounding a
+  16 ms request up to two ticks — not AE, and not contention. Very likely fixed
+  by `timeBeginPeriod(1)`, which A3c should test explicitly rather than assume.
+  33 Hz may well be enough for an overlay; the point is that the current number
+  is an artefact, so it should not be used to judge A3c either way.
+- **A3b proved `s` is readable. It proved nothing about `t`.** The transform is
+  `screen = s·comp + t`, and A1b found **no source anywhere for the pan
+  translation** — not AEGP, not the window tree, not ExtendScript. A1 recovered
+  `t` by marker calibration from a screen capture, which cannot be done 30 times
+  a second. So the remaining risk is now exactly one thing, and it is sharper
+  than when A3 started: **recovering `t` continuously.**
+
+  The promising line for A3c: during a hand-tool drag the image tracks the cursor
+  1:1, so `Δt` *is* the mouse delta — exact, not inferred, with drift only from
+  missed events. That is a measurable claim and A3c should measure it, with a
+  periodic re-sync by capture as the fallback.
+
+#### `t` is ANALYTIC when unpanned (2026-09-09) — re-analysis of A1's captures
+
+Free result: no new AE session, just the 14 solved transforms tested against the
+hypothesis `t = panel_centre − s·comp_centre`.
+
+| | max \|dx\| | max \|dy\| |
+|---|---|---|
+| centred captures (7) | **0.50 px** | **1.00 px** |
+| panned captures (7) | 226.50 px | 234.00 px |
+
+**AE centres the comp in the panel, and it does so exactly.** The residual is
+sub-pixel and consistent (dx ≈ −0.5, dy ≈ −0.5…−1.0) — most likely our own
+half-pixel centroid quantisation on even-sized markers, not an AE offset, and
+well inside A1's tolerance either way. The panned captures miss by up to 234 px,
+so this is a discriminating test rather than one that fits anything.
+
+**Consequence for A3c: `t` never has to be recovered, only the PAN OFFSET does** —
+and that is zero until the user pans, changes only during explicit pan gestures,
+and is 1:1 with the cursor while one is in progress. The continuous-unknown
+problem A3b left open is now a bounded, event-driven one.
+
+    s  = zoom            (read per tick, 0.19 ms, proven in motion by A3b)
+    t  = panel_centre - s*comp_centre + pan_offset
+    pan_offset          (accumulated from cursor deltas during pan drags)
+
+### A3c — the glued overlay (built 2026-09-09, awaiting an AE session)
+
+Third command in `osA3.aex`. A layered topmost window over the comp viewer,
+drawing a green rectangle where the comp *should* be plus a centre crosshair,
+repainted from a thread timer.
+
+Implements exactly the model the earlier results established:
+
+    s = zoom                                   read per tick (A3b: 0.19 ms)
+    t = panel_centre - s*comp_centre + pan     centring proven analytic to <1 px
+    pan                                        accumulated from cursor deltas
+
+**What it is actually testing** is the one remaining claim: that during a pan
+drag the picture tracks the cursor 1:1, so `Δpan` *is* the mouse delta rather
+than an estimate of it. Everything else in the model is already measured.
+
+Deliberate choices:
+
+- **`timeBeginPeriod(1)` plus an 8 ms request.** A3a's ~30 ms cadence was
+  Windows' 15.6 ms granularity rounding a 16 ms request to two ticks — an
+  artefact of the request, not an AE ceiling. A3c raises the resolution for the
+  whole run and reports mean and worst gap on exit, so the 33 Hz question is
+  answered rather than inherited.
+- **`WS_EX_TRANSPARENT | WS_EX_NOACTIVATE`.** An overlay that ate the viewer's
+  clicks or stole its focus would fail as a product however well it tracked.
+- **The overlay follows the panel every tick** (`SetWindowPos` from the live
+  client rect), because a panel resize or a window move is exactly the case an
+  overlay pinned at arm time would get wrong.
+- **PAR correction assumed OFF** (its default; ExtendScript cannot read it). If
+  it is on, the box will be visibly wrong in x by the PAR factor — that is a
+  demonstration of the unread state, not a bug to paper over.
+- **A2 is not solved, so the user points at the viewer** — nothing can name AE's
+  panels (A1a).
+
+Judged **by eye, on video**. A message trace measures messages, not what the user
+sees; this is the same lesson pieFX S2 paid for.
+
+#### A3c result (2026-09-09) — **glued at rest, FAILS on pan**
+
+Screen recording measured rather than eyeballed: the overlay's green rectangle and
+the magenta calibration marker were both detected per frame at 5 fps and the
+error tabulated (`scratchpad/track.py`).
+
+| phase | box centre | error |
+|---|---|---|
+| at rest, 26.8–35.6 s | 792.0, 366.5 (constant) | **0.5, −1.1 px** |
+| pan from 35.8 s | **unchanged** | grows to 110 px within 1.2 s |
+| whole run | — | median 59.9 px, **max 222.4 px** |
+
+**Two separate results, and they must not be blurred together.**
+
+- **The model is confirmed.** At rest the overlay sat on the comp to within
+  **0.5 px in x and 1.1 px in y** for nine continuous seconds, and the box
+  *dimensions* tracked zoom all the way through the run
+  (1296→1345→1527→1097→959 px). So `s = zoom` read per tick and
+  `t = panel_centre − s·comp_centre` both work, live, exactly as A1 and A3b
+  predicted.
+- **Pan tracking never engaged at all.** Not drift — the box centre did not move
+  by a single pixel while the comp moved 110 px. The mouse hook never fired.
+
+**Cause: the gesture was not a mouse drag.** The frame at 36.4 s shows the cursor
+as a plain arrow, stationary, *outside* the panel, while the comp slides upward
+with a smooth decelerating profile (Δy per 200 ms: 32, 24, 18, 14, 10 px). That
+is AE's smooth scroll, not a drag. The hook only watches `WM_MBUTTONDOWN` and
+space+`WM_LBUTTONDOWN`, so it saw nothing.
+
+**The lesson is bigger than the missing case.** AE changes the pan through at
+least: wheel scroll, shift+wheel, space-drag, middle-drag, the Hand tool,
+scrollbars, zoom-about-cursor, panel resize, and menu commands like Fit. Adding
+`WM_MOUSEWHEEL` would fix this recording and leave the approach just as fragile —
+and worse, the failure mode of a missed gesture is a *silently wrong* overlay,
+which is precisely the outcome that makes an onion skin worse than none.
+**Inferring `t` from input is the wrong architecture, and this is the evidence.**
+
+Confirmed with the user: the pan was a **wheel scroll**, the most common pan
+gesture there is.
+
+### A3d — measure `t` instead of inferring it (built 2026-09-09)
+
+Fourth command in `osA3.aex`. Same overlay; `t` comes from measurement rather
+than from gesture tracking.
+
+**The method.** We know `s` exactly, therefore the comp's on-screen size. Blit
+one horizontal and one vertical **1-pixel strip** through the panel, find where
+the comp's edges cross them, and `t` is the top-left crossing. Two thin BitBlts
+plus an O(w+h) scan — no correlation, no full-frame capture, and **cause-agnostic
+by construction**: wheel, drag, scrollbar, Hand tool, zoom-about-cursor, panel
+resize and Fit all move the comp, and none of them need to be recognised.
+
+**Three things that make it honest rather than merely clever:**
+
+- **The control.** The detected span must equal `s·comp_size` within
+  `OS_STRIP_SIZE_TOL` (3 px) on *both* axes, or the frame is **rejected**. A
+  detector without this would silently lock onto a panel divider or a layer
+  outline and hand back a confident wrong `t` — precisely A3c's failure mode
+  wearing a different hat. Rejections are counted by reason and reported.
+- **Reading past our own overlay.** The overlay is layered and topmost, so a
+  screen blit would sample the green box and the detector would converge on its
+  own previous output. Fixed by never painting on the two sample lines — alpha
+  stays 0 there, so the composited screen shows AE's pixels through the gap. The
+  sample lines are offset from the panel centre (37, 53 px) so they cannot
+  coincide with the centre crosshair.
+- **Rejected frames hold the last good `t`** rather than falling back to the
+  analytic value, which would make the box jump on every rejection — a worse
+  artefact than being briefly stale.
+
+Known limits, stated up front: at high zoom the comp fills the panel and no edge
+is on screen, so detection *must* fail (reported as `no-bg`/`no-edge`, not as a
+wrong answer). Comp content that exactly matches AE's panel grey at the edge
+would fool the edge finder — the size control is what catches it.
+
+Reports on exit: attempts, accept rate, rejections by reason, and mean/worst
+detection cost. **The cost number is the gate** — if this cannot run inside a
+tick, the approach is dead regardless of accuracy.
+
+#### Run 1 CRASHED AE, during a scrub (2026-09-09) — cause found and fixed
+
+**`AEGP_ExecuteScript` pumps messages.** A `WM_TIMER` dispatched inside that pump
+re-enters the paint, and the re-entrant call reaches `EnsureStrips` →
+`FreeStrips()` → `DeleteObject`/`DeleteDC` **on the handles the outer call is
+still using**. Use-after-free on GDI objects.
+
+Why it appeared only now, and only on a scrub:
+
+- A3c held no shared GDI state across the script call, so the same re-entrancy
+  was harmless. A3d caches strip DCs across it, which turned a latent bug into a
+  crash. The bug was arguably always there; A3d just gave it something to break.
+- A busy AE makes `ExecuteScript` slower, which widens the window for a tick to
+  land inside it. Scrubbing is exactly that.
+
+Three fixes:
+
+1. **Re-entrancy guard** (`InterlockedCompareExchange`) — a nested tick returns
+   immediately instead of corrupting the outer one's state.
+2. **Throttled the script call.** A3c/A3d tick at 8 ms with `timeBeginPeriod(1)`,
+   so they were making **up to 125 `ExecuteScript` calls a second**. A3b measured
+   30 Hz at 100% success and 0.19 ms; 125 Hz is four times the pressure on AE for
+   no extra fidelity, since the overlay can repaint from a cached zoom between
+   reads. Now capped at ~30 Hz, and a failed read holds the last good value
+   instead of blanking the overlay.
+3. **Teardown is now re-entrancy-aware.** The stop command can itself be
+   dispatched from inside a paint — the menu click is sitting in the queue that
+   `ExecuteScript` pumps — so destroying the window and DCs there is the *same*
+   use-after-free. Stop now clears the flags and kills the tick first, and skips
+   the destroy if a paint is on the stack; the next Start reclaims it, safely,
+   because no timer is running by then.
+
+**The general lesson, worth carrying to Phase 1: any AEGP call that can pump
+messages is a re-entrancy point, and a timer-driven plug-in is therefore
+re-entrant by default.** State held across such a call needs a guard.
+
+#### Run 2 also went down — so A3d moved OUT of AE (2026-09-09)
+
+The re-entrancy fixes did not save it. No Windows Error Reporting entry for the
+event (the only `AfterFX.exe` records are an unrelated AppHang from the previous
+afternoon), so Windows never saw a fault — consistent with AE's own crash handler
+or a freeze that had to be killed.
+
+**Two AE sessions lost to bugs in the harness is the signal to change approach,
+not to debug harder.** A3d's question — can the comp's edges be found cheaply and
+reliably from two 1px strips? — has nothing to do with running inside AE. So it
+now runs as `os_A3d.exe`, out of process, where a bug costs a process nobody
+minds. Same move pieFX made for S3B.
+
+Suspected in-process cause, left unfixed because it no longer matters for
+answering A3d: at an 8 ms tick the plug-in was allocating and blitting a
+full-panel DIB (1288×697×4 ≈ 3.6 MB) up to 125 times a second **on AE's UI
+thread** — around 450 MB/s of GDI work competing with AE's own drawing. That is a
+plausible route to a freeze regardless of the re-entrancy bug, and it is a real
+constraint on the eventual product: **the overlay must not repaint at tick rate,
+and must not reallocate its bitmap per frame.**
+
+**Out of process the control also gets stronger.** In-process the detected span
+was validated against `s·comp_size`, with `s` from ExtendScript — so the check
+depended on AE answering. Out here the two axes check each other:
+
+    span_w / comp_w  and  span_h / comp_h  are both the zoom, so they must agree
+
+No AE involved, and it catches exactly the failure that matters: a detector that
+locked onto a panel divider on one axis will disagree with the other. A run where
+every sample "succeeds" but the axes disagree is a **failed** run. It also
+measures the zoom as a by-product — a free cross-check against what ExtendScript
+reported in A3b.
+
+`os_A3d.exe [comp_w] [comp_h] [seconds]` samples at ~60 Hz, writes
+`A3d_strips.txt`, sends no input and never touches AE's process.
+
+#### A3d result (2026-09-09) — **the method works; the capture is too slow**
+
+545 samples over 30 s of real interaction (1592×734 panel, comp 1920×1080).
+
+| | |
+|---|---|
+| accepted | **455 (83.5%)** |
+| no edge | 84 (16%) — correct: at high zoom the comp fills the panel |
+| **axes disagree** | **6 (1.1%)** — times it would have lied |
+| axis disagreement, accepted | mean 0.14%, max 0.68% |
+| distinct zooms recovered | 15, from 0.2198 to 0.6328 |
+| **cost mean** | **31.6 ms** |
+| cost worst | 45.0 ms |
+
+**The detection itself is good.** It found the comp's edges through real
+scrubbing, wheel-scrolling and zooming, agreed with itself across two
+independent axes to within 0.14% on average, and recovered the zoom as a
+by-product across a 3× range — a free cross-check on A3b's ExtendScript reads.
+The 16% `no_edge` are the honest answer at high zoom, not failures.
+
+**The cost is disqualifying, and it is entirely the BitBlt.** Flat distribution
+(p5 24 ms, p50 31 ms, p99 41 ms), identical whether an edge was found (31.7 ms)
+or not (30.9 ms), and invariant with panel size. The O(w+h) scan is free; the
+screen readback is not.
+
+**Hypothesis worth one more measurement before calling A3d dead.** 31.6 ms for
+*two* blits on a 60 Hz display is close to 2 × 16.7 ms, which would mean each
+readback blocks on a composition sync — cost **per call**, not per pixel. If so,
+one full-panel blit costs the same as one thin strip while giving both axes, and
+A3d fits a 60 Hz budget after all.
+
+`A3d2_CaptureBench.cpp` → `os_A3d2.exe` times six strategies back to back
+against the same window: two thin blits / one thin blit / one full-panel blit,
+each from the screen DC and the window DC, plus `PrintWindow`. The reading is
+pre-committed so the result cannot be rationalised afterwards:
+
+- **A ≈ 2×B and C ≈ B** → per call. A3d lives.
+- **A ≈ B and C much worse** → per pixel. The thin strips were already the cheap
+  version; A3d is dead as designed.
+- **D or E far below A** → the window DC skips the desktop readback, the cheapest
+  fix available.
+
+Caveat built into the tool: a blit returning in well under a millisecond may be
+reading a **stale or blank** surface rather than being fast, so any strategy that
+looks free must be re-checked with `os_A3d.exe` for accept rate before it is
+believed.
+
+#### A3d2 result (2026-09-09) — both hypotheses confirmed, 176× on the table
+
+60 iterations each, 1592×734 panel, AE idle.
+
+| strategy | mean | p50 | worst |
+|---|---|---|---|
+| A two thin blits, screen DC | 33.443 | 33.360 | 36.938 |
+| B one thin blit, screen DC | 16.575 | 16.677 | 26.012 |
+| C one **full-panel** blit, screen DC | 16.744 | 16.651 | 24.130 |
+| **D two thin blits, window DC** | **0.189** | **0.128** | 1.675 |
+| E one full-panel blit, window DC | 1.145 | 1.028 | 2.896 |
+| F PrintWindow whole window | 50.008 | 49.998 | 52.314 |
+
+**A ≈ 2×B and C ≈ B**, exactly as the pre-committed reading required: the
+screen-DC cost is **one composition sync per call** — 16.7 ms is one frame at
+60 Hz — and the pixels are free. A full-panel blit costs the same as a 1-pixel
+strip.
+
+**And `GetDC(hwnd)` skips the sync entirely: 0.189 ms, 176× faster than A.**
+Comfortably inside any tick budget. Also note `PrintWindow` at 50 ms — the method
+A1c1 used for the calibration captures, never timed until now; fine for one-shot
+calibration, hopeless for live tracking.
+
+**Not yet believed.** The pre-registered caveat applies precisely here: 0.189 ms
+is fast enough to be suspicious, and a window DC may be handing back a stale or
+blank redirection surface rather than the live window. `os_A3d.exe` now runs
+**differentially** — every iteration detects the comp origin through *both* paths
+and logs both, with the window-DC path timed first so the screen blit's sync
+cannot mask its cost.
+
+The test needs no external ground truth:
+
+- **at rest** the two must agree *exactly*; a standing difference means the
+  window DC is not showing the live window;
+- **in motion** any difference is **lag**, and its size in pixels is the number
+  that decides whether it can drive an overlay;
+- a blank or garbage window-DC path shows up as its own detection failures while
+  the screen path succeeds.
+
+`dx`/`dy` are logged as `-9999` when the two are not comparable, so a missing
+comparison can never be misread as agreement.
+
+#### Differential result (2026-09-09) — **the window DC is a mirage**
+
+534 samples over 30 s of real interaction.
+
+| path | cost mean | detections |
+|---|---|---|
+| window DC | 0.876 ms | **0 of 534** |
+| screen DC | 32.455 ms | 384 ok, 9 axis-disagree, 141 no-edge |
+
+**`GetDC(hwnd)` on AE's viewer returns a surface with no content.** The 176×
+speedup was the cost of reading nothing. Zero comparable samples, so the lag
+question never even arose. This is exactly the trap the pre-registered caveat
+described, and the only reason it was caught is that the "fix" was required to
+prove itself before being believed.
+
+Removed from the probe rather than kept as a failing control: its ~0.9 ms would
+land inside the cost measurement, and cost is the gate.
+
+**What remains is the shipping configuration: one full-panel screen blit.**
+A3d2 measured that at 16.744 ms against 16.575 ms for a single strip — one
+composition sync, pixels free — so taking the whole panel in one call and reading
+both axes out of it halves the 32.5 ms above. Now wired and awaiting a run.
+
+Implication either way: **~16.7 ms is the floor for GDI screen capture**, because
+it is one display frame. That is affordable on a dedicated thread out of process
+(it is a sync wait, not CPU burn — this is how screen recorders work), and it is
+*not* affordable on AE's UI thread, which is consistent with the two freezes.
+If one frame of latency proves too much, the upgrade path is
+**Windows.Graphics.Capture** targeting the viewer HWND — which would also solve
+self-capture, since it would never see our own overlay.
+
+#### Gate status
+
+| Spike | Verdict |
+|---|---|
+| A1 transform | **PASS** |
+| A2 identity | not started; `app.activeViewer` / `Viewer.type` is a strong lead |
+| A3a cadence | **MARGINAL** — timer fine, idle unusable, 33 Hz artefact to confirm |
+| A3b readability | **PASS** — `s` readable in motion at 0.19 ms |
+| A3c glued overlay | **FAIL as built** — model right, pan inference wrong architecture |
+| A3d strip-measured `t` | **built, unmeasured** |
+| A4 cost | not started |
+
+### A1c — Pan by correlation (historical section below)
+
+Now the only remaining unknown in A1. Open questions, in order:
+
+1. **Is `zoom` live and cheap?** Does it update as the user zooms, and what does
+   an `AEGP_ExecuteScript` round trip cost? If it is stale or slow, the analytic
+   half is worth less than it looks. Measure before building on it.
+2. **What exactly does `saveBlittedImageToPng` write** — the panel-sized blit
+   including pan cropping, or the whole comp at view resolution? The answer
+   decides whether pan falls straight out of it or needs a screen capture after
+   all.
+3. **Recover the 2-DOF translation** and check it against the A1 pass criteria
+   (1 px, 12 states, one deliberately-wrong control).
+
+#### A1c-0 — the signature is undocumented (2026-09-08)
+
+`saveBlittedImageToPng` does **not** take a lone `File`. AE reports it requires
+**four** parameters: `(boolean, File, integer, boolean)`. Nothing in the SDK or
+the scripting guide documents it, and the integer is presumably an enum.
+
+So the first version of the pan test was invalid before it ran — it called the
+method with one argument. Superseded and deleted (`A1c_Blit.jsx`,
+`A1c_analyse.py`).
+
+**Map the signature, do not guess it.** `A1c0_SweepBlit.jsx` sweeps
+`b1 ∈ {false,true} × n ∈ 0..7 × b2 ∈ {false,true}` — 32 calls, each writing
+`A1c0_<b1>_<n>_<b2>.png`. The throws are as much the measurement as the
+successes: they draw the boundary of the integer's domain, and the script records
+the distinct error messages. `A1c0_analyse.py` then holds two parameters fixed and
+varies the third, so each parameter's effect is isolated:
+
+- dimensions change ⇒ a resolution/scale control
+- content changes but not dimensions ⇒ a channel/overlay/alpha toggle
+- nothing changes ⇒ reported as **"not proven inert"**, because the sweep held
+  pan, overlays, resolution and preview mode constant
+
+If `n = 7` is accepted, the analyser says so and warns that the domain may extend
+past where the sweep stopped — an accepted upper bound is not a discovered one.
+
+**Sweep result (2026-09-08): the method silently does nothing.** 32 combinations,
+**zero throws, zero files**. And the arity claim was wrong: calling with **no**
+arguments does not throw either — the "requires 4 parameters" error came from the
+earlier one-argument call, not from a real contract.
+
+The integer domain was almost certainly wrong: AE's scripting enums live around
+7000–8100 (`viewer.type` 7612, `channels` 7812, `fastPreview` 8012), so sweeping
+0..7 was outside it entirely.
+
+**Parked, not chased.** It writes a PNG to disk, so it could only ever be a
+calibration instrument, never a live per-frame source — and for calibration a
+screen capture does the same job with no undocumented behaviour underneath.
+Chasing it is how an undocumented API becomes the sunk cost that eats A1's time
+box.
+
+#### A1c-1 — marker calibration by screen capture — **TOOLING VERIFIED, AWAITING AE**
+
+Replaces the blit approach, and is a better fit anyway: it *is* the pass criteria
+the roadmap specified, measured directly, rather than a route to them.
+
+| Tool | Role |
+|---|---|
+| `A1c1_MakeCalib.jsx` | builds `A1_CALIB` — 1920×1080, mid-grey ground, 5 saturated markers at exact known coords; writes `A1c1_calib.json` |
+| `A1c1_Zoom.jsx` | logs the live viewer zoom, one line per capture, numbered |
+| `A1c1_Capture.cpp` → `os_A1c1.exe` | captures the viewer panel's client area to a top-down 24-bit BMP + a metadata `.txt` |
+| `A1c1_solve.py` | detects markers, solves the transform, judges it |
+
+Design decisions that carry the result:
+
+- **The ground is mid-grey, not black**, so a failed capture (which comes back
+  flat black) cannot be mistaken for a successful capture of the background. The
+  capture tool independently flags a uniform-colour frame and exits 3.
+- **Five markers, four used.** The fit uses the corners; the centre is held out,
+  so its error is an honest residual. A four-point fit to four points is exact by
+  construction and proves nothing.
+- **`sx` and `sy` are solved independently** though they should be equal — the
+  anisotropy is then a free diagnostic for non-square pixels or bad detection.
+- **Three independent checks**: held-out residual, cross-check of solved scale
+  against ExtendScript's `zoom`, and a broken control (scale forced to 1.0). If
+  the control is not detected, the harness reports INVALID rather than PASS.
+- `PrintWindow(PW_RENDERFULLCONTENT)` first, `BitBlt` from the screen as
+  fallback; which one produced the pixels is recorded, because a later analysis
+  that does not know cannot interpret a blank frame.
+
+**Solver self-tested offline on synthetic data** (per
+[[verify-offline-before-rebuild]]): recovers `sx` to 1e-6 and `tx` exactly,
+held-out centre 0.500 px, broken control fails by 757 px. The 0.5 px residual is
+the synthetic generator rounding marker centres to integers, not solver error —
+but it does mean **the 1 px criterion is tight**, and a real result near 1 px must
+be attributed to the transform or the detector before it is called either way.
+
+**First real capture (2026-09-08): the mechanism works.** Panel 1288×449,
+`PrintWindow(PW_RENDERFULLCONTENT)` succeeded — the comp viewer **is** capturable,
+which was the main risk in this route. All 5 markers detected, all three checks
+green: held-out centre 0.426 px, zoom cross-check 0.139% apart, broken control
+failing by 653 px.
+
+**And it was rejected anyway, correctly.** `cal_red` returned **69 detected
+pixels against 361** for the others — about 18% of a marker that should cover
+~384 px at that zoom. A partial marker still produces a centroid; it is just a
+*biased* one. Red's centre sat 1.14 px off in x and 1.26 px off in y relative to
+the markers sharing its comp coordinates — most of A1's entire 1 px budget,
+inside a corner the fit depends on, hidden in a result that otherwise passed.
+
+Cause: `addSolid` leaves the last-created layer selected, and AE draws selection
+handles and a bounding box **over** it in the viewer. `cal_red` was created last.
+
+Two fixes, and only the second one matters:
+
+1. `MakeCalib` now deselects every layer and hides rulers/guides after
+   `openInViewer`.
+2. **The solver now checks marker integrity itself** — each marker's area against
+   the median, rejecting anything under half or over double — and reports
+   `NOT ANALYSED` rather than solving. Re-run against the existing capture 1: it
+   is now correctly refused. The first fix stops this instance; the second stops
+   the class, and the class is the dangerous part, because the failure mode is a
+   *plausible wrong answer* rather than an error.
+
+Also made PAR-aware in the same pass, before it could produce a confusing false
+failure: AE applies pixel aspect on X only (drawn width is `w*PAR*zoom`, height
+`h*zoom`), so the expected `sx/sy` is **PAR, not 1**, and the zoom cross-check
+compares against **`sy`**, which PAR does not touch. `MakeCalib` now prompts for
+the PAR so the non-square state is reachable without editing the script.
+
+#### Run 1 of the 15-state matrix (2026-09-09) — model confirmed, coverage failed
+
+**The transform model is right.** Six captures solved, across two zooms, two
+panel sizes, centred and panned:
+
+| capture | panel | sx | sy | residual |
+|---|---|---|---|---|
+| 1 | 1288×449 | 0.408125 | 0.407895 | **0.000 px** |
+| 2 | 1288×449 (panned) | 0.408750 | 0.407895 | **0.000 px** |
+| 3 | 1288×449 | 0.500000 | 0.500000 | **0.373 px** |
+| 7 | 924×449 | 0.408125 | 0.407895 | **0.000 px** |
+| 9 | 924×449 | 0.500000 | 0.500000 | **0.373 px** |
+| 13 | 1288×449 | 0.408125 | 0.407895 | **0.000 px** |
+
+Broken control detected on every one (551–652 px). `screen = s·comp + t` is the
+correct model, and the marker-integrity fix held — no partial markers anywhere.
+
+**Nine captures were unusable, and the design was at fault, not the operator.**
+The markers span 760 comp-pixels vertically. At 100% zoom that needs a panel over
+760 px tall; the viewer was 449. Captures 4,5,6,8,10,11,12 were **impossible as
+specified**. Fixed: `MakeCalib` now asks for the comp size and lays the markers
+out proportionally, so the 100% states use a 640×360 comp — still scale 1.0,
+which is the thing being measured.
+
+**The PAR states did not test PAR.** Capture 13 measured `sx/sy = 1.0006` on a
+comp that really was PAR 2. **AE's viewer has a Pixel Aspect Ratio Correction
+toggle that defaults to OFF, and `ViewOptions` does not expose it.** So this is a
+*second* piece of transform-affecting viewer state that cannot be read, alongside
+pan. Not fatal — it is a binary, and with correction off `sx = sy = zoom` — but
+it is a real gap and it belongs in A1's result, not in a footnote.
+
+**The zoom "disagreement" was bookkeeping, not physics.** Two zoom readings were
+logged against fifteen captures, so capture 2 was judged against a reading taken
+eight minutes later. Where the pairing was valid (capture 1) the two sources
+agreed to 0.107%.
+
+Fixed by making the slip impossible rather than asking for care: **`os_A1c1.exe`
+now refuses to capture unless the zoom-log line count equals the next capture
+index**, and writes nothing when it refuses. Verified — it correctly rejected a
+16th capture against 2 readings, leaving the file count unchanged.
+
+#### Run 2 (2026-09-09) — **A1 PASSES**
+
+14 captures, 14 usable, 14 zoom readings in enforced lockstep.
+
+```
+usable captures : 14
+worst residual  : 0.559 px   (criterion 1.0 px)
+broken control  : detected everywhere
+zoom cross-check: all agree   (on 14 of 14 captures)
+measured PAR    : 1 on captures 1-12, 2 on captures 13-14
+A1 PASSES.
+```
+
+Coverage: fit / 50% / 100% zoom, centred and panned hard, two panel sizes
+(1288×697 and 924×697), square and PAR 2. Residuals were 0.000 px on ten of the
+fourteen; the worst was 0.559 px.
+
+**PAR correction is real and measurable.** With the viewer toggle enabled,
+captures 13–14 measured `sx/sy` of 2.003 and 2.000 against a PAR 2 comp — exactly
+as predicted. So `sx = zoom·PAR` when correction is on and `sx = zoom` when it is
+off, and since `ViewOptions` does not expose the toggle, **the plug-in must infer
+it rather than read it.** A known, bounded unknown.
+
+**So the transform is: `screen = s·comp + t`, with `s` from
+`views[i].options.zoom` (times PAR when correction is on) and `t` the only thing
+that must be recovered by other means.**
+
+##### Two harness bugs this run exposed, both mine
+
+- **`calib.json` is global, comp geometry is per-capture.** Set B used a 640×360
+  comp but the file had been overwritten by the final 1920×1080 build, so those
+  four captures were solved against markers 3× too large and reported a 66% zoom
+  disagreement. The residuals were unaffected — a uniform scale error cancels in
+  the held-out prediction — which is exactly why it survived to be caught by the
+  cross-check rather than the primary measurement. Fixed: `A1c1_Zoom.jsx` now
+  logs comp width/height/PAR with every reading, and the solver prefers that over
+  the global file. Run 2's data was recovered with an explicitly-labelled
+  `A1c1_geometry.json`, whose inference was **falsifiable and verified**: applying
+  it left every residual unchanged and made all 14 cross-checks agree.
+- **The broken control was degenerate at 100% zoom.** Forcing the scale to 1.0 is
+  the *correct* transform when zoom is 1.0, so the control stopped being a control
+  on precisely the four captures the new coverage added — and the harness
+  correctly reported INVALID rather than passing. Replaced with two controls that
+  are wrong everywhere: a fixed +3 px translation and a 5% scale error.
+  **Generalisable: a control must be wrong at every point in the matrix, or it
+  stops guarding exactly where coverage grows.**
+
+##### Gate status
+
+| Spike | Verdict |
+|---|---|
+| A1 transform | **PASS** |
+| A2 identity | not started — but A1b's `app.activeViewer` / `Viewer.type` is a strong lead |
+| A3 sync | not started — **the gate to bet against** |
+| A4 cost | not started |
+
+A1 is a **static** result: the transform is correct when nothing is moving.
+
+#### A1c-1 (superseded design) — the blit pan test
+
+The three-run design below is still the right measurement; it just has to wait
+until a working argument tuple is known, since a pan test run through a
+misunderstood argument proves nothing.
+
+The design, so it cannot be read wrong:
+
+- **Runs 1 vs 2 differ only in pan.** Byte-identical blits ⇒ the blit carries no
+  pan information (whole-comp hypothesis) and A1c needs a screen capture after
+  all. Different blits ⇒ the blit encodes the pan crop (panel hypothesis) and pan
+  falls out of a correlation with no screen capture anywhere in the loop.
+- **Run 3 changes the zoom**, which tests Q1 *and* gives an independent second
+  read on Q2: under whole-comp the blit dimensions must equal
+  `round(comp_wh * zoom)`; under panel they stay pinned to the panel size. The
+  two reads must agree — if they disagree, neither hypothesis holds.
+- The analyser **refuses to answer Q2** if runs 1 and 2 turn out to have been at
+  different zooms, rather than reporting a difference that pan did not cause.
