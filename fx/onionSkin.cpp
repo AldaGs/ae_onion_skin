@@ -77,12 +77,22 @@ GlobalSetup(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *[], PF_LayerD
 {
 	out_data->my_version = PF_VERSION(OS_MAJOR, OS_MINOR, OS_BUG, OS_STAGE, OS_BUILD);
 
-	//	NOT PIX_INDEPENDENT: an output pixel depends on other FRAMES, so it is
+	//	WIDE_TIME_INPUT is the one that matters, and its absence was the v1.1
+	//	defect: "Set this flag if the effect calls get_param to inquire a
+	//	parameter at a time besides the current one (e.g. to get the previous
+	//	video frame)" -- AE_Effect.h, describing this effect exactly. Without it
+	//	AE does not know our output depends on OTHER FRAMES, so it happily serves
+	//	a cached frame that was rendered before the neighbours changed. Run 2
+	//	reported ghosts that only updated after a manual cache purge, which is
+	//	precisely what a missed frame dependency looks like from the outside.
+	//
+	//	NOT PIX_INDEPENDENT: an output pixel depends on other frames, so it is
 	//	emphatically not a function of the co-located input pixel alone.
 	//	SEND_UPDATE_PARAMS_UI is what makes the Open Panel button's
 	//	PF_Cmd_USER_CHANGED_PARAM arrive at all.
 	out_data->out_flags = PF_OutFlag_DEEP_COLOR_AWARE |
-							PF_OutFlag_SEND_UPDATE_PARAMS_UI;
+							PF_OutFlag_SEND_UPDATE_PARAMS_UI |
+							PF_OutFlag_WIDE_TIME_INPUT;
 	return PF_Err_NONE;
 }
 
@@ -360,15 +370,35 @@ Render(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *params[], PF_Layer
 	A_long	sources[OS_MAX_SOURCES];
 	A_long	n_sources = 0;
 
+	//	A layer param's u.ld is NOT populated by AE before render. v1.1 tested
+	//	params[idx]->u.ld.data and always saw NULL/0x0, so every Source Layer
+	//	looked unset and the effect silently fell back to its own input -- which
+	//	on an adjustment layer over an opaque background is invisible, and looked
+	//	like "selecting a source does nothing".
+	//
+	//	The SDK's own Checkout sample never reads params[CHECK_LAYER] at all; it
+	//	only ever calls PF_CHECKOUT_PARAM. Checking out IS the test.
 	for (A_long s = 0; s < OS_MAX_SOURCES; s++) {
-		A_long idx = OS_SOURCE_1 + s;
+		A_long		idx = OS_SOURCE_1 + s;
+		PF_ParamDef	probe;
+		PF_Err		perr;
 
-		OS_Log("  source param %ld: u.ld.data=%s  %ldx%ld",
-				(long)idx, params[idx]->u.ld.data ? "yes" : "NO",
-				(long)params[idx]->u.ld.width, (long)params[idx]->u.ld.height);
+		AEFX_CLR_STRUCT(probe);
+		perr = PF_CHECKOUT_PARAM(in_data, idx, in_data->current_time,
+									in_data->time_step, in_data->time_scale, &probe);
 
-		if (params[idx]->u.ld.data) {
+		A_Boolean liveB = (!perr && probe.u.ld.data != NULL);
+
+		OS_Log("  source param %ld: probe_err=%d  data=%s  %ldx%ld",
+				(long)idx, (int)perr, liveB ? "yes" : "NO",
+				liveB ? (long)probe.u.ld.width  : 0L,
+				liveB ? (long)probe.u.ld.height : 0L);
+
+		if (liveB) {
 			sources[n_sources++] = idx;
+		}
+		if (!perr) {
+			PF_CHECKIN_PARAM(in_data, &probe);
 		}
 	}
 	if (n_sources == 0) {
