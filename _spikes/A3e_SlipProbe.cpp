@@ -1,78 +1,89 @@
 /*
-	A3e_SlipProbe.cpp (Onion Skin) - Phase 0, spike A3e, out of process.
+	A3e_SlipProbe.cpp (Onion Skin) - Phase 0, spikes A3e and A3f, out of process.
 
-	THE QUESTION. A3d2 measured GDI screen capture at 16.7ms - one composition
-	sync, one display frame - and left the decision open: is one frame of
-	latency good enough for a glued overlay, or is Windows.Graphics.Capture
-	required? A3e answers it in the only currency that matters: HOW MANY PIXELS
-	DOES THE OVERLAY SLIP, and under which gesture.
+	A3e ASKED: is one frame of GDI capture latency good enough for a glued
+	overlay, or is Windows.Graphics.Capture required? Run 1 answered it, and the
+	answer was that latency was the wrong thing to worry about. Capture was
+	healthy (worst 25.3ms, no stall) and the typical slip sat ON the quantisation
+	floor - half a capture interval, which WGC is paced by too and would not buy
+	back. What busted the budget was the tail, and the tail was not lag.
+
+	A3f IS WHAT RUN 1 FOUND. For 12.6% of a 60s session the detector rejected
+	every capture and the overlay FROZE while the picture moved - the failure the
+	user reported as "it doesn't work when the comp bounds are out of the view".
+	Two causes, both measured off the screen recording:
+
+	  1. the comp drawn LARGER THAN THE PANEL (here at s > 0.675 vertically), so
+	     a scan line found background at neither end;
+	  2. the single fixed sample line MISSING A SMALL COMP at low zoom - at 21.9%
+	     the comp was 420x236 and the sample column fell just outside it.
+
+	This file now implements A3f stages 1 and 2.
+
+	STAGE 1a - PER-AXIS ACCEPTANCE. Run 1 rejected the WHOLE frame if either axis
+	failed. But at 69% zoom the comp's left and right edges were at x=493 and
+	x=1818, both comfortably inside the panel: the horizontal axis was perfectly
+	measurable and was thrown away because the vertical one was not. That single
+	policy accounted for the longest blind run in the session. tx and ty are now
+	accepted, held and aged INDEPENDENTLY.
+
+	STAGE 1b - MANY SAMPLE LINES, NOT ONE. Cause 2 is simply that one line can
+	miss. Several spread across the panel cannot all miss a comp big enough to
+	matter, and the pixels are already captured - the scan is O(w+h) per line, so
+	this costs nothing measurable.
+
+	AND THE CONTROL THAT HAD TO BE REPLACED. Accepting axes independently
+	DESTROYS the control A3d and A3e relied on: that both axes must imply the
+	same zoom. Dropping a control to make a fix fit is how a detector starts
+	lying, so it is replaced, not removed:
+
+	  - WITHIN an axis, the sample lines check each other. The comp is a
+	    rectangle, so every line that crosses it must return the SAME pair of
+	    edges. At least OS_MIN_AGREE lines must agree within OS_AGREE_TOL or the
+	    axis is refused. A line that locked onto a layer outline or a stray solid
+	    disagrees with its neighbours and is outvoted.
+	  - ACROSS axes, the old zoom check is KEPT and still applied whenever both
+	    axes are available - which is most of the time. It is now an additional
+	    check on top of the within-axis vote, not the only one.
+
+	So the detector is strictly better guarded than in run 1, not worse: it has a
+	control when both axes are present AND a control when only one is.
+
+	STAGE 2 - BLIND MUST BE VISIBLE AS BLIND. Run 1 held the last good t and kept
+	drawing a confident box. That is precisely the roadmap's founding failure - an
+	onion skin that lies about where the previous drawing was is worse than none.
+	Now: an axis with no fresh fix for OS_STALE_MS is drawn DASHED AND AMBER, and
+	if nothing has been measured for OS_HIDE_MS the overlay hides itself
+	completely. Holding a stale value silently is not an option any more.
 
 	WHY IT IS OUT OF PROCESS, AND WHY IT NEEDS NO AE AT ALL. A3d proved the comp
-	rectangle can be found from a captured panel, and that its span on the two
-	axes RECOVERS THE ZOOM as a by-product. So both halves of the transform,
-
-	    s  = span / comp_size          t  = the top-left crossing
-
-	come out of the capture itself. No AEGP, no ExtendScript, no re-entrancy,
-	and no way to take AE down - which two in-process A3d runs already did.
-	This is also the SHIPPING CONFIGURATION, not a stand-in for it: one
-	full-panel screen blit on a DEDICATED THREAD, an overlay repainting from
-	whatever that thread has most recently published.
-
-	The dedicated thread is the whole point. The 16.7ms is a SYNC WAIT, not CPU
-	burn, so a capture loop of its own never blocks the paint; the paint reads
-	the newest completed sample and returns. If capture were done inside the
-	paint instead, the full 16.7ms would land in the path and the answer to this
-	spike would be a different, worse number. Do not "simplify" that away.
+	rectangle can be found from a captured panel, and that its span on an axis
+	RECOVERS THE ZOOM. So both halves of the transform come out of the capture
+	itself - no AEGP, no ExtendScript, no re-entrancy, and no way to take AE down,
+	which two in-process A3d runs already did. This is also the SHIPPING
+	CONFIGURATION: one full-panel screen blit on a DEDICATED THREAD, an overlay
+	repainting from whatever that thread last published. The 16.7ms is a SYNC
+	WAIT, not CPU burn, so the capture loop never blocks the paint. Do not
+	"simplify" that away.
 
 	WHAT IS ON SCREEN
-	  green    the comp rectangle from the NEWEST capture - the shipping config
-	  magenta  the same, from a capture deliberately held OS_STALE_MS old
+	  green    the comp rectangle from the newest capture - the shipping config
+	  amber    dashed: that axis is STALE, the value is not currently trusted
+	  magenta  the same rectangle from a capture deliberately held OS_STALE_MS old
+	  nothing  fully blind - and shown as nothing, which is the honest answer
 
 	Magenta is the BROKEN CONTROL, and it is a control of the MEASUREMENT rather
 	than of the detector: if the analysis cannot separate a 100ms-stale overlay
-	from a live one, then it is not resolving lag at all and the run is INVALID -
-	it cannot pronounce 16.7ms acceptable, because it could not have detected
-	16.7ms being unacceptable. A control that only guards the subject and not the
-	instrument is how a null result gets mistaken for a pass.
+	from a live one, it is not resolving lag at all and may not pronounce on it.
 
 	THE TWO MEASUREMENTS, AND WHY NEITHER ALONE IS ENOUGH
 
-	  A3e_paints.txt   every paint: what it drew, and which capture it drew from.
-	                   Offline, the capture stream is interpolated to the paint's
-	                   own timestamp, and the difference is the slip. 60Hz, sub-
-	                   pixel, and it measures the PIPELINE ONLY - capture-to-
-	                   screen. It CANNOT see the sync lag itself, because the
-	                   capture stream is the reference and is equally late.
-	                   Therefore it is a LOWER BOUND, and it is labelled as one.
-
-	  a screen recording   the overlay against the actual comp, same instant,
-	                   whole chain. This is the number the verdict is read from.
-
-	The standing rule applies without exception here: when the claim is about
-	what the user sees, the check has to be what the user sees. The log explains
-	the video; it does not replace it. (pieFX S2 paid for that lesson once.)
-
-	PRE-COMMITTED READING - fixed before the first run, so the result cannot be
-	rationalised afterwards. Judged on the VIDEO, binned by gesture:
-
-	    at rest     <= 1 px      and   wheel scroll <= 5 px
-	    hand drag   <= 20 px
-	      -> GDI SHIPS. Windows.Graphics.Capture becomes a later polish item
-	         (for occlusion and self-capture), not a gate.
-
-	    anything worse
-	      -> WGC IS REQUIRED on Windows, and it must be built before Phase 1.
-
-	    magenta indistinguishable from green in the moving bins
-	      -> INVALID. Fix the instrument and re-run; report nothing.
-
-	SELF-CAPTURE. The detector reads exactly one row and one column of the
-	captured panel. The overlay leaves alpha at 0 on those two lines, so the
-	composited screen shows AE's pixels through the gap and the detector can
-	never converge on our own output. Both boxes obey it - the magenta control
-	is drawn OUTSIDE the comp edge while it lags, which is precisely where a
-	contaminated detector would lock onto it.
+	  A3e_paints.txt   what each paint drew and which capture it drew from. The
+	                   capture stream is the reference and is ITSELF one sync
+	                   late, so this measures the pipeline only. A LOWER BOUND,
+	                   and labelled as one.
+	  a screen recording   overlay against comp, same instant, whole chain. THE
+	                   VERDICT IS READ FROM THIS. (A3e_video.py.)
 
 	Build (from this directory, any Developer prompt):
 	    cl /nologo /EHsc /DUNICODE /D_UNICODE A3e_SlipProbe.cpp /link user32.lib gdi32.lib winmm.lib /OUT:os_A3e.exe
@@ -80,10 +91,9 @@
 	Usage:
 	    os_A3e.exe [comp_w] [comp_h] [seconds]      default 1920 1080 60
 
-	Hover over the comp viewer image area for the countdown, then USE AE:
-	hold still, wheel-scroll, then drag hard with the Hand tool. Record the
-	screen while you do it. The probe only reads pixels; it sends no input and
-	never touches AE's process.
+	Hover over the comp viewer image area for the countdown, then USE AE. Record
+	the screen. The probe only reads pixels; it sends no input and never touches
+	AE's process.
 */
 
 #include <windows.h>
@@ -97,15 +107,33 @@
 #define OS_RING			256		// capture history; ~4s at 60Hz
 #define OS_MAX_PAINTS	20000
 
+//	A3f stage 1b. Five lines per axis, spread across the panel. Odd fractions so
+//	they cannot share a symmetry with the comp edges at any round zoom, and none
+//	at the exact centre where the crosshair is drawn.
+#define OS_SCAN_LINES	5
+static const double kScanFrac[OS_SCAN_LINES] = {0.17, 0.33, 0.55, 0.71, 0.89};
+
+//	How close two lines' edge pairs must be to count as agreeing, and how many
+//	must agree before an axis is believed. Two is the minimum that can disagree
+//	at all; one line voting alone is an assertion, not a measurement.
+#define OS_AGREE_TOL	2.0
+#define OS_MIN_AGREE	2
+
+//	A3f stage 2. Beyond this an axis is drawn as untrusted; beyond the second,
+//	the overlay hides rather than show a stale rectangle.
+#define OS_STALE_LIMIT_MS	250.0
+#define OS_HIDE_MS			500.0
+
 /* ------------------------------------------------------------------ */
 /*  Shared state: one capture thread publishes, the paint reads.       */
 /* ------------------------------------------------------------------ */
 
+//	Per-axis validity, because A3f accepts the axes independently.
 typedef struct {
 	double	t_ms;			// when this capture was TAKEN (probe clock)
-	double	sx, sy;			// recovered zoom per axis
-	double	tx, ty;			// comp top-left in panel coords
-	int		ok;				// 1 if accepted by the axis-agreement control
+	double	sx, tx;			// horizontal: zoom and comp left
+	double	sy, ty;			// vertical:   zoom and comp top
+	int		okx, oky;
 } Sample;
 
 static CRITICAL_SECTION	g_lock;
@@ -121,13 +149,15 @@ static int				g_comp_w	= 1920, g_comp_h = 1080;
 static LARGE_INTEGER	g_freq, g_t0;
 
 //	Capture-thread tallies, read only after the join.
-static long		g_cap_total = 0, g_cap_ok = 0, g_cap_noedge = 0, g_cap_axis = 0;
-static long		g_cap_ends = 0, g_cap_notrans = 0;
+static long		g_cap_total = 0, g_cap_bothx = 0, g_cap_okx = 0, g_cap_oky = 0;
+static long		g_cap_blind = 0, g_cap_axis = 0, g_cap_onlyx = 0, g_cap_onlyy = 0;
 static double	g_cap_cost_sum = 0.0, g_cap_cost_worst = 0.0;
 
-//	The scan line and column, recomputed per capture from the panel size. The
-//	paint needs them too, to leave its alpha gap in the right place.
-static volatile LONG g_scan_row = -1, g_scan_col = -1;
+//	The sample lines, published so the paint can leave its alpha gaps on exactly
+//	the lines the detector reads.
+static CRITICAL_SECTION	g_line_lock;
+static int		g_rows[OS_SCAN_LINES], g_cols[OS_SCAN_LINES];
+static int		g_nlines = 0;
 
 static double
 NowMs(void)
@@ -137,7 +167,7 @@ NowMs(void)
 }
 
 /* ------------------------------------------------------------------ */
-/*  Detection - the A3d method, unchanged, because it already passed.  */
+/*  Detection                                                          */
 /* ------------------------------------------------------------------ */
 
 static HDC		g_capDC		= NULL;
@@ -155,8 +185,7 @@ FreeCapture(void)
 
 //	Allocated once per panel size, NEVER per frame. A3d's in-process run was
 //	allocating and blitting a 3.6MB DIB up to 125 times a second on AE's UI
-//	thread - ~450MB/s of GDI work - and that is a plausible half of why AE
-//	froze. The constraint survives into the product.
+//	thread - ~450MB/s of GDI work - and that is a plausible half of why AE froze.
 static bool
 EnsureCapture(HDC screenDC, int pw, int ph)
 {
@@ -190,18 +219,15 @@ PixDiff(const BYTE *a, const BYTE *b)
 	return d;
 }
 
-//	Why a scan failed. "no_edge" lumped three different causes together, and the
-//	first run's 12.6% blind time could not be attributed to any of them: the comp
-//	was fully inside the panel, both edges on screen, and the sample lines
-//	crossing it, on every single blind run. So the probe must say WHICH test
-//	rejected the line rather than leave the cause to be inferred from geometry
-//	that has already been ruled out.
+//	Why one line failed. Kept split rather than lumped as "no_edge", because run
+//	1's blind time could not be attributed without knowing which test rejected
+//	it - the geometry alone cleared every suspect.
 enum {
 	kScanOK = 0,
-	kScanTooShort,		//	line shorter than the minimum
-	kScanEndsDiffer,	//	the two ends are not the same colour: comp runs off
-	kScanNoTransition,	//	the whole line is background: comp misses this line
-	kScanDegenerate		//	found a start but no end past it
+	kScanTooShort,
+	kScanEndsDiffer,	//	the comp runs off that side of the line
+	kScanNoTransition,	//	the line never crossed the comp at all
+	kScanDegenerate
 };
 
 //	First and last pixel on the line differing from the line's own background.
@@ -215,8 +241,6 @@ Scan(const BYTE *bits, int n, int step, int *loP, int *hiP)
 	const BYTE *a = bits + (size_t)2 * step;
 	const BYTE *b = bits + (size_t)(n - 3) * step;
 
-	//	Both ends must be background, or the comp runs off that side and no edge
-	//	is on screen. At high zoom that is the CORRECT answer, not a failure.
 	if (PixDiff(a, b) > BG_TOL) return kScanEndsDiffer;
 
 	int lo = -1, hi = -1;
@@ -231,19 +255,77 @@ Scan(const BYTE *bits, int n, int step, int *loP, int *hiP)
 	return kScanOK;
 }
 
-static const char *
-ScanWhy(int h, int v)
+//	A3f stage 1: scan every sample line on one axis and let them vote.
+//
+//	THE WITHIN-AXIS CONTROL. The comp is a rectangle, so every line that crosses
+//	it must return the SAME two edges. Lines are clustered on their (lo, hi) pair
+//	and the largest cluster wins; fewer than OS_MIN_AGREE agreeing means the axis
+//	is refused, not guessed. This is what replaces the cross-axis zoom check when
+//	only one axis is available - a line that locked onto a layer outline or a
+//	stray solid disagrees with its neighbours and is outvoted.
+//
+//	Returns the number of lines that agreed (0 = axis refused), and reports the
+//	most common failure reason so blind time stays attributable.
+static int
+DetectAxis(const BYTE *base, int nlines, const int *at,
+           int n, int step, int line_step,
+           double *loP, double *hiP, int *whyP)
 {
-	static const char *names[] = {"ok", "short", "ends_differ", "no_transition",
-	                              "degenerate"};
-	static char buf[64];
-	sprintf(buf, "h_%s/v_%s", names[h], names[v]);
-	return buf;
+	int lo[OS_SCAN_LINES], hi[OS_SCAN_LINES], got = 0;
+	int why_count[5] = {0, 0, 0, 0, 0};
+
+	for (int i = 0; i < nlines; ++i) {
+		int l = 0, h = 0;
+		int why = Scan(base + (size_t)at[i] * line_step, n, step, &l, &h);
+		++why_count[why];
+		if (why == kScanOK) { lo[got] = l; hi[got] = h; ++got; }
+	}
+
+	//	Report the commonest reason among the lines that failed, so a blind
+	//	frame says WHY rather than merely that it happened.
+	int why_best = kScanNoTransition, best_n = -1;
+	for (int w = 1; w < 5; ++w)
+		if (why_count[w] > best_n) { best_n = why_count[w]; why_best = w; }
+	*whyP = why_best;
+
+	if (got < OS_MIN_AGREE) return 0;
+
+	//	Largest cluster of agreeing lines.
+	int best_i = -1, best_c = 0;
+	for (int i = 0; i < got; ++i) {
+		int c = 0;
+		for (int j = 0; j < got; ++j)
+			if (fabs((double)lo[j] - lo[i]) <= OS_AGREE_TOL &&
+			    fabs((double)hi[j] - hi[i]) <= OS_AGREE_TOL) ++c;
+		if (c > best_c) { best_c = c; best_i = i; }
+	}
+	if (best_c < OS_MIN_AGREE) return 0;
+
+	//	Median of the winning cluster, so one ragged line cannot pull the answer.
+	double sl = 0.0, sh = 0.0;
+	int c = 0;
+	for (int j = 0; j < got; ++j)
+		if (fabs((double)lo[j] - lo[best_i]) <= OS_AGREE_TOL &&
+		    fabs((double)hi[j] - hi[best_i]) <= OS_AGREE_TOL) {
+			sl += lo[j]; sh += hi[j]; ++c;
+		}
+	*loP = sl / c;
+	*hiP = sh / c;
+	*whyP = kScanOK;
+	return best_c;
 }
 
 /* ------------------------------------------------------------------ */
 /*  The capture thread.                                               */
 /* ------------------------------------------------------------------ */
+
+static const char *
+WhyName(int w)
+{
+	static const char *n[] = {"ok", "short", "ends_differ", "no_transition",
+	                          "degenerate"};
+	return n[w];
+}
 
 static DWORD WINAPI
 CaptureThread(LPVOID)
@@ -251,9 +333,9 @@ CaptureThread(LPVOID)
 	HDC screenDC = GetDC(NULL);
 	FILE *clog = _wfopen(L"A3e_captures.txt", L"w");
 	if (clog) {
-		fprintf(clog, "# onion skin A3e capture stream (dedicated thread)\n");
+		fprintf(clog, "# onion skin A3e/A3f capture stream (dedicated thread)\n");
 		fprintf(clog, "# comp\t%d\t%d\n", g_comp_w, g_comp_h);
-		fprintf(clog, "t_ms\tpw\tph\tsx\tsy\ttx\tty\taxis_diff_pct\tcost_ms\tstatus\n");
+		fprintf(clog, "t_ms\tpw\tph\tsx\tsy\ttx\tty\taxis_diff_pct\tcost_ms\tstatus\tnx\tny\twhy_x\twhy_y\n");
 	}
 
 	while (!InterlockedCompareExchange(&g_stop, 0, 0)) {
@@ -262,77 +344,99 @@ CaptureThread(LPVOID)
 		POINT origin = {0, 0}; ClientToScreen(g_viewer, &origin);
 		if (pw <= 0 || ph <= 0) { Sleep(16); continue; }
 
-		int row = ph / 2 + 37; if (row < 0 || row >= ph) row = ph / 2;
-		int col = pw / 2 + 53; if (col < 0 || col >= pw) col = pw / 2;
-		InterlockedExchange(&g_scan_row, row);
-		InterlockedExchange(&g_scan_col, col);
+		int rows[OS_SCAN_LINES], cols[OS_SCAN_LINES];
+		for (int i = 0; i < OS_SCAN_LINES; ++i) {
+			rows[i] = (int)(kScanFrac[i] * ph);
+			cols[i] = (int)(kScanFrac[i] * pw);
+			if (rows[i] < 1) rows[i] = 1;
+			if (rows[i] > ph - 2) rows[i] = ph - 2;
+			if (cols[i] < 1) cols[i] = 1;
+			if (cols[i] > pw - 2) cols[i] = pw - 2;
+		}
+		EnterCriticalSection(&g_line_lock);
+		memcpy(g_rows, rows, sizeof(rows));
+		memcpy(g_cols, cols, sizeof(cols));
+		g_nlines = OS_SCAN_LINES;
+		LeaveCriticalSection(&g_line_lock);
 
 		double c0 = NowMs();
 
-		int x0 = 0, x1 = 0, y0 = 0, y1 = 0;
-		const char *status = "ok";
-		bool got = false;
-		int why_h = kScanOK, why_v = kScanOK;
+		double x0 = 0, x1 = 0, y0 = 0, y1 = 0;
+		int nx = 0, ny = 0, why_x = kScanNoTransition, why_y = kScanNoTransition;
 
 		if (EnsureCapture(screenDC, pw, ph)) {
 			HGDIOBJ old = SelectObject(g_capDC, g_capBmp);
 			//	ONE full-panel blit from the screen DC. A3d2: this costs the
-			//	same as a 1px strip (16.744 vs 16.575ms) because the price is
-			//	one composition sync and the pixels are free.
+			//	same as a 1px strip - the price is one composition sync and the
+			//	pixels are free. Which is exactly why sampling five lines per
+			//	axis instead of one is free too.
 			BitBlt(g_capDC, 0, 0, pw, ph, screenDC, origin.x, origin.y, SRCCOPY);
 			SelectObject(g_capDC, old);
 
-			why_h = Scan(g_capBits + (size_t)row * g_capStride, pw, 3, &x0, &x1);
-			why_v = Scan(g_capBits + (size_t)col * 3, ph, g_capStride, &y0, &y1);
-			if (why_h != kScanOK || why_v != kScanOK) status = ScanWhy(why_h, why_v);
-			else got = true;
-		} else {
-			status = "no_capture";
+			nx = DetectAxis(g_capBits, OS_SCAN_LINES, rows, pw, 3, g_capStride,
+			                &x0, &x1, &why_x);
+			ny = DetectAxis(g_capBits, OS_SCAN_LINES, cols, ph, g_capStride, 3,
+			                &y0, &y1, &why_y);
 		}
 
 		double c1 = NowMs();
 		double cost = c1 - c0;
-		//	Timestamp the sample at the MIDPOINT of the blit, not its end. The
-		//	pixels are a snapshot taken somewhere inside that 16.7ms window;
-		//	stamping it at the end would build a systematic half-frame error
-		//	straight into the slip number the spike exists to measure.
+		//	Timestamp at the MIDPOINT of the blit. The pixels are a snapshot
+		//	somewhere inside that window; stamping at the end would build a
+		//	systematic half-frame error into the number being measured.
 		double t_taken = (c0 + c1) * 0.5;
 
-		double sx = 0, sy = 0, tx = 0, ty = 0, diff = 0;
-		if (got) {
-			sx = (double)(x1 - x0 + 1) / g_comp_w;
-			sy = (double)(y1 - y0 + 1) / g_comp_h;
-			//	THE DETECTOR'S CONTROL, carried from A3d: both axes must imply
-			//	the same zoom, or what was found is not the comp.
+		double sx = 0, sy = 0, diff = 0;
+		int okx = 0, oky = 0;
+		const char *status = "blind";
+
+		if (nx) sx = (x1 - x0 + 1.0) / g_comp_w;
+		if (ny) sy = (y1 - y0 + 1.0) / g_comp_h;
+
+		if (nx && ny) {
+			//	THE CROSS-AXIS CONTROL, KEPT. Whenever both axes are available
+			//	they must imply the same zoom, exactly as in A3d and A3e. Going
+			//	per-axis added a control, it did not trade this one away.
 			diff = (sy > 0) ? fabs(sx - sy) / sy : 1.0;
-			if (diff > AXIS_TOL) { status = "axis_disagree"; got = false; ++g_cap_axis; }
-			else { tx = (double)x0; ty = (double)y0; ++g_cap_ok; }
-		} else if (why_h != kScanOK || why_v != kScanOK) {
-			++g_cap_noedge;
-			if (why_h == kScanEndsDiffer || why_v == kScanEndsDiffer) ++g_cap_ends;
-			if (why_h == kScanNoTransition || why_v == kScanNoTransition) ++g_cap_notrans;
+			if (diff > AXIS_TOL) {
+				++g_cap_axis;
+				status = "axis_disagree";		// both refused, as before
+			} else {
+				okx = oky = 1;
+				status = "ok";
+				++g_cap_bothx;
+			}
+		} else if (nx) {
+			okx = 1; status = "x_only"; ++g_cap_onlyx;
+		} else if (ny) {
+			oky = 1; status = "y_only"; ++g_cap_onlyy;
 		}
+
+		if (okx) ++g_cap_okx;
+		if (oky) ++g_cap_oky;
+		if (!okx && !oky) ++g_cap_blind;
 
 		++g_cap_total;
 		g_cap_cost_sum += cost;
 		if (cost > g_cap_cost_worst) g_cap_cost_worst = cost;
 
-		if (got) {
+		if (okx || oky) {
 			EnterCriticalSection(&g_lock);
 			Sample *s = &g_ring[g_head % OS_RING];
-			s->t_ms = t_taken; s->sx = sx; s->sy = sy;
-			s->tx = tx; s->ty = ty; s->ok = 1;
+			s->t_ms = t_taken;
+			s->sx = sx; s->tx = x0; s->okx = okx;
+			s->sy = sy; s->ty = y0; s->oky = oky;
 			++g_head; if (g_filled < OS_RING) ++g_filled;
 			LeaveCriticalSection(&g_lock);
 		}
 
 		if (clog)
-			fprintf(clog, "%.3f\t%d\t%d\t%.6f\t%.6f\t%.2f\t%.2f\t%.3f\t%.4f\t%s\n",
-			        t_taken, pw, ph, sx, sy, tx, ty, diff * 100.0, cost, status);
+			fprintf(clog, "%.3f\t%d\t%d\t%.6f\t%.6f\t%.2f\t%.2f\t%.3f\t%.4f\t%s\t%d\t%d\t%s\t%s\n",
+			        t_taken, pw, ph, sx, sy, x0, y0, diff * 100.0, cost, status,
+			        nx, ny, WhyName(why_x), WhyName(why_y));
 
 		//	No Sleep. The BitBlt's own composition sync paces this loop at the
-		//	display rate, which is exactly the cadence being characterised.
-		//	Adding a sleep would measure the sleep.
+		//	display rate, which is the cadence being characterised.
 	}
 
 	if (clog) fclose(clog);
@@ -342,21 +446,28 @@ CaptureThread(LPVOID)
 }
 
 /* ------------------------------------------------------------------ */
-/*  Reading the ring: newest, and newest that is at least age_ms old.  */
+/*  Reading the ring, PER AXIS - that is the whole of stage 1a.        */
 /* ------------------------------------------------------------------ */
 
+//	Newest sample whose chosen axis is valid and which is at least age_ms old.
+//	Each axis ages on its own clock, so one going blind no longer freezes the
+//	other - which in run 1 threw away a perfectly good horizontal fix for 2.7s.
 static bool
-GetSample(double now_ms, double age_ms, Sample *out)
+GetAxis(double now_ms, double age_ms, int want_x,
+        double *sP, double *tP, double *whenP)
 {
 	bool found = false;
 	EnterCriticalSection(&g_lock);
-	//	Walk back from newest. age_ms == 0 takes the newest; otherwise the most
-	//	recent sample that is already at least that old, which is what a
-	//	pipeline running age_ms behind would have had available.
 	for (long i = 1; i <= g_filled; ++i) {
 		Sample *s = &g_ring[(g_head - i + OS_RING * 2) % OS_RING];
-		if (!s->ok) continue;
-		if (now_ms - s->t_ms >= age_ms) { *out = *s; found = true; break; }
+		if (want_x ? !s->okx : !s->oky) continue;
+		if (now_ms - s->t_ms >= age_ms) {
+			*sP = want_x ? s->sx : s->sy;
+			*tP = want_x ? s->tx : s->ty;
+			*whenP = s->t_ms;
+			found = true;
+			break;
+		}
 	}
 	LeaveCriticalSection(&g_lock);
 	return found;
@@ -367,8 +478,9 @@ GetSample(double now_ms, double age_ms, Sample *out)
 /* ------------------------------------------------------------------ */
 
 static FILE		*g_plog		= NULL;
-static long		g_paints	= 0;
+static long		g_paints	= 0, g_paints_hidden = 0, g_paints_stale = 0;
 static double	g_last_paint = 0.0, g_paint_gap_sum = 0.0, g_paint_gap_worst = 0.0;
+static bool		g_shown		= true;
 
 static LRESULT CALLBACK
 OverlayWndProc(HWND h, UINT m, WPARAM w, LPARAM l)
@@ -384,20 +496,42 @@ Paint(void)
 	if (pw <= 0 || ph <= 0) return;
 
 	POINT origin = {0, 0}; ClientToScreen(g_viewer, &origin);
-
-	//	Follow the panel every paint: it can be moved or resized while we are
-	//	up, and an overlay pinned at arm time is glued to nothing.
 	SetWindowPos(g_overlay, HWND_TOPMOST, origin.x, origin.y, pw, ph, SWP_NOACTIVATE);
 
 	double now = NowMs();
 
-	Sample live, stale;
-	bool have_live  = GetSample(now, 0.0, &live);
-	bool have_stale = GetSample(now, OS_STALE_MS, &stale);
-	if (!have_live) return;
+	double sx = 0, tx = 0, wx = 0, sy = 0, ty = 0, wy = 0;
+	bool hx = GetAxis(now, 0.0, 1, &sx, &tx, &wx);
+	bool hy = GetAxis(now, 0.0, 0, &sy, &ty, &wy);
 
-	int scan_row = (int)InterlockedCompareExchange(&g_scan_row, -1, -1);
-	int scan_col = (int)InterlockedCompareExchange(&g_scan_col, -1, -1);
+	double age_x = hx ? now - wx : 1e9;
+	double age_y = hy ? now - wy : 1e9;
+
+	//	A3f STAGE 2. An axis with no fresh fix is UNTRUSTED, and beyond
+	//	OS_HIDE_MS the overlay shows nothing at all. Run 1 held the last good
+	//	value and kept drawing a confident rectangle; that is the roadmap's
+	//	founding failure - an onion skin that lies about where the drawing was is
+	//	worse than no onion skin. Being wrong is not allowed to look like being
+	//	right.
+	bool stale_x = !hx || age_x > OS_STALE_LIMIT_MS;
+	bool stale_y = !hy || age_y > OS_STALE_LIMIT_MS;
+	bool hide    = (!hx && !hy) ||
+	               (age_x > OS_HIDE_MS && age_y > OS_HIDE_MS);
+
+	if (hide) {
+		if (g_shown) { ShowWindow(g_overlay, SW_HIDE); g_shown = false; }
+		++g_paints_hidden;
+		++g_paints;
+		if (g_plog && g_paints < OS_MAX_PAINTS)
+			fprintf(g_plog, "%.3f\t\t\t\t\t0\t\t\t\t0.0\thidden\n", now);
+		return;
+	}
+	if (!g_shown) { ShowWindow(g_overlay, SW_SHOWNOACTIVATE); g_shown = true; }
+	if (stale_x || stale_y) ++g_paints_stale;
+
+	double sxs = 0, txs = 0, wxs = 0, sys = 0, tys = 0, wys = 0;
+	bool cx = GetAxis(now, OS_STALE_MS, 1, &sxs, &txs, &wxs);
+	bool cy = GetAxis(now, OS_STALE_MS, 0, &sys, &tys, &wys);
 
 	int stride = pw * 4;
 	BYTE *bits = NULL;
@@ -415,36 +549,63 @@ Paint(void)
 	HBITMAP dib  = CreateDIBSection(memDC, &bi, DIB_RGB_COLORS, (void **)&bits, NULL, 0);
 	HGDIOBJ old  = SelectObject(memDC, dib);
 
+	int rows[OS_SCAN_LINES], cols[OS_SCAN_LINES], nlines;
+	EnterCriticalSection(&g_line_lock);
+	memcpy(rows, g_rows, sizeof(rows));
+	memcpy(cols, g_cols, sizeof(cols));
+	nlines = g_nlines;
+	LeaveCriticalSection(&g_line_lock);
+
 	if (bits) {
 		memset(bits, 0, (size_t)stride * ph);
 
-		//	Alpha stays 0 on the scan row and column so the detector reads AE
-		//	through the gap and can never converge on our own output.
-		#define OS_PLOT(px, py, B, G, R) do {                          \
-			int xx = (int)(px), yy = (int)(py);                        \
-			if (xx >= 0 && xx < pw && yy >= 0 && yy < ph                \
-			    && yy != scan_row && xx != scan_col) {                 \
-				BYTE *p = bits + (size_t)yy * stride + (size_t)xx * 4; \
-				p[0] = (B); p[1] = (G); p[2] = (R); p[3] = 255;        \
-			} } while (0)
+		//	Alpha stays 0 on EVERY sample line - five rows and five columns now,
+		//	not one of each - so the detector always reads AE through the gap and
+		//	can never converge on our own output.
+		#define OS_PLOT(px, py, B, G, R) do {                              \
+			int xx = (int)(px), yy = (int)(py);                            \
+			if (xx >= 0 && xx < pw && yy >= 0 && yy < ph) {                \
+				int _hit = 0;                                              \
+				for (int _k = 0; _k < nlines; ++_k)                        \
+					if (yy == rows[_k] || xx == cols[_k]) { _hit = 1; break; } \
+				if (!_hit) {                                               \
+					BYTE *p = bits + (size_t)yy * stride + (size_t)xx * 4; \
+					p[0] = (B); p[1] = (G); p[2] = (R); p[3] = 255;        \
+				} } } while (0)
 
-		#define OS_BOX(S, B, G, R, thick) do {                                     \
-			double _x0 = (S).tx, _y0 = (S).ty;                                     \
-			double _x1 = (S).tx + (S).sx * g_comp_w;                               \
-			double _y1 = (S).ty + (S).sy * g_comp_h;                               \
+		//	dash != 0 draws a broken line: that is what "do not trust this edge"
+		//	looks like without hiding information the run still needs.
+		#define OS_BOX(X0, Y0, X1, Y1, B, G, R, thick, dash) do {                   \
 			for (int _t = 0; _t < (thick); ++_t) {                                 \
-				for (double _x = _x0; _x <= _x1; _x += 1.0) {                       \
-					OS_PLOT(_x, _y0 + _t, B, G, R); OS_PLOT(_x, _y1 - _t, B, G, R); \
+				for (double _x = (X0); _x <= (X1); _x += 1.0) {                     \
+					if ((dash) && ((int)_x / 8) % 2) continue;                      \
+					OS_PLOT(_x, (Y0) + _t, B, G, R);                               \
+					OS_PLOT(_x, (Y1) - _t, B, G, R);                               \
 				}                                                                   \
-				for (double _y = _y0; _y <= _y1; _y += 1.0) {                       \
-					OS_PLOT(_x0 + _t, _y, B, G, R); OS_PLOT(_x1 - _t, _y, B, G, R); \
+				for (double _y = (Y0); _y <= (Y1); _y += 1.0) {                     \
+					if ((dash) && ((int)_y / 8) % 2) continue;                      \
+					OS_PLOT((X0) + _t, _y, B, G, R);                               \
+					OS_PLOT((X1) - _t, _y, B, G, R);                               \
 				}                                                                   \
 			} } while (0)
 
-		//	Magenta FIRST so green wins where they overlap - at rest they
-		//	coincide, and the eye should see one green box, not a muddled one.
-		if (have_stale) OS_BOX(stale, 255, 40, 255, 2);
-		OS_BOX(live, 40, 255, 40, 3);
+		double bx0 = tx, bx1 = tx + sx * g_comp_w;
+		double by0 = ty, by1 = ty + sy * g_comp_h;
+
+		//	An axis with no fix at all has no extent to draw; fall back to the
+		//	panel so the other axis is still legible, and dash it.
+		if (!hx) { bx0 = 0; bx1 = pw - 1; }
+		if (!hy) { by0 = 0; by1 = ph - 1; }
+
+		//	Magenta first so green wins where they coincide.
+		if (cx && cy)
+			OS_BOX(txs, tys, txs + sxs * g_comp_w, tys + sys * g_comp_h,
+			       255, 40, 255, 2, 0);
+
+		if (stale_x || stale_y)
+			OS_BOX(bx0, by0, bx1, by1, 40, 190, 255, 3, 1);		// amber, dashed
+		else
+			OS_BOX(bx0, by0, bx1, by1, 40, 255, 40, 3, 0);		// green, solid
 
 		#undef OS_BOX
 		#undef OS_PLOT
@@ -470,17 +631,15 @@ Paint(void)
 	}
 	g_last_paint = now;
 
-	//	One row per paint. src_t_ms is when the pixels we drew were CAPTURED, so
-	//	(t_ms - src_t_ms) is the age of what is on screen. The analyser
-	//	interpolates the capture stream to t_ms to get the slip in pixels.
 	if (g_plog && g_paints < OS_MAX_PAINTS)
-		fprintf(g_plog, "%.3f\t%.3f\t%.2f\t%.2f\t%.6f\t%d\t%.3f\t%.2f\t%.2f\t%.4f\n",
-		        now, live.t_ms, live.tx, live.ty, live.sx,
-		        have_stale ? 1 : 0,
-		        have_stale ? stale.t_ms : -9999.0,
-		        have_stale ? stale.tx : -9999.0,
-		        have_stale ? stale.ty : -9999.0,
-		        done - now);
+		fprintf(g_plog, "%.3f\t%.3f\t%.2f\t%.2f\t%.6f\t%d\t%.3f\t%.2f\t%.2f\t%.4f\t%s\n",
+		        now, hx ? wx : -9999.0, tx, ty, sx,
+		        (cx && cy) ? 1 : 0,
+		        (cx && cy) ? wxs : -9999.0,
+		        (cx && cy) ? txs : -9999.0,
+		        (cx && cy) ? tys : -9999.0,
+		        done - now,
+		        (stale_x || stale_y) ? "stale" : "ok");
 	++g_paints;
 }
 
@@ -509,8 +668,9 @@ wmain(int argc, wchar_t **argv)
 	QueryPerformanceFrequency(&g_freq);
 	QueryPerformanceCounter(&g_t0);
 	InitializeCriticalSection(&g_lock);
+	InitializeCriticalSection(&g_line_lock);
 
-	wprintf(L"A3e slip probe - comp %dx%d, %ds\n", g_comp_w, g_comp_h, secs);
+	wprintf(L"A3e/A3f slip probe - comp %dx%d, %ds\n", g_comp_w, g_comp_h, secs);
 	wprintf(L"Hover over the COMP VIEWER IMAGE AREA...\n");
 	for (int i = 5; i > 0; --i) { wprintf(L"  %d...\n", i); Sleep(1000); }
 
@@ -532,8 +692,6 @@ wmain(int argc, wchar_t **argv)
 	RECT cr; GetClientRect(g_viewer, &cr);
 	POINT origin = {0, 0}; ClientToScreen(g_viewer, &origin);
 
-	//	WS_EX_TRANSPARENT | WS_EX_NOACTIVATE: an overlay that ate the viewer's
-	//	clicks or stole its focus would fail as a product however well it tracks.
 	g_overlay = CreateWindowExW(
 		WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOPMOST |
 		WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW,
@@ -545,30 +703,32 @@ wmain(int argc, wchar_t **argv)
 
 	g_plog = _wfopen(L"A3e_paints.txt", L"w");
 	if (g_plog) {
-		fprintf(g_plog, "# onion skin A3e paint log\n");
+		fprintf(g_plog, "# onion skin A3e/A3f paint log\n");
 		fprintf(g_plog, "# comp\t%d\t%d\n", g_comp_w, g_comp_h);
 		fprintf(g_plog, "# stale_ms\t%.1f\n", OS_STALE_MS);
-		fprintf(g_plog, "t_ms\tsrc_t_ms\ttx\tty\tsx\thave_stale\tstale_t_ms\tstale_tx\tstale_ty\tpaint_ms\n");
+		fprintf(g_plog, "t_ms\tsrc_t_ms\ttx\tty\tsx\thave_stale\tstale_t_ms\tstale_tx\tstale_ty\tpaint_ms\ttrust\n");
 	}
 
 	HANDLE cap = CreateThread(NULL, 0, CaptureThread, NULL, 0, NULL);
 	if (!cap) { wprintf(L"FAIL: no capture thread.\n"); return 1; }
-	//	Above normal: it must not be starved by the paint, or the "one frame"
-	//	claim becomes a claim about the scheduler.
 	SetThreadPriority(cap, THREAD_PRIORITY_ABOVE_NORMAL);
 
-	//	A3a: a 16ms request lands as ~30ms at Windows' default 15.6ms
-	//	granularity. Raise it so the cadence measured is the real ceiling.
 	timeBeginPeriod(1);
 	UINT_PTR timer = SetTimer(NULL, 0, OS_TICK_MS, TickProc);
 
-	wprintf(L"\nOVERLAY UP. Green = live capture. Magenta = %.0fms stale (the control).\n",
-	        OS_STALE_MS);
-	wprintf(L"START YOUR SCREEN RECORDING NOW, then in order:\n");
-	wprintf(L"  1. hold completely still      (~10s)\n");
-	wprintf(L"  2. wheel-scroll the viewer    (~15s)\n");
-	wprintf(L"  3. hand-tool drag, hard       (~15s)\n");
-	wprintf(L"  4. hold still again           (~10s)\n\n");
+	wprintf(L"\nOVERLAY UP.\n");
+	wprintf(L"  GREEN solid   = live fix on both axes\n");
+	wprintf(L"  AMBER dashed  = an axis is STALE (>%.0fms) - do not trust it\n",
+	        OS_STALE_LIMIT_MS);
+	wprintf(L"  NOTHING       = fully blind (>%.0fms). Honest, and the point of stage 2.\n",
+	        OS_HIDE_MS);
+	wprintf(L"  MAGENTA       = the %.0fms-stale measurement control\n", OS_STALE_MS);
+	wprintf(L"\nSTART RECORDING, then in order:\n");
+	wprintf(L"  1. hold still                     (~10s)\n");
+	wprintf(L"  2. wheel-scroll                   (~10s)\n");
+	wprintf(L"  3. hand-drag hard                 (~10s)\n");
+	wprintf(L"  4. ZOOM PAST 100%% and pan around  (~20s)  <- the A3f case\n");
+	wprintf(L"  5. zoom way OUT, small comp, pan  (~10s)  <- the other A3f case\n\n");
 
 	DWORD end = GetTickCount() + (DWORD)secs * 1000;
 	MSG msg;
@@ -590,26 +750,34 @@ wmain(int argc, wchar_t **argv)
 	DestroyWindow(g_overlay);
 	if (g_plog) fclose(g_plog);
 	DeleteCriticalSection(&g_lock);
+	DeleteCriticalSection(&g_line_lock);
 
 	wprintf(L"\nCAPTURE THREAD\n");
 	wprintf(L"  samples        %ld\n", g_cap_total);
-	wprintf(L"  accepted       %ld  (%.1f%%)\n", g_cap_ok,
-	        g_cap_total ? 100.0 * g_cap_ok / g_cap_total : 0.0);
-	wprintf(L"  no edge        %ld   (correct at high zoom)\n", g_cap_noedge);
-	wprintf(L"  axes disagree  %ld   (times it would have LIED)\n", g_cap_axis);
+	wprintf(L"  both axes      %ld  (%.1f%%)\n", g_cap_bothx,
+	        g_cap_total ? 100.0 * g_cap_bothx / g_cap_total : 0.0);
+	wprintf(L"  x only         %ld   <- would have been BLIND in run 1\n", g_cap_onlyx);
+	wprintf(L"  y only         %ld   <- would have been BLIND in run 1\n", g_cap_onlyy);
+	wprintf(L"  axes disagree  %ld   (both refused - the cross-axis control)\n", g_cap_axis);
+	wprintf(L"  FULLY BLIND    %ld  (%.1f%%)  <- THE A3f NUMBER\n", g_cap_blind,
+	        g_cap_total ? 100.0 * g_cap_blind / g_cap_total : 0.0);
+	wprintf(L"  x available    %ld  (%.1f%%)\n", g_cap_okx,
+	        g_cap_total ? 100.0 * g_cap_okx / g_cap_total : 0.0);
+	wprintf(L"  y available    %ld  (%.1f%%)\n", g_cap_oky,
+	        g_cap_total ? 100.0 * g_cap_oky / g_cap_total : 0.0);
 	wprintf(L"  cost mean      %.3f ms   worst %.3f ms\n",
 	        g_cap_total ? g_cap_cost_sum / g_cap_total : 0.0, g_cap_cost_worst);
-	wprintf(L"  effective rate %.1f Hz\n",
-	        g_cap_cost_sum > 0 ? 1000.0 * g_cap_total / g_cap_cost_sum : 0.0);
 
 	wprintf(L"\nPAINT THREAD\n");
 	wprintf(L"  paints         %ld\n", g_paints);
+	wprintf(L"  drawn stale    %ld  (amber dashed - shown as untrusted)\n", g_paints_stale);
+	wprintf(L"  hidden         %ld  (%.1f%% - shown as nothing, which is honest)\n",
+	        g_paints_hidden, g_paints ? 100.0 * g_paints_hidden / g_paints : 0.0);
 	wprintf(L"  gap mean       %.2f ms   worst %.2f ms\n",
 	        g_paints > 1 ? g_paint_gap_sum / (g_paints - 1) : 0.0, g_paint_gap_worst);
 
 	wprintf(L"\nwrote A3e_captures.txt and A3e_paints.txt\n");
-	wprintf(L"Run:  py A3e_analyse.py\n");
-	wprintf(L"THE VERDICT IS READ FROM THE VIDEO. The log is a lower bound on\n");
-	wprintf(L"slip - it cannot see the capture sync, only the pipeline after it.\n");
+	wprintf(L"A3f PASSES if FULLY BLIND is under 1%% across the matrix above,\n");
+	wprintf(L"and every remaining blind frame was SHOWN as blind.\n");
 	return 0;
 }

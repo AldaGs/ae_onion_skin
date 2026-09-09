@@ -888,6 +888,113 @@ Recorded because three of them produced *plausible* numbers rather than errors.
 Fault 4 is the one worth carrying: **do not grade an instrument on a statistic
 that the measurand degrades.**
 
+### A3f — blindness, stages 1 and 2 (built 2026-09-09)
+
+A3e run 1 left the latency question answered and a worse one open: the detector
+went blind for **12.6%** of a normal session and the overlay froze while the
+picture moved. A3f is the fix, and it is a **gate** — high zoom is when onion
+skinning is wanted most and high zoom is where the blindness is.
+
+#### Stage 1a — per-axis acceptance, and the correction that prompted it
+
+Run 1 rejected the **whole frame** if either axis failed. But looking at the
+recording at 43.3 s, at 69% zoom, the comp's left and right edges sat at x=493
+and x=1818 — **both comfortably inside the panel**. The horizontal axis was
+perfectly measurable and was discarded because the vertical one was not. That
+single policy accounts for the longest blind run in the session.
+
+So `tx` and `ty` are now accepted, held and **aged independently**. This is a
+correction to the earlier A3f framing, which said the first fix was "one edge
+instead of two". It is not: the first fix is **one axis instead of both**, and it
+is smaller and lands harder.
+
+#### Stage 1b — several sample lines per axis, not one
+
+Cause 2 needs nothing cleverer than more lines: at 21.9% zoom the comp was
+420x236 and the single sample column fell just outside it. Five lines per axis at
+fractions 0.17 / 0.33 / 0.55 / 0.71 / 0.89. The pixels are already captured and
+each scan is O(w+h), so — as A3d2 established that a full-panel blit costs the
+same as a 1 px strip — **ten lines cost the same as two**.
+
+#### The control that had to be replaced, not dropped
+
+Accepting the axes independently **destroys** the control A3d and A3e leaned on:
+that both axes must imply the same zoom. It is unavailable exactly when one axis
+is missing, which is the case A3f exists to serve. Dropping a control to make a
+fix fit is how a detector starts lying, so:
+
+- **Within an axis**, the lines check each other. The comp is a rectangle, so
+  every line crossing it must return the *same* pair of edges. At least
+  `OS_MIN_AGREE` lines must agree within `OS_AGREE_TOL`, and the answer is the
+  median of the winning cluster. A line that locked onto a layer outline or a
+  stray solid is outvoted.
+- **Across axes**, the old zoom check is **kept**, and still applied whenever
+  both axes are present — which is most of the time.
+
+The detector is therefore *better* guarded than in run 1, not worse: it has a
+control when both axes are present **and** a control when only one is.
+
+#### Stage 2 — blind is drawn as blind
+
+Run 1 held the last good `t` and kept drawing a confident box. That is the
+roadmap's founding failure — an onion skin that lies about where the previous
+drawing was is worse than none. Now:
+
+| state | drawn as |
+|---|---|
+| live fix on both axes | green, solid |
+| an axis stale > 250 ms | **amber, dashed** — visibly untrusted |
+| nothing measured for > 500 ms | **nothing** — the overlay hides itself |
+
+Being wrong is no longer allowed to look like being right.
+
+#### Offline self-test — `A3f_selftest.cpp` → `os_A3f_test.exe`, **PASSES**
+
+It `#include`s the probe's own source, so there is one `DetectAxis` rather than a
+copy free to drift from the shipping one. Synthetic panels use the **real**
+colours measured off the recording (panel 13,13,13; comp 64,64,64), so `BG_TOL`
+is exercised as it will be in AE rather than against an easy contrast.
+
+| case | expected | result |
+|---|---|---|
+| clean comp inside the panel | the 4 / 3 crossing lines agree exactly | 300..1259 and 100..639 |
+| comp taller than the panel (69%) | **x still accepted**, y refused | x n=5 at 133; y refused |
+| small comp missing some lines (21.9%) | found by the lines that do cross | n=2, exact edges |
+| comp covering both axes | fully blind, and says why | refused on both |
+| **one contaminated line** | **outvoted** | n=0 |
+| two agreeing lines | accepted | n=2, exact |
+| two **disagreeing** lines | refused, not averaged | n=0 |
+
+The last three are the broken controls, and the middle one matters most: a vote
+that refused everything would "pass" by being useless, so it must also **accept**
+two genuinely agreeing lines. Both directions are asserted.
+
+#### Two things the self-test corrected, one of them in my own write-up
+
+- **The overflow failure mode is `no_transition`, not `ends_differ`.** `Scan`
+  takes its background reference *from the line's own end pixel*, so when the
+  comp covers the whole line both ends are comp, they match, and nothing differs
+  from them. `ends_differ` is the *other* overflow shape — the comp covering one
+  end but not the other. The A3e write-up said "found background at neither end",
+  which describes a case that reports differently. Both modes are now covered by
+  their own assertion.
+- **Not all five lines cross a comp that is fully inside the panel.** With the
+  comp at 300..1259, `cols[0]`=270 and `cols[4]`=1416 are outside it. The test
+  now predicts *which* lines miss rather than accepting any count — a test happy
+  with any number would not notice a detector that had begun missing lines for
+  the wrong reason.
+
+#### Status
+
+Built, self-tested offline, **awaiting a run in AE with a screen recording**. The
+run matrix now has to include the two cases that broke run 1: **zoom past 100%
+and pan**, and **zoom far out on a small comp and pan**.
+
+**A3f passes** if fully-blind frames are under 1% across that matrix *and* every
+remaining blind frame was shown as blind. Stage 3 — correlation for the case
+where the comp covers the panel with no edge anywhere — is deliberately **not
+built**: ship degrading honestly there and let usage say whether it is worth it.
+
 ### A5 — the macOS capture-permission gate (not started, and it outranks A4)
 
 **Why it jumped the queue.** The product is meant to work on macOS. Everything
@@ -943,12 +1050,12 @@ window and local event monitor being the same shape on both platforms — does
 | A3d strip-measured `t` | method works; 0 false positives in 710 samples |
 | A3d2 capture cost | **16.7 ms = one composition sync.** `GetDC(hwnd)` is blank |
 | **A3e slip** | **run 1 done. Latency is NOT the problem; the detector goes BLIND 12.6% of the time** |
-| **A3f blindness** | **new, and it now outranks everything: multi-line sampling + one-edge solve + honest degradation** |
+| **A3f blindness** | **stages 1+2 BUILT and self-tested offline; awaiting a run in AE** |
 | **A5 macOS capture permission** | **not started — and it now outranks A4** |
 | A4 render cost | not started |
 
-**Order from here: A3f (fix blindness) -> A3e run 2 (the moving bins, on the
-video) -> A5 (a mac session) -> A2 -> A4.** WGC has dropped further down: run 1
+**Order from here: A3f run 1 + A3e run 2 (ONE sitting in AE - the same recording
+answers both) -> A5 (a mac session) -> A2 -> A4.** WGC has dropped further down: run 1
 showed the typical slip sitting on the quantisation floor that WGC shares, so its
 case rests entirely on occlusion and self-capture.
 
