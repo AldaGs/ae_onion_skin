@@ -564,6 +564,230 @@ self-capture, since it would never see our own overlay.
 | A3d strip-measured `t` | **built, unmeasured** |
 | A4 cost | not started |
 
+
+### A3e — is one frame of latency good enough? (built 2026-09-09)
+
+A3d2 left a decision open rather than a result: GDI screen capture costs one
+composition sync, 16.7 ms, one display frame — and the note said "if one frame of
+latency is too much, the upgrade path is Windows.Graphics.Capture." Nothing said
+how much is too much, or how it would be known.
+
+**The question is not "is 16.7 ms acceptable".** It is *how many pixels does the
+overlay slip, and under which gesture* — and that is arithmetic, not opinion:
+
+    slip = pan_velocity × latency
+
+#### Scoping it first, because most of the fear evaporates
+
+`t` only needs updating **while `t` is changing**: pan, zoom, panel resize, Fit.
+It does not change while scrubbing the CTI — which is the dominant onion-skin
+gesture. So capture latency never touches the main use case at all.
+
+And A3c already measured a real pan velocity, without meaning to. The wheel
+scroll at 36.4 s moved Δy per 200 ms of 32, 24, 18, 14, 10 px: **~160 px/s,
+decelerating**. Against that:
+
+| latency | slip |
+|---|---|
+| 16.7 ms (one full frame) | **2.7 px** |
+| ~8 ms (mean age with a continuous 60 Hz capture thread) | **1.3 px** |
+
+That is one to three pixels of rubber-band *during* the gesture, converging to
+zero within two frames of release. Worse than A1's 1 px static budget; almost
+certainly invisible as smear. A fast Hand-tool drag at ~2000 px/s would be ~30 px
+— noticeable, but that is the case where the user is watching where they are
+dragging *to*, not registration.
+
+**So the prior is that GDI is good enough, and A3e exists to try to falsify it.**
+
+#### The "one frame" claim is conditional, and the condition is the architecture
+
+16.7 ms is a **sync wait, not CPU burn**. It is one frame only if capture runs on
+its **own thread**, publishing to a slot the paint samples; the paint then reads
+the newest completed sample and returns immediately. Capture *inside* the paint
+puts the whole 16.7 ms in the path and the answer changes. A3e is built the first
+way deliberately — it is the shipping configuration, not a stand-in for it.
+
+#### Two arguments for WGC that are not about latency, and they are the real ones
+
+1. **Occlusion.** `BitBlt` from the screen DC reads the *desktop*. Any window
+   overlapping the viewer, AE not frontmost, a tooltip, a floating panel — and
+   the detector reads someone else's pixels. The axis-agreement control makes
+   that fail safe rather than lie, but "the overlay freezes whenever anything
+   overlaps AE" is a product defect. WGC captures the window's own surface.
+2. **Self-capture.** Handled today by never painting on the two scan lines. It
+   works, but it constrains the overlay's design permanently and breaks the
+   moment a skin must be drawn across that row. WGC on the AE window never sees a
+   topmost overlay at all.
+
+Those are correctness arguments, and they beat a 1.3 px latency argument.
+
+**One thing WGC would NOT fix, and it is easy to get wrong:** WGC is paced by the
+same display frames. It removes the sync wait *in the caller* and it can be
+double-buffered, but it does not sample the screen more often than the screen
+changes. Half a frame of quantisation slip is a property of 60 Hz, not of GDI.
+See the floor the analyser now prints.
+
+**Untested assumption, recorded before it is relied on.** `GetDC(hwnd)` returned
+a blank surface, which says the viewer panel is **not separately redirected** — a
+child drawn into AE's main-window surface. So WGC would have to target the
+**top-level AE window** and crop to the panel's client rect. `PrintWindow(
+PW_RENDERFULLCONTENT)` succeeding in A1c1 is evidence the content is renderable
+from that window, but it is evidence, not a measurement.
+
+#### The harness
+
+`A3e_SlipProbe.cpp` → `os_A3e.exe`, and `A3e_analyse.py`.
+
+Entirely **out of process, and needing no AE at all** — A3d proved the comp
+rectangle can be found from a captured panel and that its span on the two axes
+recovers the zoom, so both halves of the transform come out of the capture
+itself. No AEGP, no ExtendScript, no re-entrancy, and no way to take AE down,
+which two in-process A3d runs already did.
+
+On screen: **green** = the comp rect from the newest capture (the shipping
+config); **magenta** = the same from a capture deliberately held 100 ms stale.
+
+**Magenta is a control of the *instrument*, not of the detector.** If the
+analysis cannot separate a 100 ms-stale overlay from a live one, then it is not
+resolving lag at all, and it could not have detected 16.7 ms being unacceptable
+either — so it may not pronounce 16.7 ms acceptable. That is reported as
+**INVALID**, not as a pass. A control that guards only the subject and not the
+instrument is how a null result gets mistaken for a result.
+
+#### Two measurements, and why neither alone is enough
+
+- **`A3e_paints.txt`** — every paint, and which capture it drew from. Offline the
+  capture stream is interpolated to the paint's own timestamp and the difference
+  is the slip: 60 Hz, sub-pixel. But the capture stream is *itself* one sync
+  behind the screen and the paint drew from that same stream, so the constant
+  part cancels and this measures **the pipeline only**. It is a **lower bound**,
+  and it is printed as one. A measurement that quietly omits a term it cannot see
+  is exactly how 16.7 ms would get declared fine on a number that never contained
+  it.
+- **A screen recording** — the overlay against the actual comp, same instant,
+  whole chain. **The verdict is read from this.** Standing rule, no exceptions:
+  when the claim is about what the user sees, the check has to be what the user
+  sees.
+
+Samples are timestamped at the **midpoint** of the blit, not its end — the pixels
+are a snapshot somewhere inside that 16.7 ms window, and stamping at the end
+would build a systematic half-frame error into the very number being measured.
+
+#### Pre-committed reading
+
+Fixed before the first run, judged on the **video**, binned by gesture:
+
+| result | conclusion |
+|---|---|
+| at rest ≤ 1 px **and** wheel ≤ 5 px **and** drag ≤ 20 px | **GDI ships.** WGC becomes a later polish item for occlusion and self-capture, not a gate |
+| anything worse | **WGC required** on Windows, built before Phase 1 |
+| magenta not separable from green in the moving bins | **INVALID** — fix the instrument, re-run, report nothing |
+
+#### Offline self-test (2026-09-09) — the instrument is verified
+
+Per [[verify-offline-before-rebuild]], run against synthetic logs with a *known*
+lag before it is pointed at AE. Profile: 10 s still, 15 s at 157 px/s, 15 s at
+1566 px/s, 10 s still.
+
+| case | expectation | result |
+|---|---|---|
+| 16.7 ms pipeline lag | slip = velocity × measured age | wheel median **3.93 px** vs 156.6 × 0.0251 s = **3.93** |
+| | | drag median **39.31 px** vs 1566 × 0.0251 s = **39.3** |
+| | at rest exactly zero | **0.00 px** |
+| 0 ms pipeline lag | residual quantisation only | wheel **1.32**, drag **13.16**, rest **0.00** |
+| control defeated (stale channel fed the live values) | must refuse to report | **INVALID**, both moving bins named |
+
+The recovery is exact to two decimals in both moving bins, and the zero-lag case
+proves the analyser is not measuring its own interpolation error.
+
+**And the self-test changed the analyser before any real data existed.** The
+zero-lag case still showed 13.16 px in the drag bin — because the newest
+published sample is on average half a capture interval old *whatever* the capture
+method, and the picture kept moving. At 60 Hz that floor is
+`velocity × 8.35 ms`: 1.31 px at wheel speed, **13.08 px at 1566 px/s**. So a
+20 px drag budget is unreachable above roughly 2400 px/s by arithmetic alone, and
+a drag-bin failure near that floor would be a fact about 60 Hz, not an argument
+for WGC — which is paced by the same frames.
+
+The analyser now prints that floor per bin and refuses to let a busted budget be
+read as a verdict on the capture method without checking it. This is a change to
+the instrument made *before* the first run, from arithmetic rather than from a
+result — stated explicitly, because moving a budget after seeing data is the
+thing this project does not do.
+
+#### Status
+
+Built, self-tested offline, **awaiting a real run in AE with a screen recording**.
+
+    os_A3e.exe [comp_w] [comp_h] [seconds]        default 1920 1080 60
+    py A3e_analyse.py
+
+Hover the comp viewer for the countdown, start recording, then: hold still ~10 s,
+wheel-scroll ~15 s, hand-drag hard ~15 s, hold still ~10 s.
+
+### A5 — the macOS capture-permission gate (not started, and it outranks A4)
+
+**Why it jumped the queue.** The product is meant to work on macOS. Everything
+A1–A3 established rests on one thing: `t` is **measured from a capture of the
+viewer**, because A3c proved it cannot be inferred from input. On Windows that
+capture is free of ceremony. On macOS it is not.
+
+`CGWindowListCreateImage` and ScreenCaptureKit **both require the Screen
+Recording TCC permission** — granted per-application in System Settings, and the
+application being prompted is **After Effects**, not our plug-in. So the mac
+product is: install the plug-in, AE raises a system dialog asking to record the
+screen, and the user restarts AE. That is a far larger cost than 16.7 ms, and it
+applies to *every* capture-derived route to `t`, not to one API choice.
+
+**So the mac question is not "WGC or GDI".** It is **"is a capture-derived `t`
+viable on macOS at all?"** — and it can invalidate Windows work rather than merely
+delay it, which is why it goes before A4 and before any WGC code.
+
+**What A5 must establish, on a real mac:**
+
+- Does AE prompt for Screen Recording when a bundled AEGP calls ScreenCaptureKit
+  / `CGWindowListCreateImage`, and does the grant persist across AE restarts and
+  plug-in updates?
+- What is the capture cost, and is it frame-paced like the Windows path?
+- Is the viewer window individually capturable, or only the whole screen?
+- **The product question, which is not a technical one:** is "After Effects wants
+  to record your screen" an acceptable install experience for this plug-in?
+
+**Gate:**
+
+| result | consequence |
+|---|---|
+| permission acceptable and capture works | mac Option A is alive; continue |
+| permission works but is unacceptable as an experience | decide now: Windows-only, or **Option B** |
+| capture unavailable or unreliable | Windows-only, or **Option B** |
+
+Note that a fail here is not automatically fatal to Option A — it is fatal to
+*cross-platform* Option A, and the honest response is to decide deliberately
+between shipping Windows-only and dropping to B, rather than discovering the
+choice halfway through Phase 2. [[radial-menu-plugin]]'s precedent — overlay
+window and local event monitor being the same shape on both platforms — does
+**not** extend here: that work needed no capture and no TCC grant.
+
+### Gate status (2026-09-09, current)
+
+| Spike | Verdict |
+|---|---|
+| A1 transform | **PASS** — 14/14, worst residual 0.559 px against a 1 px criterion |
+| A2 identity | not started — `app.activeViewer` / `Viewer.type` is a strong lead |
+| A3a cadence | timer fine; **idle hook unusable** (9.2 s silent during a drag) |
+| A3b readability | **PASS** — `s` readable in motion at 0.19 ms |
+| A3c pan inference | **FAIL — architecture abandoned.** `t` is measured, not inferred |
+| A3d strip-measured `t` | method works; 0 false positives in 710 samples |
+| A3d2 capture cost | **16.7 ms = one composition sync.** `GetDC(hwnd)` is blank |
+| **A3e slip** | **built, self-tested offline, awaiting a run in AE + video** |
+| **A5 macOS capture permission** | **not started — and it now outranks A4** |
+| A4 render cost | not started |
+
+**Order from here: A3e (a sitting with AE and a screen recorder) -> A5 (a mac
+session) -> A2 -> A4.** WGC is built only if A3e fails, or later as the occlusion
+and self-capture fix once the thing works.
+
 ### A1c — Pan by correlation (historical section below)
 
 Now the only remaining unknown in A1. Open questions, in order:
