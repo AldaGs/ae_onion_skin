@@ -8,8 +8,8 @@ maintains a layer.
 
 | File | Exports | Version |
 |---|---|---|
-| `C:\_build_out\AEGP\onionSkin.aex` | `EffectMain` | 1.5.0 build 6 = 688134 |
-| `C:\_build_out\AEGP\onionSkinPanel.aex` | `EntryPointFunc` | — |
+| `C:\AE_SDK\_build_out\AEGP\onionSkin.aex` | `EffectMain` | 1.5.0 build 6 = 688134 |
+| `C:\AE_SDK\_build_out\AEGP\onionSkinPanel.aex` | `EntryPointFunc` | — |
 
 The effect was rebuilt because the disk-ID enum moved into
 `shared/onionSkinIDs.h`, included by both binaries. They address params by
@@ -23,8 +23,8 @@ Falloff and never error. One file, no copies.
 ## Deploy (admin, AE closed)
 
 ```
-Copy-Item "C:\_build_out\AEGP\onionSkin.aex"      "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\onionSkin.aex" -Force
-Copy-Item "C:\_build_out\AEGP\onionSkinPanel.aex" "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\onionSkinPanel.aex" -Force
+Copy-Item "C:\AE_SDK\_build_out\AEGP\onionSkin.aex"      "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\onionSkin.aex" -Force
+Copy-Item "C:\AE_SDK\_build_out\AEGP\onionSkinPanel.aex" "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\onionSkinPanel.aex" -Force
 ```
 
 The B2/B3/B5 spike binaries can be deleted now — they answered their questions.

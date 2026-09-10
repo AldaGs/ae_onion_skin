@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="onionSkin.vcxproj" Id="6b4f2d81-9a05-4c73-be18-d40917e5c3a2" />
+</Solution>

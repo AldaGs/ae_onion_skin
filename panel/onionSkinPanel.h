@@ -59,8 +59,15 @@
 
 #define OSP_PANEL_MENU		"Onion Skin"
 #define OSP_CMD_TOGGLE		"Onion Skin: Toggle"
-#define OSP_CMD_MORE		"Onion Skin: More Previous Frames"
-#define OSP_CMD_FEWER		"Onion Skin: Fewer Previous Frames"
+//	These move PREVIOUS AND NEXT TOGETHER, which is what "more onion skin" means
+//	to the hand on the pen. Renamed from "... Previous Frames" when the behaviour
+//	changed rather than left describing something else - AE lists these strings
+//	in its shortcut editor, so the name is the whole documentation.
+//
+//	NOTE the rename orphans any shortcut already bound to the old names; AE keys
+//	its bindings on the command name. That is the cost of the names being honest.
+#define OSP_CMD_MORE		"Onion Skin: More Frames"
+#define OSP_CMD_FEWER		"Onion Skin: Fewer Frames"
 
 #define OSP_LOG_LEAF		"onionskin_panel.txt"
 

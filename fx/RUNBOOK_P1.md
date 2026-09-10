@@ -4,7 +4,7 @@ First build of the actual product. Ports the model from
 `python-proto/onion_skin/os_step1_composite.py`, whose seven offline checks pass
 with two controls correctly failing.
 
-**Built:** `C:\_build_out\AEGP\onionSkin.aex` — exports `EffectMain`, version
+**Built:** `C:\AE_SDK\_build_out\AEGP\onionSkin.aex` — exports `EffectMain`, version
 524289 (= 1.0.0 build 1, matching `PF_VERSION` in `GlobalSetup`).
 
 ---
@@ -12,7 +12,7 @@ with two controls correctly failing.
 ## Deploy (admin, AE closed)
 
 ```
-Copy-Item "C:\_build_out\AEGP\onionSkin.aex" "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\onionSkin.aex" -Force
+Copy-Item "C:\AE_SDK\_build_out\AEGP\onionSkin.aex" "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\onionSkin.aex" -Force
 ```
 
 The B3 spike binaries can stay; different match names, no collision.
@@ -133,7 +133,7 @@ disappears.
 **Redeploy** (`onionSkin.aex` only, version now 557058 = 1.1.0 build 2):
 
 ```
-Copy-Item "C:\_build_out\AEGP\onionSkin.aex" "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\onionSkin.aex" -Force
+Copy-Item "C:\AE_SDK\_build_out\AEGP\onionSkin.aex" "C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\Plug-ins\AGS\onionSkin.aex" -Force
 ```
 
 ## 4' — Ghosting must now THIN OUT, not stop

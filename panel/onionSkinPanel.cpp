@@ -315,16 +315,19 @@ WriteStreamNoUndo(AEGP_EffectRefH fxH, A_long idx, double value)
 	return okB;
 }
 
-//	Writes to EVERY instance in the comp, under ONE undo group.
+//	Writes N params to EVERY instance in the comp, under ONE undo group.
 //
 //	Broadcast because onion-skin settings are a workspace preference, not
 //	per-layer art direction - and because a panel that silently drove only the
 //	first of three instances would look broken on the other two.
 //
-//	One undo group because N writes would otherwise cost N presses of Ctrl+Z for
-//	a single click.
+//	N params rather than one because the shortcuts move Previous and Next
+//	together: two separate calls would open two undo groups and cost the user two
+//	presses of Ctrl+Z for one press of the key, which is exactly the defect B3's
+//	runbook was written to catch.
 static void
-BroadcastWrite(A_long idx, double value, const char *whatZ)
+BroadcastWriteN(const A_long *idxP, const double *valP, A_long n_params,
+				const char *whatZ)
 {
 	AEGP_SuiteHandler	suites(sP);
 	AEGP_CompH			compH = NULL;
@@ -347,14 +350,22 @@ BroadcastWrite(A_long idx, double value, const char *whatZ)
 		fxH = OurEffectOn(layerH);
 		if (!fxH) continue;
 
-		if (WriteStreamNoUndo(fxH, idx, value)) hits++;
+		for (A_long k = 0; k < n_params; k++) {
+			if (WriteStreamNoUndo(fxH, idxP[k], valP[k])) hits++;
+		}
 		suites.EffectSuite4()->AEGP_DisposeEffect(fxH);
 	}
 
 	if (group_openedB) {
 		suites.UtilitySuite3()->AEGP_EndUndoGroup();
 	}
-	Log("WRITE   %s = %.2f on %ld instance(s)", whatZ, value, (long)hits);
+	Log("WRITE   %s -> %ld write(s)", whatZ, (long)hits);
+}
+
+static void
+BroadcastWrite(A_long idx, double value, const char *whatZ)
+{
+	BroadcastWriteN(&idx, &value, 1, whatZ);
 }
 
 /* ------------------------------------------------------------------ */
@@ -533,7 +544,10 @@ enum {
 	kReqEnableFlip,
 	kReqPrevUp, kReqPrevDn,
 	kReqNextUp, kReqNextDn,
-	kReqStrUp,  kReqStrDn
+	kReqStrUp,  kReqStrDn,
+
+	//	Both directions at once - what the keyboard shortcuts drive.
+	kReqBothUp, kReqBothDn
 };
 
 static volatile LONG S_pending = kReqNone;
@@ -574,6 +588,24 @@ Perform(LONG req)
 		case kReqStrDn:
 			BroadcastWrite(OS_STRENGTH, MAX(0.0, S_snap.strength - 5.0), "Onion Skin Strength");
 			break;
+
+		//	Previous and Next move together, in one undo step. Each side is
+		//	clamped on its own, so a side already at the limit simply stays there
+		//	rather than blocking the other.
+		case kReqBothUp: {
+			A_long	idx[2] = {OS_PREV_FRAMES, OS_NEXT_FRAMES};
+			double	val[2] = {(double)MIN(OS_MAX_SKINS, S_snap.prev + 1),
+							  (double)MIN(OS_MAX_SKINS, S_snap.next + 1)};
+			BroadcastWriteN(idx, val, 2, "Onion Skin More Frames");
+			break;
+		}
+		case kReqBothDn: {
+			A_long	idx[2] = {OS_PREV_FRAMES, OS_NEXT_FRAMES};
+			double	val[2] = {(double)MAX(0, S_snap.prev - 1),
+							  (double)MAX(0, S_snap.next - 1)};
+			BroadcastWriteN(idx, val, 2, "Onion Skin Fewer Frames");
+			break;
+		}
 	}
 }
 
@@ -917,11 +949,11 @@ CommandHook(AEGP_GlobalRefcon, AEGP_CommandRefcon, AEGP_Command cmd,
 		*handledPB = TRUE;
 
 	} else if (cmd == S_cmd_more) {
-		Queue(kReqPrevUp);
+		Queue(kReqBothUp);
 		*handledPB = TRUE;
 
 	} else if (cmd == S_cmd_fewer) {
-		Queue(kReqPrevDn);
+		Queue(kReqBothDn);
 		*handledPB = TRUE;
 	}
 	return A_Err_NONE;
