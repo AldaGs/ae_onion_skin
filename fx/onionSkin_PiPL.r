@@ -35,10 +35,10 @@ resource 'PiPL' (16000) {
 			PF_PLUG_IN_SUBVERS
 		},
 		/*	PF_VERSION bit-packing, NOT the AEGP 'Version' convention -- the two
-			look alike and are not. 1.4.0 build 5 = 655365.
+			look alike and are not. 1.5.0 build 6 = 688134.
 			MUST move in lockstep with PF_VERSION() in GlobalSetup. */
 		AE_Effect_Version {
-			655365
+			688134
 		},
 		AE_Effect_Info_Flags {
 			0

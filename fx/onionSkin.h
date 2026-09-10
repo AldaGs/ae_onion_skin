@@ -68,57 +68,16 @@
 
 #include <stdio.h>
 
-#define OS_NAME				"Onion Skin"
-#define OS_MATCH_NAME		"aldai OnionSkin"
-#define OS_PANEL_MATCH_NAME	"OnionSkinPanel"
+//	Param indices, match names and defaults live in ONE place so the effect and
+//	the panel cannot drift apart. See the header for why that matters.
+#include "../shared/onionSkinIDs.h"
 
 #define OS_MAJOR	1
-#define OS_MINOR	4
+#define OS_MINOR	5
 #define OS_BUG		0
 #define OS_STAGE	PF_Stage_DEVELOP
-#define OS_BUILD	5
+#define OS_BUILD	6
 
-/*	Disk IDs are APPEND-ONLY. Inserting one renumbers the rest and silently
-	mis-maps every saved project ("effect control conversion required"). Add at
-	the bottom, and bump the PiPL version and PF_VERSION together when you do. */
-enum {
-	OS_INPUT = 0,
-	OS_ENABLE,
-	OS_PREV_FRAMES,
-	OS_NEXT_FRAMES,
-	OS_FRAME_STEP,
-	OS_STRENGTH,
-	OS_FALLOFF,
-	OS_TINT_AMOUNT,
-	OS_PAST_COLOR,
-	OS_FUTURE_COLOR,
-	//	RETIRED in v1.4. Kept, and still added in ParamsSetup, so the disk IDs
-	//	after them do not shift -- deleting a param in the middle renumbers the
-	//	rest and silently mis-maps every saved project. They are added invisible
-	//	and never read. See the placement note above for why they went.
-	OS_RETIRED_SOURCE_1,
-	OS_RETIRED_SOURCE_2,
-	OS_RETIRED_SOURCE_3,
-	OS_OPEN_PANEL,
-	OS_DEBUG_LOG,		// appended for v1.1 - see the append-only note above
-	OS_NUM_PARAMS
-};
-
-#define OS_MAX_SKINS		12		// per side
-#define OS_MAX_SOURCES		3
-
-#define OS_PREV_DFLT		2
-#define OS_NEXT_DFLT		2
-#define OS_STEP_DFLT		1
-#define OS_STRENGTH_DFLT	55.0
-#define OS_FALLOFF_DFLT		60.0
-#define OS_TINT_DFLT		100.0
-
-//	Diagnostic log, off by default. Writes one block per render describing what
-//	the effect actually SAW - how many sources it resolved, what each checkout
-//	returned, and the dimensions it got. Added because "selecting a source shows
-//	no ghost" is a question about what arrives, and guessing at that is how a
-//	morning disappears.
 #define OS_LOG_LEAF			"onionskin_fx.txt"
 void OS_Log(const char *fmt, ...);
 
