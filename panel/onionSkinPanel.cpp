@@ -317,6 +317,31 @@ WriteStreamNoUndo(AEGP_EffectRefH fxH, A_long idx, double value)
 	return okB;
 }
 
+//	AE refuses edits to a locked layer, and we lock the managed layer on purpose.
+//	So the panel takes the lock off, does its work, and puts it back - inside
+//	whatever undo group the caller has already opened, so the whole thing is one
+//	step. Returns the flag state to restore.
+static A_Boolean
+UnlockIfLocked(AEGP_LayerH layerH)
+{
+	AEGP_SuiteHandler	suites(sP);
+	AEGP_LayerFlags		flags = 0;
+
+	if (suites.LayerSuite9()->AEGP_GetLayerFlags(layerH, &flags)) return FALSE;
+	if (!(flags & AEGP_LayerFlag_LOCKED)) return FALSE;
+
+	suites.LayerSuite9()->AEGP_SetLayerFlag(layerH, AEGP_LayerFlag_LOCKED, FALSE);
+	return TRUE;
+}
+
+static void
+RelockIf(AEGP_LayerH layerH, A_Boolean wasLockedB)
+{
+	if (!wasLockedB) return;
+	AEGP_SuiteHandler suites(sP);
+	suites.LayerSuite9()->AEGP_SetLayerFlag(layerH, AEGP_LayerFlag_LOCKED, TRUE);
+}
+
 //	Writes N params to EVERY instance in the comp, under ONE undo group.
 //
 //	Broadcast because onion-skin settings are a workspace preference, not
@@ -352,9 +377,13 @@ BroadcastWriteN(const A_long *idxP, const double *valP, A_long n_params,
 		fxH = OurEffectOn(layerH);
 		if (!fxH) continue;
 
+		A_Boolean wasLockedB = UnlockIfLocked(layerH);
+
 		for (A_long k = 0; k < n_params; k++) {
 			if (WriteStreamNoUndo(fxH, idxP[k], valP[k])) hits++;
 		}
+
+		RelockIf(layerH, wasLockedB);
 		suites.EffectSuite4()->AEGP_DisposeEffect(fxH);
 	}
 
@@ -447,6 +476,16 @@ CreateManagedLayer()
 		suites.LayerSuite9()->AEGP_SetLayerFlag(layerH, AEGP_LayerFlag_ADJUSTMENT_LAYER, TRUE);
 		suites.LayerSuite9()->AEGP_SetLayerFlag(layerH, AEGP_LayerFlag_GUIDE_LAYER, TRUE);
 
+		//	Locked so it cannot be selected or dragged by accident. This layer is
+		//	furniture: the user should never have to think about it, and a layer
+		//	that swallows a click meant for the drawing underneath is worse than
+		//	no layer at all.
+		//
+		//	Everything that writes to it must therefore unlock first - see
+		//	WithUnlocked. We put the lock on, so it is our job to work around it
+		//	rather than the user's.
+		suites.LayerSuite9()->AEGP_SetLayerFlag(layerH, AEGP_LayerFlag_LOCKED, TRUE);
+
 		AEGP_EffectRefH fxH = NULL;
 		if (!suites.EffectSuite4()->AEGP_ApplyEffect(S_my_id, layerH, key, &fxH)) {
 			suites.EffectSuite4()->AEGP_DisposeEffect(fxH);
@@ -477,6 +516,10 @@ RemoveManagedLayer()
 	if (!suites.UtilitySuite3()->AEGP_StartUndoGroup("Onion Skin Off")) {
 		group_openedB = TRUE;
 	}
+
+	//	Unlock before deleting: AE will not delete a locked layer, and we are the
+	//	ones who locked it.
+	UnlockIfLocked(layerH);
 	suites.LayerSuite9()->AEGP_DeleteLayer(layerH);
 	if (group_openedB) {
 		suites.UtilitySuite3()->AEGP_EndUndoGroup();
@@ -922,15 +965,7 @@ private:
 		GetClientRect(h, &client);
 		int right = client.right;
 
-		AEGP_SuiteHandler	suites(sP);
-		PF_App_Color		bg = {0};
-		HBRUSH				br;
-
-		if (!suites.AppSuite4()->PF_AppGetColor(PF_App_Color_PANEL_BACKGROUND, &bg)) {
-			br = CreateSolidBrush(RGB(bg.red / 255, bg.green / 255, bg.blue / 255));
-		} else {
-			br = CreateSolidBrush(RGB(48, 48, 48));
-		}
+		HBRUSH br = CreateSolidBrush(PanelBG());
 		FillRect(dc, &client, br);
 		DeleteObject(br);
 
@@ -997,10 +1032,32 @@ private:
 		EndPaint(h, &ps);
 	}
 
+	//	AE hands the panel background back as 16-bit channels; Win32 wants 8.
+	//	Looked up rather than hardcoded so the panel follows AE's theme.
+	COLORREF PanelBG()
+	{
+		AEGP_SuiteHandler	suites(sP);
+		PF_App_Color		bg = {0};
+
+		if (!suites.AppSuite4()->PF_AppGetColor(PF_App_Color_PANEL_BACKGROUND, &bg)) {
+			return RGB(bg.red / 255, bg.green / 255, bg.blue / 255);
+		}
+		return RGB(48, 48, 48);
+	}
+
 	void DrawButton(LPDRAWITEMSTRUCT d)
 	{
 		A_Boolean downB = (d->itemState & ODS_SELECTED) != 0;
 		A_Boolean hotB  = (i_hot_btn == (int)d->CtlID);
+
+		//	RoundRect paints INSIDE the rounded shape, so the four corner
+		//	slivers outside it keep whatever the button class last left there -
+		//	which is white. Owner-draw means owning every pixel of rcItem, not
+		//	just the interesting ones, so fill the whole rect with the panel
+		//	colour first and let the pill sit on top of it.
+		HBRUSH bgbr = CreateSolidBrush(PanelBG());
+		FillRect(d->hDC, &d->rcItem, bgbr);
+		DeleteObject(bgbr);
 
 		COLORREF fill = downB ? COL_BTN_DOWN : (hotB ? COL_BTN_HOT : COL_BTN);
 		Pill(d->hDC, d->rcItem, fill, COL_BTN_EDGE);
