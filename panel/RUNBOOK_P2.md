@@ -74,11 +74,19 @@ exists for.
 **Edit ▸ Keyboard Shortcuts…**, search `Onion Skin`. Bind:
 
 - `Onion Skin: Toggle` → something free, e.g. `Ctrl+Alt+O`
-- `Onion Skin: More Previous Frames`
-- `Onion Skin: Fewer Previous Frames`
+- `Onion Skin: More Frames`
+- `Onion Skin: Fewer Frames`
 
 Then, mouse over the comp viewer, nothing selected: press them. The comp and the
 panel must both respond.
+
+**More / Fewer move Previous AND Next together**, in one undo step — press More
+twice from 2/2 and the panel should read 4/4, then one Ctrl+Z should take it back
+to 3/3, not to 4/3.
+
+> If you had shortcuts bound to the old `... Previous Frames` names, they are
+> orphaned: AE keys bindings on the command name and the names changed when the
+> behaviour did. Rebind once.
 
 ## 5 — The opaque-background warning
 
