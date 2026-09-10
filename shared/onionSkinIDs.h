@@ -60,8 +60,11 @@ enum {
 #define OS_MAX_SKINS		12		// per side
 #define OS_MAX_SOURCES		3		// retired; kept so the loop that creates them still reads
 
-#define OS_PREV_DFLT		2
-#define OS_NEXT_DFLT		2
+//	Three either way. Two reads as a hint, and anything past four or five is a
+//	smear rather than a sequence of positions - three is where you can still
+//	count the frames.
+#define OS_PREV_DFLT		3
+#define OS_NEXT_DFLT		3
 #define OS_STEP_DFLT		1
 #define OS_STRENGTH_DFLT	55.0
 #define OS_FALLOFF_DFLT		60.0

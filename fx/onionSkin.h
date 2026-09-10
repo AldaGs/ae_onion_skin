@@ -73,10 +73,10 @@
 #include "../shared/onionSkinIDs.h"
 
 #define OS_MAJOR	1
-#define OS_MINOR	6
+#define OS_MINOR	7
 #define OS_BUG		0
 #define OS_STAGE	PF_Stage_DEVELOP
-#define OS_BUILD	7
+#define OS_BUILD	8
 
 #define OS_LOG_LEAF			"onionskin_fx.txt"
 
