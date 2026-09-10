@@ -4,6 +4,8 @@
 
 #include "onionSkinPanel.h"
 
+#include <windowsx.h>	// GET_X_LPARAM
+
 static AEGP_PluginID	S_my_id		= 0L;
 static SPBasicSuite		*sP			= NULL;
 static AEGP_PanelSuite1	*S_panelP	= NULL;
@@ -547,12 +549,27 @@ enum {
 	kReqStrUp,  kReqStrDn,
 
 	//	Both directions at once - what the keyboard shortcuts drive.
-	kReqBothUp, kReqBothDn
+	kReqBothUp, kReqBothDn,
+
+	//	Absolute sets, from a slider release. These carry a value.
+	kReqSetPrev, kReqSetNext, kReqSetStr
 };
 
-static volatile LONG S_pending = kReqNone;
+static volatile LONG S_pending		= kReqNone;
+static volatile LONG S_pending_val	= 0;
 
+//	The wndproc and the idle hook both run on AE's main thread, so this is a
+//	hand-off between two points in one thread rather than between two threads.
+//	The interlocked exchange is belt and braces; the ordering below - value
+//	first, request second - is what actually matters, because the request is
+//	what the idle hook tests.
 static void Queue(LONG req) { InterlockedExchange(&S_pending, req); }
+
+static void QueueVal(LONG req, LONG value)
+{
+	InterlockedExchange(&S_pending_val, value);
+	InterlockedExchange(&S_pending, req);
+}
 
 static void
 Perform(LONG req)
@@ -606,6 +623,18 @@ Perform(LONG req)
 			BroadcastWriteN(idx, val, 2, "Onion Skin Fewer Frames");
 			break;
 		}
+
+		//	Absolute sets from a slider. One write, one undo step, on RELEASE -
+		//	see the drag note in the panel.
+		case kReqSetPrev:
+			BroadcastWrite(OS_PREV_FRAMES, (double)S_pending_val, "Onion Skin Previous");
+			break;
+		case kReqSetNext:
+			BroadcastWrite(OS_NEXT_FRAMES, (double)S_pending_val, "Onion Skin Next");
+			break;
+		case kReqSetStr:
+			BroadcastWrite(OS_STRENGTH, (double)S_pending_val, "Onion Skin Strength");
+			break;
 	}
 }
 
@@ -650,29 +679,52 @@ IdleHook(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long *max_sleepPL)
 
 static const char *S_propZ = "OnionSkinPanelInst";
 
-//	The stepper loop below builds its control ids by arithmetic, which only
-//	works while the ids are laid out as consecutive DOWN/UP pairs. Reordering
-//	them in the header would silently wire "+" to the wrong row rather than
-//	failing to compile, so it is made to fail to compile.
-static_assert(OSP_BTN_PREV_UP == OSP_BTN_PREV_DN + 1, "stepper ids must be DN,UP pairs");
-static_assert(OSP_BTN_NEXT_DN == OSP_BTN_PREV_DN + 2, "stepper ids must be consecutive");
-static_assert(OSP_BTN_NEXT_UP == OSP_BTN_PREV_DN + 3, "stepper ids must be DN,UP pairs");
-static_assert(OSP_BTN_STR_DN  == OSP_BTN_PREV_DN + 4, "stepper ids must be consecutive");
-static_assert(OSP_BTN_STR_UP  == OSP_BTN_PREV_DN + 5, "stepper ids must be DN,UP pairs");
-
+//	The stepper loop is gone - the ids below are kept because the toggle still
+//	uses one and because retiring an id is cheaper than reusing it.
+//
 //	One grid, named once. Scattering magic numbers through Paint is how a panel
 //	drifts half a pixel out of line every time somebody touches it.
-#define PAD		12
-#define ROW0	78
-#define ROWH	28
-#define STEP_X	150
+#define PAD			14
+#define ROW0		84
+#define ROWH		34
+#define LABEL_W		112
+#define SLIDER_H	18
+
+//	AE's UI is a narrow band of greys and a panel that picks its own palette
+//	looks like a foreign object docked inside it. These are sampled to sit in
+//	that band; the accent is the only saturated thing on the panel, so it reads
+//	as "this is the value" without shouting.
+#define COL_BTN			RGB(58, 58, 58)
+#define COL_BTN_HOT		RGB(72, 72, 72)
+#define COL_BTN_DOWN	RGB(44, 44, 44)
+#define COL_BTN_EDGE	RGB(84, 84, 84)
+#define COL_TRACK		RGB(38, 38, 38)
+#define COL_FILL		RGB(96, 132, 176)
+#define COL_KNOB		RGB(206, 206, 206)
+#define COL_LABEL		RGB(162, 162, 162)
+#define COL_VALUE		RGB(238, 238, 238)
+
+enum { SL_PREV = 0, SL_NEXT, SL_STR, SL_COUNT };
+
+typedef struct {
+	const char	*labelZ;
+	A_long		lo, hi;
+	const char	*suffixZ;
+} SliderDef;
+
+static const SliderDef S_sliders[SL_COUNT] = {
+	{ "Previous frames",	0, OS_MAX_SKINS,	""  },
+	{ "Next frames",		0, OS_MAX_SKINS,	""  },
+	{ "Strength",			0, 100,				"%" },
+};
 
 class OSPanel
 {
 public:
 	OSPanel(AEGP_PanelH panelH, AEGP_PlatformViewRef container,
 			AEGP_PanelFunctions1 *tableP)
-		: i_panelH(panelH), i_hwnd(container)
+		: i_panelH(panelH), i_hwnd(container), i_drag(-1), i_drag_val(0),
+		  i_hot_btn(0), i_down_btn(0), i_tracking(FALSE)
 	{
 		i_prev = (WNDPROC)SetWindowLongPtrA(i_hwnd, GWLP_WNDPROC, (LONG_PTR)S_WndProc);
 		::SetPropA(i_hwnd, S_propZ, (HANDLE)this);
@@ -688,16 +740,15 @@ public:
 								CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
 								DEFAULT_PITCH | FF_DONTCARE, "Segoe UI");
 
-		Btn("Turn Onion Skin On / Off", OSP_BTN_TOGGLE, PAD, 32, 232, 26);
-
-		//	Steppers flank the value, so the eye reads  -  2  +  as one control
-		//	rather than as three. Rows share one grid rather than each carrying
-		//	its own offsets.
-		for (int r = 0; r < 3; r++) {
-			int y = ROW0 + r * ROWH;
-			Btn("-", OSP_BTN_PREV_DN + r * 2,     STEP_X,      y, 22, 20);
-			Btn("+", OSP_BTN_PREV_DN + r * 2 + 1, STEP_X + 74, y, 22, 20);
-		}
+		//	BS_OWNERDRAW: Win32 has no pill button, so we draw it. Everything
+		//	else about the control - focus, keyboard, click semantics - still
+		//	comes from the button class, which is why this is a draw override
+		//	and not a hand-rolled control.
+		i_toggle = CreateWindowA("BUTTON", "Turn Onion Skin On / Off",
+									WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
+									PAD, 34, 230, 28,
+									i_hwnd, (HMENU)(INT_PTR)OSP_BTN_TOGGLE, NULL, NULL);
+		if (i_toggle && i_font) SendMessage(i_toggle, WM_SETFONT, (WPARAM)i_font, TRUE);
 
 		tableP->DoFlyoutCommand	= S_Flyout;
 		tableP->GetSnapSizes	= S_Snap;
@@ -710,80 +761,124 @@ public:
 private:
 	AEGP_PanelH	i_panelH;
 	HWND		i_hwnd;
+	HWND		i_toggle;
 	WNDPROC		i_prev;
 	HFONT		i_font;
 	HFONT		i_font_bold;
 
-	void Btn(const char *z, int id, int x, int y, int w, int h)
+	//	Transient DRAG state. Not a cached setting: it exists only between mouse
+	//	down and mouse up, and the moment the button is released the panel goes
+	//	back to painting whatever the streams say. Rule 1 is about never holding
+	//	a second opinion of a SETTING; the position of a finger mid-drag is not
+	//	one.
+	int			i_drag;			// which slider, or -1
+	A_long		i_drag_val;
+
+	int			i_hot_btn;		// owner-draw hover / press, for the pill
+	int			i_down_btn;
+	A_Boolean	i_tracking;
+
+	/* ---------- geometry ---------- */
+
+	RECT SliderRect(int i, int right) const
 	{
-		HWND b = CreateWindowA("BUTTON", z, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-								x, y, w, h, i_hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
-		if (b && i_font) SendMessage(b, WM_SETFONT, (WPARAM)i_font, TRUE);
+		RECT r;
+		r.left	= PAD + LABEL_W;
+		r.right	= right - PAD - 44;		// leave room for the value
+		r.top	= ROW0 + i * ROWH;
+		r.bottom = r.top + SLIDER_H;
+		return r;
 	}
 
-	static LRESULT CALLBACK S_WndProc(HWND h, UINT m, WPARAM w, LPARAM l)
+	A_long ValueOf(int i) const
 	{
-		OSPanel *p = reinterpret_cast<OSPanel *>(::GetPropA(h, S_propZ));
-		return p ? p->Proc(h, m, w, l) : DefWindowProc(h, m, w, l);
+		if (i == i_drag) return i_drag_val;		// mid-drag: show the finger
+		switch (i) {
+			case SL_PREV:	return S_snap.prev;
+			case SL_NEXT:	return S_snap.next;
+			case SL_STR:	return (A_long)(S_snap.strength + 0.5);
+		}
+		return 0;
 	}
 
-	LRESULT Proc(HWND h, UINT m, WPARAM w, LPARAM l)
+	A_long ValueAt(int i, int x, const RECT &r) const
 	{
-		bool handledB = false;
+		const SliderDef &d = S_sliders[i];
+		int span = (r.right - r.left) - 12;			// knob never leaves the track
+		if (span < 1) span = 1;
 
-		switch (m) {
-			case WM_PAINT:	Paint(h); handledB = true; break;
-			case WM_SIZE:	InvalidateRect(h, NULL, FALSE); break;
+		double t = (double)(x - (r.left + 6)) / (double)span;
+		if (t < 0) t = 0;
+		if (t > 1) t = 1;
 
-			case WM_COMMAND:
-				if (HIWORD(w) == BN_CLICKED) {
-					//	Rule 2: these QUEUE. Not one AEGP call happens here.
-					switch (LOWORD(w)) {
-						case OSP_BTN_TOGGLE:	Queue(kReqToggleLayer);	handledB = true; break;
-						case OSP_BTN_PREV_DN:	Queue(kReqPrevDn);		handledB = true; break;
-						case OSP_BTN_PREV_UP:	Queue(kReqPrevUp);		handledB = true; break;
-						case OSP_BTN_NEXT_DN:	Queue(kReqNextDn);		handledB = true; break;
-						case OSP_BTN_NEXT_UP:	Queue(kReqNextUp);		handledB = true; break;
-						case OSP_BTN_STR_DN:	Queue(kReqStrDn);		handledB = true; break;
-						case OSP_BTN_STR_UP:	Queue(kReqStrUp);		handledB = true; break;
-					}
-				}
-				break;
+		//	Rounded, not truncated, so the knob lands on the value nearest the
+		//	cursor rather than always the one below it.
+		return d.lo + (A_long)((d.hi - d.lo) * t + 0.5);
+	}
 
-			case WM_DESTROY:
-				if (S_panel_hwnd == h) S_panel_hwnd = NULL;
-				if (i_font)      { DeleteObject(i_font);      i_font = NULL; }
-				if (i_font_bold) { DeleteObject(i_font_bold); i_font_bold = NULL; }
-				break;
+	/* ---------- painting ---------- */
+
+	void Pill(HDC dc, const RECT &r, COLORREF fill, COLORREF edge)
+	{
+		HBRUSH br = CreateSolidBrush(fill);
+		HPEN   pn = CreatePen(PS_SOLID, 1, edge);
+		HGDIOBJ ob = SelectObject(dc, br);
+		HGDIOBJ op = SelectObject(dc, pn);
+
+		int d = r.bottom - r.top;		// fully round ends
+		RoundRect(dc, r.left, r.top, r.right, r.bottom, d, d);
+
+		SelectObject(dc, ob);
+		SelectObject(dc, op);
+		DeleteObject(br);
+		DeleteObject(pn);
+	}
+
+	void DrawSlider(HDC dc, int i, int right)
+	{
+		const SliderDef &d = S_sliders[i];
+		RECT r = SliderRect(i, right);
+		A_long v = ValueOf(i);
+
+		char buf[32];
+		sprintf(buf, "%ld%s", (long)v, d.suffixZ);
+
+		SetBkMode(dc, TRANSPARENT);
+		SelectObject(dc, i_font);
+
+		RECT lab = {PAD, r.top - 1, PAD + LABEL_W - 8, r.bottom + 1};
+		SetTextColor(dc, COL_LABEL);
+		DrawTextA(dc, d.labelZ, (int)strlen(d.labelZ), &lab,
+					DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+
+		//	Track, then the filled part, then the knob - painted in that order so
+		//	the knob is never clipped by the fill.
+		RECT track = {r.left, r.top + 6, r.right, r.bottom - 6};
+		Pill(dc, track, COL_TRACK, COL_TRACK);
+
+		double t = (d.hi > d.lo) ? (double)(v - d.lo) / (double)(d.hi - d.lo) : 0.0;
+		int span = (r.right - r.left) - 12;
+		int cx = r.left + 6 + (int)(span * t + 0.5);
+
+		if (cx > r.left + 6) {
+			RECT fill = {r.left, r.top + 6, cx, r.bottom - 6};
+			Pill(dc, fill, COL_FILL, COL_FILL);
 		}
 
-		if (i_prev && !handledB) return CallWindowProc(i_prev, h, m, w, l);
-		return handledB ? 0 : DefWindowProc(h, m, w, l);
+		RECT knob = {cx - 6, r.top + 1, cx + 6, r.bottom - 1};
+		Pill(dc, knob, (i == i_drag) ? RGB(255, 255, 255) : COL_KNOB, RGB(30, 30, 30));
+
+		RECT val = {r.right + 8, r.top - 1, r.right + 46, r.bottom + 1};
+		SetTextColor(dc, COL_VALUE);
+		DrawTextA(dc, buf, (int)strlen(buf), &val, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
 
 	void Line(HDC dc, int y, int right)
 	{
 		RECT r = {PAD, y, right - PAD, y + 1};
-		HBRUSH b = CreateSolidBrush(RGB(70, 70, 70));
+		HBRUSH b = CreateSolidBrush(RGB(66, 66, 66));
 		FillRect(dc, &r, b);
 		DeleteObject(b);
-	}
-
-	void Row(HDC dc, const char *labelZ, const char *valZ, int y)
-	{
-		RECT r;
-		SetBkMode(dc, TRANSPARENT);
-
-		SetTextColor(dc, RGB(165, 165, 165));
-		r.left = PAD; r.top = y; r.right = STEP_X - 8; r.bottom = y + 20;
-		DrawTextA(dc, labelZ, (int)strlen(labelZ), &r, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
-
-		//	The value sits BETWEEN the two steppers so the control reads as one
-		//	thing rather than as two buttons and a number that happen to be near
-		//	each other.
-		SetTextColor(dc, RGB(238, 238, 238));
-		r.left = STEP_X + 22; r.top = y; r.right = STEP_X + 74; r.bottom = y + 20;
-		DrawTextA(dc, valZ, (int)strlen(valZ), &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 	}
 
 	void Swatch(HDC dc, const char *labelZ, double r01, double g01, double b01,
@@ -793,27 +888,23 @@ private:
 		HBRUSH b = CreateSolidBrush(RGB((int)(r01 * 255), (int)(g01 * 255), (int)(b01 * 255)));
 		FillRect(dc, &sw, b);
 		DeleteObject(b);
-
-		//	A hairline, so a dark tint does not vanish into the panel.
 		FrameRect(dc, &sw, (HBRUSH)GetStockObject(GRAY_BRUSH));
 
 		RECT t = {x + 20, y, x + 96, y + 18};
 		SetBkMode(dc, TRANSPARENT);
-		SetTextColor(dc, RGB(165, 165, 165));
+		SetTextColor(dc, COL_LABEL);
 		DrawTextA(dc, labelZ, (int)strlen(labelZ), &t, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 	}
 
 	//	Returns the next free y. Everything below the swatches is conditional, so
-	//	it FLOWS rather than sitting at fixed offsets - a warning that gets
-	//	clipped is a warning nobody reads.
+	//	it FLOWS from a measured height rather than sitting at fixed offsets - a
+	//	warning that gets clipped is a warning nobody reads.
 	int Note(HDC dc, const char *z, COLORREF col, int y, int right)
 	{
 		RECT m = {PAD, y, right - PAD, y + 400};
 		SetBkMode(dc, TRANSPARENT);
 		SetTextColor(dc, col);
-
 		int h = DrawTextA(dc, z, (int)strlen(z), &m, DT_WORDBREAK | DT_CALCRECT);
-
 		RECT r = {PAD, y, right - PAD, y + h};
 		DrawTextA(dc, z, (int)strlen(z), &r, DT_WORDBREAK);
 		return y + h + 8;
@@ -821,9 +912,8 @@ private:
 
 	void Paint(HWND h)
 	{
-		//	Rule 1 and rule 2 together: this reads S_snap and nothing else. No
-		//	AEGP call, no cached "what I last wrote" - only what was last READ
-		//	from the streams.
+		//	Rules 1 and 2 together: this reads S_snap (plus the transient drag)
+		//	and nothing else. No AEGP call, no memory of what was last written.
 		PAINTSTRUCT	ps;
 		HDC			dc = BeginPaint(h, &ps);
 		RECT		client;
@@ -847,10 +937,9 @@ private:
 		HFONT old = (HFONT)SelectObject(dc, i_font);
 		SetBkMode(dc, TRANSPARENT);
 
-		//	Three lamp states, distinguishable at a glance: green means ghosts
-		//	are on, amber means the layer is there but the effect is disabled,
-		//	grey means nothing. The middle one exists because it is a real state
-		//	the user can reach and would otherwise look identical to "off".
+		//	Three lamp states, distinguishable at a glance. The amber one - layer
+		//	present, effect disabled - exists because it is reachable and would
+		//	otherwise look identical to off.
 		COLORREF lamp = RGB(95, 95, 95);
 		const char *stateZ = "off";
 		if (S_snap.has_layerB) {
@@ -858,31 +947,28 @@ private:
 			else                 { lamp = RGB(214, 162, 66); stateZ = "disabled"; }
 		}
 
-		RECT dot = {PAD, 10, PAD + 10, 20};
+		RECT dot = {PAD, 12, PAD + 10, 22};
 		br = CreateSolidBrush(lamp);
 		FillRect(dc, &dot, br);
 		DeleteObject(br);
 
 		SelectObject(dc, i_font_bold);
-		SetTextColor(dc, RGB(238, 238, 238));
-		RECT t = {PAD + 18, 5, right - 80, 25};
+		SetTextColor(dc, COL_VALUE);
+		RECT t = {PAD + 18, 8, right - 80, 26};
 		DrawTextA(dc, "ONION SKIN", 10, &t, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 
 		SelectObject(dc, i_font);
 		SetTextColor(dc, lamp);
-		RECT ts = {right - 80, 5, right - PAD, 25};
+		RECT ts = {right - 80, 8, right - PAD, 26};
 		DrawTextA(dc, stateZ, (int)strlen(stateZ), &ts, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 
-		Line(dc, 68, right);
+		Line(dc, 72, right);
 
-		sprintf(buf, "%ld", (long)S_snap.prev);
-		Row(dc, "Previous frames", buf, ROW0);
-		sprintf(buf, "%ld", (long)S_snap.next);
-		Row(dc, "Next frames", buf, ROW0 + ROWH);
-		sprintf(buf, "%.0f%%", S_snap.strength);
-		Row(dc, "Strength", buf, ROW0 + ROWH * 2);
+		for (int i = 0; i < SL_COUNT; i++) {
+			DrawSlider(dc, i, right);
+		}
 
-		int y = ROW0 + ROWH * 3 + 2;
+		int y = ROW0 + ROWH * SL_COUNT + 2;
 		Line(dc, y, right);
 		y += 10;
 
@@ -891,21 +977,18 @@ private:
 		y += 28;
 
 		if (!S_snap.has_compB) {
-			y = Note(dc, "No comp open.", RGB(165, 165, 165), y, right);
+			y = Note(dc, "No comp open.", COL_LABEL, y, right);
 		}
-
 		if (S_snap.opaque_belowB) {
 			y = Note(dc, "An opaque full-frame layer sits below the onion skin "
 						"layer, so the ghosts will be invisible. Move the "
 						"background above it, or make it a guide layer.",
 						RGB(255, 190, 90), y, right);
 		}
-
 		if (S_snap.n_instances > 1) {
 			sprintf(buf, "Driving %ld effect instances.", (long)S_snap.n_instances);
 			y = Note(dc, buf, RGB(150, 150, 150), y, right);
 		}
-
 		if (S_snap.note[0]) {
 			y = Note(dc, S_snap.note, RGB(255, 190, 90), y, right);
 		}
@@ -914,8 +997,143 @@ private:
 		EndPaint(h, &ps);
 	}
 
+	void DrawButton(LPDRAWITEMSTRUCT d)
+	{
+		A_Boolean downB = (d->itemState & ODS_SELECTED) != 0;
+		A_Boolean hotB  = (i_hot_btn == (int)d->CtlID);
+
+		COLORREF fill = downB ? COL_BTN_DOWN : (hotB ? COL_BTN_HOT : COL_BTN);
+		Pill(d->hDC, d->rcItem, fill, COL_BTN_EDGE);
+
+		char label[128] = {'\0'};
+		GetWindowTextA(d->hwndItem, label, sizeof(label) - 1);
+
+		SetBkMode(d->hDC, TRANSPARENT);
+		SelectObject(d->hDC, i_font);
+		SetTextColor(d->hDC, downB ? RGB(200, 200, 200) : COL_VALUE);
+
+		RECT r = d->rcItem;
+		DrawTextA(d->hDC, label, (int)strlen(label), &r,
+					DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+	}
+
+	/* ---------- input ---------- */
+
+	int HitSlider(int x, int y, int right) const
+	{
+		for (int i = 0; i < SL_COUNT; i++) {
+			RECT r = SliderRect(i, right);
+			//	A generous vertical band. A 6px track is a fair target to look
+			//	at and a poor one to hit.
+			if (x >= r.left - 6 && x <= r.right + 6 &&
+				y >= r.top - 4 && y <= r.bottom + 4) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	static LRESULT CALLBACK S_WndProc(HWND h, UINT m, WPARAM w, LPARAM l)
+	{
+		OSPanel *p = reinterpret_cast<OSPanel *>(::GetPropA(h, S_propZ));
+		return p ? p->Proc(h, m, w, l) : DefWindowProc(h, m, w, l);
+	}
+
+	LRESULT Proc(HWND h, UINT m, WPARAM w, LPARAM l)
+	{
+		bool handledB = false;
+		RECT client;
+		GetClientRect(h, &client);
+
+		switch (m) {
+			case WM_PAINT:	Paint(h); handledB = true; break;
+			case WM_SIZE:	InvalidateRect(h, NULL, FALSE); break;
+
+			case WM_ERASEBKGND:
+				//	We fill the whole client area in WM_PAINT, and letting the
+				//	default erase run first makes the sliders flicker.
+				return 1;
+
+			case WM_DRAWITEM:
+				DrawButton((LPDRAWITEMSTRUCT)l);
+				return TRUE;
+
+			case WM_LBUTTONDOWN: {
+				int x = GET_X_LPARAM(l), y = GET_Y_LPARAM(l);
+				int i = HitSlider(x, y, client.right);
+				if (i >= 0) {
+					i_drag = i;
+					i_drag_val = ValueAt(i, x, SliderRect(i, client.right));
+					SetCapture(h);
+					InvalidateRect(h, NULL, FALSE);
+					handledB = true;
+				}
+				break;
+			}
+
+			case WM_MOUSEMOVE: {
+				int x = GET_X_LPARAM(l), y = GET_Y_LPARAM(l);
+				if (i_drag >= 0) {
+					A_long v = ValueAt(i_drag, x, SliderRect(i_drag, client.right));
+					if (v != i_drag_val) {
+						i_drag_val = v;
+						InvalidateRect(h, NULL, FALSE);
+					}
+					handledB = true;
+				}
+				break;
+			}
+
+			case WM_LBUTTONUP:
+				if (i_drag >= 0) {
+					//	Committed ONCE, on release. Writing on every mouse-move
+					//	would give live ghosts but a separate undo entry per
+					//	pixel of travel, and a drag that costs forty presses of
+					//	Ctrl+Z is a worse bargain than a preview that arrives
+					//	when the finger lifts.
+					switch (i_drag) {
+						case SL_PREV:	QueueVal(kReqSetPrev, i_drag_val); break;
+						case SL_NEXT:	QueueVal(kReqSetNext, i_drag_val); break;
+						case SL_STR:	QueueVal(kReqSetStr,  i_drag_val); break;
+					}
+					i_drag = -1;
+					ReleaseCapture();
+					InvalidateRect(h, NULL, FALSE);
+					handledB = true;
+				}
+				break;
+
+			case WM_CAPTURECHANGED:
+				//	Capture can be taken away - a dialog, an alt-tab. Drop the
+				//	drag rather than leaving the knob stuck under a finger that
+				//	is no longer there.
+				if (i_drag >= 0) {
+					i_drag = -1;
+					InvalidateRect(h, NULL, FALSE);
+				}
+				break;
+
+			case WM_COMMAND:
+				if (HIWORD(w) == BN_CLICKED && LOWORD(w) == OSP_BTN_TOGGLE) {
+					//	Rule 2: this QUEUES. Not one AEGP call happens here.
+					Queue(kReqToggleLayer);
+					handledB = true;
+				}
+				break;
+
+			case WM_DESTROY:
+				if (S_panel_hwnd == h) S_panel_hwnd = NULL;
+				if (i_font)      { DeleteObject(i_font);      i_font = NULL; }
+				if (i_font_bold) { DeleteObject(i_font_bold); i_font_bold = NULL; }
+				break;
+		}
+
+		if (i_prev && !handledB) return CallWindowProc(i_prev, h, m, w, l);
+		return handledB ? 0 : DefWindowProc(h, m, w, l);
+	}
+
 	static A_Err S_Snap(AEGP_PanelRefcon, A_LPoint *s, A_long *nP)
-	{ s[0].x = 268; s[0].y = 250; s[1].x = 340; s[1].y = 340; *nP = 2; return A_Err_NONE; }
+	{ s[0].x = 276; s[0].y = 250; s[1].x = 360; s[1].y = 340; *nP = 2; return A_Err_NONE; }
 	static A_Err S_Populate(AEGP_PanelRefcon, AEGP_FlyoutMenuItem *, A_long *nP)
 	{ *nP = 0; return A_Err_NONE; }
 	static A_Err S_Flyout(AEGP_PanelRefcon, AEGP_FlyoutMenuCmdID)

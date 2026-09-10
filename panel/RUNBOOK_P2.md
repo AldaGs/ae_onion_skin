@@ -153,7 +153,61 @@ Rows 2 and 3 are the ones that decide whether Phase 2 delivered what Option B
 promised. Row 5 is the one that turns this product's worst failure mode into a
 sentence.
 
-**Known rough edges, not defects:** the panel's buttons are `+`/`−` steppers
-rather than sliders — B4 (what a real slider costs) was never run, and steppers
-were enough to prove the mechanism. Colours and Frame Step are not on the panel
+**Known rough edges, not defects:** Colours and Frame Step are not on the panel
 yet; they live in Effect Controls.
+
+---
+
+# Sliders and pill buttons — re-test
+
+The steppers are gone. Previous, Next and Strength are now drag sliders, and the
+toggle is an owner-drawn pill in AE's own greys.
+
+Redeploy `onionSkinPanel.aex` only — the effect is unchanged.
+
+## S1 — The sliders work
+
+1. Drag each slider. The knob follows the cursor, the fill grows behind it, and
+   the number on the right updates **live while dragging**.
+2. Release. The comp updates.
+3. Click once anywhere on a track without dragging — the knob should jump there.
+
+## S2 — One drag, one undo
+
+Drag Strength from one end to the other, release, then press **Ctrl+Z once**.
+It must go back to where it started in a single step.
+
+> **The tradeoff, stated so it can be argued with.** The write happens on
+> RELEASE, not during the drag. That is why one drag costs one undo — but it also
+> means the ghosts in the comp do not update until you let go. The alternative is
+> a write per mouse-move: live ghosts, and forty undo entries for one drag. If
+> the delayed preview annoys you more than the undo spam would, say so and I will
+> flip it — the honest fix is one undo group held open across the drag, which
+> works but leaves a group open across idle ticks, and I did not want to ship
+> that untested.
+
+## S3 — The panel is still only a readout
+
+Same test as row 2, now through a slider: change Strength in Effect Controls by
+hand, and the slider must move on its own. The drag value is transient — it
+exists only between mouse-down and mouse-up.
+
+## S4 — Drag interrupted
+
+Start dragging a slider, and without releasing, press `Alt+Tab` or open a menu so
+the panel loses mouse capture. The knob must snap back to the real value rather
+than sticking under a finger that is no longer there. Nothing should be written.
+
+## S5 — The pill button
+
+Hover the toggle: it should lighten. Press: it should darken. It should look like
+part of AE rather than a Win32 button parked inside it.
+
+| # | Claim | Pass |
+|---|---|---|
+| S1 | Sliders drag, value updates live | |
+| S1 | Click-to-jump on the track | |
+| S2 | One drag = one Ctrl+Z | |
+| S3 | Effect Controls → slider still follows | |
+| S4 | Lost capture cancels the drag cleanly | |
+| S5 | Pill button hover / press states | |
