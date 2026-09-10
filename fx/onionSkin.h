@@ -12,20 +12,29 @@
 
 	WHERE THE FRAMES COME FROM
 
-	Two placements, one code path, decided by whether any Source Layer is set:
+	The effect's own input, checked out at t + k*step. Nothing else.
 
-	  - Source Layer(s) set  -> skins come from those layers, checked out at
-	    t + k*step. Works with ANY background, because a layer's own alpha is
-	    never contaminated by what sits under it.
+	PLACEMENT, AND THE ONE CONSTRAINT
 
-	  - none set             -> skins come from the effect's own input. On an
-	    adjustment layer that is the composite below, which is correct ONLY when
-	    everything below carries alpha. With an opaque background the proto
-	    measured max|result - input| = EXACTLY 0.000 - not degraded, invisible.
-	    On a drawing layer it is always safe.
+	Two supported placements, one code path:
 
-	The maths never asks which case it is in; it only needs input with real
-	alpha.
+	  - an ADJUSTMENT LAYER above the drawing. This sees comp space, so it
+	    ghosts EVERY kind of animation including layer transforms, which is what
+	    character work needs.
+
+	  - the DRAWING LAYER itself, for art that animates in its own space.
+
+	Either way the requirement is the same and it is the documented constraint:
+	THE INPUT MUST CARRY ALPHA. An adjustment layer receives the composite below
+	it, so an opaque background below makes the ghosts invisible - the proto
+	measured max|result - input| = EXACTLY 0.000, not degraded, gone. Keep the
+	background above the onion-skin layer, or outside the comp.
+
+	Source Layer params were tried in v1.0-v1.3 to lift that constraint and were
+	RETIRED in v1.4. A checked-out layer param arrives at the layer's own
+	dimensions carrying none of its comp transform, so it ghosts artwork but not
+	animated position - which for character animation is the thing you need. The
+	disk IDs stay reserved; see the enum.
 
 	STRAIGHT ALPHA
 
@@ -64,10 +73,10 @@
 #define OS_PANEL_MATCH_NAME	"OnionSkinPanel"
 
 #define OS_MAJOR	1
-#define OS_MINOR	3
+#define OS_MINOR	4
 #define OS_BUG		0
 #define OS_STAGE	PF_Stage_DEVELOP
-#define OS_BUILD	4
+#define OS_BUILD	5
 
 /*	Disk IDs are APPEND-ONLY. Inserting one renumbers the rest and silently
 	mis-maps every saved project ("effect control conversion required"). Add at
@@ -83,9 +92,13 @@ enum {
 	OS_TINT_AMOUNT,
 	OS_PAST_COLOR,
 	OS_FUTURE_COLOR,
-	OS_SOURCE_1,
-	OS_SOURCE_2,
-	OS_SOURCE_3,
+	//	RETIRED in v1.4. Kept, and still added in ParamsSetup, so the disk IDs
+	//	after them do not shift -- deleting a param in the middle renumbers the
+	//	rest and silently mis-maps every saved project. They are added invisible
+	//	and never read. See the placement note above for why they went.
+	OS_RETIRED_SOURCE_1,
+	OS_RETIRED_SOURCE_2,
+	OS_RETIRED_SOURCE_3,
 	OS_OPEN_PANEL,
 	OS_DEBUG_LOG,		// appended for v1.1 - see the append-only note above
 	OS_NUM_PARAMS

@@ -135,17 +135,14 @@ ParamsSetup(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *[], PF_LayerD
 	AEFX_CLR_STRUCT(def);
 	PF_ADD_COLOR("Future Colour", 64, 178, 242, OS_FUTURE_COLOR);
 
-	//	Optional. When none is set the skins come from the effect's own input,
-	//	which is correct on a drawing layer and correct on an adjustment layer
-	//	ONLY if everything below carries alpha.
-	AEFX_CLR_STRUCT(def);
-	PF_ADD_LAYER("Source Layer 1", PF_LayerDefault_NONE, OS_SOURCE_1);
-
-	AEFX_CLR_STRUCT(def);
-	PF_ADD_LAYER("Source Layer 2", PF_LayerDefault_NONE, OS_SOURCE_2);
-
-	AEFX_CLR_STRUCT(def);
-	PF_ADD_LAYER("Source Layer 3", PF_LayerDefault_NONE, OS_SOURCE_3);
+	//	RETIRED in v1.4, and added anyway. Removing them outright would renumber
+	//	every disk ID after them and silently mis-map saved projects; adding them
+	//	invisible costs nothing and keeps the numbering frozen. Never read.
+	for (A_long r = 0; r < OS_MAX_SOURCES; r++) {
+		AEFX_CLR_STRUCT(def);
+		def.ui_flags = PF_PUI_INVISIBLE;
+		PF_ADD_LAYER("(retired)", PF_LayerDefault_NONE, OS_RETIRED_SOURCE_1 + r);
+	}
 
 	AEFX_CLR_STRUCT(def);
 	def.flags = PF_ParamFlag_SUPERVISE;
@@ -398,49 +395,15 @@ Render(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *params[], PF_Layer
 	ColorToUnit(&params[OS_PAST_COLOR]->u.cd.value,   &pr, &pg, &pb);
 	ColorToUnit(&params[OS_FUTURE_COLOR]->u.cd.value, &nr, &ng, &nb);
 
-	//	Which params supply the skins. Any Source Layer set wins; otherwise the
-	//	effect's own input. See onionSkin.h for why that distinction exists.
-	A_long	sources[OS_MAX_SOURCES];
+	//	One source, always: the effect's own input. v1.4 retired the Source Layer
+	//	params -- a checked-out layer param carries none of its comp transform,
+	//	so it could never ghost the animated position that character work is
+	//	made of. The constraint that replaces them is documented, not coded
+	//	around: the input must carry alpha.
+	A_long	sources[1];
 	A_long	n_sources = 0;
 
-	//	A layer param's u.ld is NOT populated by AE before render. v1.1 tested
-	//	params[idx]->u.ld.data and always saw NULL/0x0, so every Source Layer
-	//	looked unset and the effect silently fell back to its own input -- which
-	//	on an adjustment layer over an opaque background is invisible, and looked
-	//	like "selecting a source does nothing".
-	//
-	//	The SDK's own Checkout sample never reads params[CHECK_LAYER] at all; it
-	//	only ever calls PF_CHECKOUT_PARAM. Checking out IS the test.
-	for (A_long s = 0; s < OS_MAX_SOURCES; s++) {
-		A_long		idx = OS_SOURCE_1 + s;
-		PF_ParamDef	probe;
-		PF_Err		perr;
-
-		AEFX_CLR_STRUCT(probe);
-		perr = PF_CHECKOUT_PARAM(in_data, idx, in_data->current_time,
-									in_data->time_step, in_data->time_scale, &probe);
-
-		A_Boolean liveB = (!perr && probe.u.ld.data != NULL);
-
-		OS_Log("  source param %ld: probe_err=%d  data=%s  %ldx%ld",
-				(long)idx, (int)perr, liveB ? "yes" : "NO",
-				liveB ? (long)probe.u.ld.width  : 0L,
-				liveB ? (long)probe.u.ld.height : 0L);
-
-		if (liveB) {
-			sources[n_sources++] = idx;
-		}
-		if (!perr) {
-			PF_CHECKIN_PARAM(in_data, &probe);
-		}
-	}
-	if (n_sources == 0) {
-		//	Fall back to the effect's own input. On a drawing layer that is
-		//	right; on an adjustment layer over an opaque background it yields
-		//	nothing visible, which is the finding that put the Source params here.
-		sources[n_sources++] = OS_INPUT;
-	}
-	OS_Log("  resolved %ld source(s); first=%ld", (long)n_sources, (long)sources[0]);
+	sources[n_sources++] = OS_INPUT;
 
 	//	Start empty, then lay skins farthest-first so nearer frames occlude
 	//	further ones, and C(t) lands last.
