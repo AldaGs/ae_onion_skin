@@ -157,7 +157,9 @@ OpaqueLayerBelow(AEGP_CompH compH, A_long onion_index)
 	A_long				n = 0, cw = 0, ch = 0;
 	AEGP_ItemH			comp_itemH = NULL;
 
+	//	Same rule as below: a success code is not a promise of a non-NULL handle.
 	if (suites.CompSuite4()->AEGP_GetItemFromComp(compH, &comp_itemH)) return FALSE;
+	if (!comp_itemH) return FALSE;
 	if (suites.ItemSuite6()->AEGP_GetItemDimensions(comp_itemH, &cw, &ch)) return FALSE;
 	if (suites.LayerSuite9()->AEGP_GetCompNumLayers(compH, &n)) return FALSE;
 
@@ -173,12 +175,32 @@ OpaqueLayerBelow(AEGP_CompH compH, A_long onion_index)
 		if (flags & AEGP_LayerFlag_ADJUSTMENT_LAYER)	continue;
 		if (flags & AEGP_LayerFlag_GUIDE_LAYER)			continue;
 
+		//	Only AV layers can be a background. Cameras, lights and text are not
+		//	candidates and asking them for a source item is meaningless.
+		AEGP_ObjectType	otype = AEGP_ObjectType_NONE;
+		if (suites.LayerSuite9()->AEGP_GetLayerObjectType(layerH, &otype)) continue;
+		if (otype != AEGP_ObjectType_AV) continue;
+
 		AEGP_ItemH	srcH = NULL;
 		A_long		lw = 0, lh = 0;
+
+		//	AEGP_GetLayerSourceItem returns A_Err_NONE with a NULL item for any
+		//	layer that has no source - shape layers, text, nulls, solids created
+		//	certain ways. Passing that NULL on raises AE's "internal verification
+		//	failure {itemH cannot be NULL}", which is what run 1 hit: the check
+		//	written to help comps with artwork in them fell over on the shape
+		//	layers that artwork is made of.
+		//
+		//	A success code is not a promise of a non-NULL handle. Check both.
 		if (suites.LayerSuite9()->AEGP_GetLayerSourceItem(layerH, &srcH)) continue;
+		if (!srcH) continue;
 		if (suites.ItemSuite6()->AEGP_GetItemDimensions(srcH, &lw, &lh)) continue;
 
-		//	Smaller than the comp: it cannot be covering everything.
+		//	Smaller than the comp: it cannot be covering everything. A shape
+		//	layer big enough to cover the frame is therefore NOT reported - it
+		//	has no source item to measure. That is the conservative side to err
+		//	on: a missed warning costs a puzzled minute, a false one costs the
+		//	user's trust in every warning after it.
 		if (lw < cw || lh < ch) continue;
 
 		//	NOTE this is AEGP_StreamVal2, the bare union, not AEGP_StreamValue2 -
@@ -364,8 +386,9 @@ CreateManagedLayer()
 	}
 
 	ERR(suites.CompSuite4()->AEGP_GetItemFromComp(compH, &comp_itemH));
+	if (err || !comp_itemH) return;			// success != non-NULL handle
 	ERR(suites.ItemSuite6()->AEGP_GetItemDimensions(comp_itemH, &cw, &ch));
-	if (err) return;
+	if (err || cw <= 0 || ch <= 0) return;
 
 	if (!suites.UtilitySuite3()->AEGP_StartUndoGroup("Onion Skin On")) {
 		group_openedB = TRUE;
