@@ -30,29 +30,38 @@
 /*  Diagnostics                                                        */
 /* ------------------------------------------------------------------ */
 
-static bool S_logB = false;
+static char S_log_pathZ[512] = {'\0'};
+
+//	Written ONLY from PF_Cmd_GLOBAL_SETUP, which AE never sends concurrently with
+//	any other selector, and read-only thereafter. That is what makes it safe to
+//	touch from several render threads.
+void
+OS_ResolveLogPath()
+{
+	if (S_log_pathZ[0]) return;
+
+	const char *tmp = getenv("TEMP");
+	if (!tmp) tmp = getenv("TMP");
+	if (!tmp) tmp = ".";
+	sprintf(S_log_pathZ, "%s\\%s", tmp, OS_LOG_LEAF);
+}
 
 void
-OS_Log(const char *fmt, ...)
+OS_Log(A_Boolean onB, const char *fmt, ...)
 {
-	if (!S_logB) return;
+	if (!onB || !S_log_pathZ[0]) return;
 
-	static char pathZ[512] = {'\0'};
-	if (!pathZ[0]) {
-		const char *tmp = getenv("TEMP");
-		if (!tmp) tmp = getenv("TMP");
-		if (!tmp) tmp = ".";
-		sprintf(pathZ, "%s\\%s", tmp, OS_LOG_LEAF);
-	}
-
-	FILE *f = fopen(pathZ, "a");
-	if (!f) return;
-
+	//	Formatted into one buffer and written with a single fprintf, so a line
+	//	from another thread lands between lines rather than inside one.
+	char line[512];
 	va_list ap;
 	va_start(ap, fmt);
-	vfprintf(f, fmt, ap);
+	vsnprintf(line, sizeof(line) - 2, fmt, ap);
 	va_end(ap);
-	fprintf(f, "\n");
+
+	FILE *f = fopen(S_log_pathZ, "a");
+	if (!f) return;
+	fprintf(f, "%s\n", line);
 	fclose(f);
 }
 
@@ -93,6 +102,16 @@ GlobalSetup(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *[], PF_LayerD
 	out_data->out_flags = PF_OutFlag_DEEP_COLOR_AWARE |
 							PF_OutFlag_SEND_UPDATE_PARAMS_UI |
 							PF_OutFlag_WIDE_TIME_INPUT;
+
+	//	Multi-Frame Rendering. Render may be called on several threads at once,
+	//	so this is a claim about the code and not a wish: the effect keeps no
+	//	mutable global state, uses no sequence data, and everything it needs
+	//	arrives in params or in_data. The log's path is resolved here, in a
+	//	selector AE guarantees is never concurrent, and is read-only afterwards.
+	out_data->out_flags2 = PF_OutFlag2_SUPPORTS_THREADED_RENDERING;
+
+	//	Resolved on the main thread, before any render can start.
+	OS_ResolveLogPath();
 	return PF_Err_NONE;
 }
 
@@ -312,7 +331,8 @@ SkinOver16(void *refcon, A_long x, A_long y, PF_Pixel16 *, PF_Pixel16 *outP)
 //	Centring is a fallback that makes the failure visible, not a fix.
 static PF_Err
 LayDown(PF_InData *in_data, PF_LayerDef *output, PF_EffectWorld *skinP,
-		double opacity, double tr, double tg, double tb, double tint_amount)
+		double opacity, double tr, double tg, double tb, double tint_amount,
+		A_Boolean logB)
 {
 	PF_Err				err = PF_Err_NONE;
 	AEGP_SuiteHandler	suites(in_data->pica_basicP);
@@ -334,7 +354,7 @@ LayDown(PF_InData *in_data, PF_LayerDef *output, PF_EffectWorld *skinP,
 	if (skinP->width != output->width || skinP->height != output->height) {
 		si.off_x = (output->width  - skinP->width)  / 2;
 		si.off_y = (output->height - skinP->height) / 2;
-		OS_Log("    !! source %ldx%ld != output %ldx%ld - CENTRED at (%ld,%ld). "
+		OS_Log(logB, "    !! source %ldx%ld != output %ldx%ld - CENTRED at (%ld,%ld). "
 				"The layer's comp transform is NOT carried. Use a comp-sized "
 				"source (a precomp), or apply the effect to the drawing layer.",
 				(long)skinP->width, (long)skinP->height,
@@ -378,8 +398,9 @@ Render(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *params[], PF_Layer
 	double		tint_am	= params[OS_TINT_AMOUNT]->u.fs_d.value / 100.0;
 	A_Boolean	enabled	= params[OS_ENABLE]->u.bd.value;
 
-	S_logB = (params[OS_DEBUG_LOG]->u.bd.value != 0);
-	OS_Log("RENDER t=%ld step=%ld prev=%ld next=%ld fstep=%ld strength=%.2f deep=%d",
+	A_Boolean	logB = (params[OS_DEBUG_LOG]->u.bd.value != 0);
+
+	OS_Log(logB, "RENDER t=%ld step=%ld prev=%ld next=%ld fstep=%ld strength=%.2f deep=%d",
 			(long)in_data->current_time, (long)in_data->time_step,
 			(long)prev, (long)next, (long)step, strength,
 			(int)PF_WORLD_IS_DEEP(output));
@@ -449,7 +470,7 @@ Render(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *params[], PF_Layer
 											in_data->time_step, in_data->time_scale,
 											&checked);
 
-				OS_Log("    k=%+ld src_param=%ld  checkout_err=%d  data=%s  %ldx%ld",
+				OS_Log(logB, "    k=%+ld src_param=%ld  checkout_err=%d  data=%s  %ldx%ld",
 						(long)k, (long)sources[s], (int)cerr,
 						(!cerr && checked.u.ld.data) ? "yes" : "NO",
 						(!cerr) ? (long)checked.u.ld.width  : 0L,
@@ -463,7 +484,7 @@ Render(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *params[], PF_Layer
 									(k < 0) ? pr : nr,
 									(k < 0) ? pg : ng,
 									(k < 0) ? pb : nb,
-									tint_am));
+									tint_am, logB));
 						laid++;
 					}
 					PF_CHECKIN_PARAM(in_data, &checked);
@@ -474,9 +495,9 @@ Render(PF_InData *in_data, PF_OutData *out_data, PF_ParamDef *params[], PF_Layer
 	}
 
 	//	C(t) last, untouched: opacity 1, no tint. Runs whatever happened above.
-	ERR(LayDown(in_data, output, &params[OS_INPUT]->u.ld, 1.0, 0, 0, 0, 0.0));
+	ERR(LayDown(in_data, output, &params[OS_INPUT]->u.ld, 1.0, 0, 0, 0, 0.0, logB));
 
-	OS_Log("  laid %ld skin(s); final err=%d", (long)laid, (int)err);
+	OS_Log(logB, "  laid %ld skin(s); final err=%d", (long)laid, (int)err);
 	return err;
 }
 

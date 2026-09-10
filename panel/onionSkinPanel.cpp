@@ -64,6 +64,8 @@ typedef struct {
 	A_long		prev, next;
 	double		strength;
 	A_Boolean	opaque_belowB;		// a full-frame opaque layer under the onion layer
+	double		past_r, past_g, past_b;
+	double		next_r, next_g, next_b;
 	char		note[160];
 } Snapshot;
 
@@ -240,6 +242,31 @@ ReadStream(AEGP_EffectRefH fxH, A_long idx, double *outP)
 	if (!suites.StreamSuite5()->AEGP_GetNewStreamValue(S_my_id, streamH,
 				AEGP_LTimeMode_CompTime, &zero, FALSE, &val)) {
 		*outP = val.val.one_d;
+		okB = TRUE;
+		suites.StreamSuite5()->AEGP_DisposeStreamValue(&val);
+	}
+	suites.StreamSuite5()->AEGP_DisposeStream(streamH);
+	return okB;
+}
+
+static A_Boolean
+ReadColorStream(AEGP_EffectRefH fxH, A_long idx, double *rP, double *gP, double *bP)
+{
+	AEGP_SuiteHandler	suites(sP);
+	AEGP_StreamRefH		streamH = NULL;
+	AEGP_StreamValue2	val;
+	A_Time				zero = {0, 100};
+
+	if (suites.StreamSuite5()->AEGP_GetNewEffectStreamByIndex(S_my_id, fxH, idx, &streamH)) {
+		return FALSE;
+	}
+	AEFX_CLR_STRUCT(val);
+	A_Boolean okB = FALSE;
+	if (!suites.StreamSuite5()->AEGP_GetNewStreamValue(S_my_id, streamH,
+				AEGP_LTimeMode_CompTime, &zero, FALSE, &val)) {
+		*rP = val.val.color.redF;
+		*gP = val.val.color.greenF;
+		*bP = val.val.color.blueF;
 		okB = TRUE;
 		suites.StreamSuite5()->AEGP_DisposeStreamValue(&val);
 	}
@@ -480,6 +507,8 @@ RefreshSnapshot()
 					if (ReadStream(fxH, OS_PREV_FRAMES, &v))	s.prev = (A_long)(v + 0.5);
 					if (ReadStream(fxH, OS_NEXT_FRAMES, &v))	s.next = (A_long)(v + 0.5);
 					if (ReadStream(fxH, OS_STRENGTH, &v))		s.strength = v;
+					ReadColorStream(fxH, OS_PAST_COLOR,   &s.past_r, &s.past_g, &s.past_b);
+					ReadColorStream(fxH, OS_FUTURE_COLOR, &s.next_r, &s.next_g, &s.next_b);
 				}
 				s.n_instances++;
 				suites.EffectSuite4()->AEGP_DisposeEffect(fxH);
@@ -570,6 +599,8 @@ IdleHook(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long *max_sleepPL)
 		 before.prev		!= S_snap.prev			||
 		 before.next		!= S_snap.next			||
 		 before.strength	!= S_snap.strength		||
+		 before.past_r		!= S_snap.past_r		||
+		 before.next_b		!= S_snap.next_b		||
 		 before.n_instances	!= S_snap.n_instances	||
 		 before.opaque_belowB != S_snap.opaque_belowB ||
 		 strcmp(before.note, S_snap.note)))
@@ -587,6 +618,23 @@ IdleHook(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long *max_sleepPL)
 
 static const char *S_propZ = "OnionSkinPanelInst";
 
+//	The stepper loop below builds its control ids by arithmetic, which only
+//	works while the ids are laid out as consecutive DOWN/UP pairs. Reordering
+//	them in the header would silently wire "+" to the wrong row rather than
+//	failing to compile, so it is made to fail to compile.
+static_assert(OSP_BTN_PREV_UP == OSP_BTN_PREV_DN + 1, "stepper ids must be DN,UP pairs");
+static_assert(OSP_BTN_NEXT_DN == OSP_BTN_PREV_DN + 2, "stepper ids must be consecutive");
+static_assert(OSP_BTN_NEXT_UP == OSP_BTN_PREV_DN + 3, "stepper ids must be DN,UP pairs");
+static_assert(OSP_BTN_STR_DN  == OSP_BTN_PREV_DN + 4, "stepper ids must be consecutive");
+static_assert(OSP_BTN_STR_UP  == OSP_BTN_PREV_DN + 5, "stepper ids must be DN,UP pairs");
+
+//	One grid, named once. Scattering magic numbers through Paint is how a panel
+//	drifts half a pixel out of line every time somebody touches it.
+#define PAD		12
+#define ROW0	78
+#define ROWH	28
+#define STEP_X	150
+
 class OSPanel
 {
 public:
@@ -597,14 +645,27 @@ public:
 		i_prev = (WNDPROC)SetWindowLongPtrA(i_hwnd, GWLP_WNDPROC, (LONG_PTR)S_WndProc);
 		::SetPropA(i_hwnd, S_propZ, (HANDLE)this);
 
-		Btn("Onion Skin On / Off", OSP_BTN_TOGGLE, 10, 34, 190, 28);
+		//	AE's own UI font. The stock Win32 default is a bitmap face from the
+		//	nineties and makes a panel look broken rather than plain.
+		i_font = CreateFontA(-12, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE,
+								DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+								CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
+								DEFAULT_PITCH | FF_DONTCARE, "Segoe UI");
+		i_font_bold = CreateFontA(-12, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
+								DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+								CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
+								DEFAULT_PITCH | FF_DONTCARE, "Segoe UI");
 
-		Btn("-", OSP_BTN_PREV_DN, 120, 76, 30, 24);
-		Btn("+", OSP_BTN_PREV_UP, 154, 76, 30, 24);
-		Btn("-", OSP_BTN_NEXT_DN, 120, 106, 30, 24);
-		Btn("+", OSP_BTN_NEXT_UP, 154, 106, 30, 24);
-		Btn("-", OSP_BTN_STR_DN,  120, 136, 30, 24);
-		Btn("+", OSP_BTN_STR_UP,  154, 136, 30, 24);
+		Btn("Turn Onion Skin On / Off", OSP_BTN_TOGGLE, PAD, 32, 232, 26);
+
+		//	Steppers flank the value, so the eye reads  -  2  +  as one control
+		//	rather than as three. Rows share one grid rather than each carrying
+		//	its own offsets.
+		for (int r = 0; r < 3; r++) {
+			int y = ROW0 + r * ROWH;
+			Btn("-", OSP_BTN_PREV_DN + r * 2,     STEP_X,      y, 22, 20);
+			Btn("+", OSP_BTN_PREV_DN + r * 2 + 1, STEP_X + 74, y, 22, 20);
+		}
 
 		tableP->DoFlyoutCommand	= S_Flyout;
 		tableP->GetSnapSizes	= S_Snap;
@@ -618,11 +679,14 @@ private:
 	AEGP_PanelH	i_panelH;
 	HWND		i_hwnd;
 	WNDPROC		i_prev;
+	HFONT		i_font;
+	HFONT		i_font_bold;
 
 	void Btn(const char *z, int id, int x, int y, int w, int h)
 	{
-		CreateWindowA("BUTTON", z, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-						x, y, w, h, i_hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
+		HWND b = CreateWindowA("BUTTON", z, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+								x, y, w, h, i_hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
+		if (b && i_font) SendMessage(b, WM_SETFONT, (WPARAM)i_font, TRUE);
 	}
 
 	static LRESULT CALLBACK S_WndProc(HWND h, UINT m, WPARAM w, LPARAM l)
@@ -656,6 +720,8 @@ private:
 
 			case WM_DESTROY:
 				if (S_panel_hwnd == h) S_panel_hwnd = NULL;
+				if (i_font)      { DeleteObject(i_font);      i_font = NULL; }
+				if (i_font_bold) { DeleteObject(i_font_bold); i_font_bold = NULL; }
 				break;
 		}
 
@@ -663,18 +729,62 @@ private:
 		return handledB ? 0 : DefWindowProc(h, m, w, l);
 	}
 
-	void Row(HDC dc, const char *labelZ, const char *valZ, int y, int right)
+	void Line(HDC dc, int y, int right)
+	{
+		RECT r = {PAD, y, right - PAD, y + 1};
+		HBRUSH b = CreateSolidBrush(RGB(70, 70, 70));
+		FillRect(dc, &r, b);
+		DeleteObject(b);
+	}
+
+	void Row(HDC dc, const char *labelZ, const char *valZ, int y)
 	{
 		RECT r;
 		SetBkMode(dc, TRANSPARENT);
 
-		SetTextColor(dc, RGB(190, 190, 190));
-		r.left = 10; r.top = y; r.right = 118; r.bottom = y + 20;
-		DrawTextA(dc, labelZ, (int)strlen(labelZ), &r, DT_SINGLELINE | DT_LEFT);
+		SetTextColor(dc, RGB(165, 165, 165));
+		r.left = PAD; r.top = y; r.right = STEP_X - 8; r.bottom = y + 20;
+		DrawTextA(dc, labelZ, (int)strlen(labelZ), &r, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 
-		SetTextColor(dc, RGB(235, 235, 235));
-		r.left = 190; r.top = y; r.right = right; r.bottom = y + 20;
-		DrawTextA(dc, valZ, (int)strlen(valZ), &r, DT_SINGLELINE | DT_LEFT);
+		//	The value sits BETWEEN the two steppers so the control reads as one
+		//	thing rather than as two buttons and a number that happen to be near
+		//	each other.
+		SetTextColor(dc, RGB(238, 238, 238));
+		r.left = STEP_X + 22; r.top = y; r.right = STEP_X + 74; r.bottom = y + 20;
+		DrawTextA(dc, valZ, (int)strlen(valZ), &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+	}
+
+	void Swatch(HDC dc, const char *labelZ, double r01, double g01, double b01,
+				int x, int y)
+	{
+		RECT sw = {x, y + 2, x + 14, y + 16};
+		HBRUSH b = CreateSolidBrush(RGB((int)(r01 * 255), (int)(g01 * 255), (int)(b01 * 255)));
+		FillRect(dc, &sw, b);
+		DeleteObject(b);
+
+		//	A hairline, so a dark tint does not vanish into the panel.
+		FrameRect(dc, &sw, (HBRUSH)GetStockObject(GRAY_BRUSH));
+
+		RECT t = {x + 20, y, x + 96, y + 18};
+		SetBkMode(dc, TRANSPARENT);
+		SetTextColor(dc, RGB(165, 165, 165));
+		DrawTextA(dc, labelZ, (int)strlen(labelZ), &t, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+	}
+
+	//	Returns the next free y. Everything below the swatches is conditional, so
+	//	it FLOWS rather than sitting at fixed offsets - a warning that gets
+	//	clipped is a warning nobody reads.
+	int Note(HDC dc, const char *z, COLORREF col, int y, int right)
+	{
+		RECT m = {PAD, y, right - PAD, y + 400};
+		SetBkMode(dc, TRANSPARENT);
+		SetTextColor(dc, col);
+
+		int h = DrawTextA(dc, z, (int)strlen(z), &m, DT_WORDBREAK | DT_CALCRECT);
+
+		RECT r = {PAD, y, right - PAD, y + h};
+		DrawTextA(dc, z, (int)strlen(z), &r, DT_WORDBREAK);
+		return y + h + 8;
 	}
 
 	void Paint(HWND h)
@@ -685,9 +795,10 @@ private:
 		PAINTSTRUCT	ps;
 		HDC			dc = BeginPaint(h, &ps);
 		RECT		client;
-		char		buf[200];
+		char		buf[240];
 
 		GetClientRect(h, &client);
+		int right = client.right;
 
 		AEGP_SuiteHandler	suites(sP);
 		PF_App_Color		bg = {0};
@@ -701,70 +812,78 @@ private:
 		FillRect(dc, &client, br);
 		DeleteObject(br);
 
-		//	Status lamp: green when ghosts are actually on, amber when the layer
-		//	exists but Enable is off, grey when there is no layer.
-		COLORREF lamp = RGB(90, 90, 90);
+		HFONT old = (HFONT)SelectObject(dc, i_font);
+		SetBkMode(dc, TRANSPARENT);
+
+		//	Three lamp states, distinguishable at a glance: green means ghosts
+		//	are on, amber means the layer is there but the effect is disabled,
+		//	grey means nothing. The middle one exists because it is a real state
+		//	the user can reach and would otherwise look identical to "off".
+		COLORREF lamp = RGB(95, 95, 95);
 		const char *stateZ = "off";
 		if (S_snap.has_layerB) {
-			if (S_snap.enabledB) { lamp = RGB(80, 200, 100); stateZ = "on"; }
-			else                 { lamp = RGB(210, 160, 60); stateZ = "layer on, effect disabled"; }
+			if (S_snap.enabledB) { lamp = RGB(86, 196, 108); stateZ = "on"; }
+			else                 { lamp = RGB(214, 162, 66); stateZ = "disabled"; }
 		}
-		RECT l = {10, 8, 26, 24};
+
+		RECT dot = {PAD, 10, PAD + 10, 20};
 		br = CreateSolidBrush(lamp);
-		FillRect(dc, &l, br);
+		FillRect(dc, &dot, br);
 		DeleteObject(br);
 
-		SetBkMode(dc, TRANSPARENT);
-		SetTextColor(dc, RGB(235, 235, 235));
-		RECT t = {34, 6, client.right - 10, 26};
-		sprintf(buf, "Onion Skin - %s", stateZ);
-		DrawTextA(dc, buf, (int)strlen(buf), &t, DT_SINGLELINE | DT_LEFT);
+		SelectObject(dc, i_font_bold);
+		SetTextColor(dc, RGB(238, 238, 238));
+		RECT t = {PAD + 18, 5, right - 80, 25};
+		DrawTextA(dc, "ONION SKIN", 10, &t, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 
-		sprintf(buf, "%ld", (long)S_snap.prev);		Row(dc, "Previous frames", buf, 78, client.right - 10);
-		sprintf(buf, "%ld", (long)S_snap.next);		Row(dc, "Next frames",     buf, 108, client.right - 10);
-		sprintf(buf, "%.0f%%", S_snap.strength);	Row(dc, "Strength",        buf, 138, client.right - 10);
+		SelectObject(dc, i_font);
+		SetTextColor(dc, lamp);
+		RECT ts = {right - 80, 5, right - PAD, 25};
+		DrawTextA(dc, stateZ, (int)strlen(stateZ), &ts, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 
-		int y = 172;
+		Line(dc, 68, right);
+
+		sprintf(buf, "%ld", (long)S_snap.prev);
+		Row(dc, "Previous frames", buf, ROW0);
+		sprintf(buf, "%ld", (long)S_snap.next);
+		Row(dc, "Next frames", buf, ROW0 + ROWH);
+		sprintf(buf, "%.0f%%", S_snap.strength);
+		Row(dc, "Strength", buf, ROW0 + ROWH * 2);
+
+		int y = ROW0 + ROWH * 3 + 2;
+		Line(dc, y, right);
+		y += 10;
+
+		Swatch(dc, "Past",   S_snap.past_r, S_snap.past_g, S_snap.past_b, PAD, y);
+		Swatch(dc, "Future", S_snap.next_r, S_snap.next_g, S_snap.next_b, PAD + 112, y);
+		y += 28;
 
 		if (!S_snap.has_compB) {
-			SetTextColor(dc, RGB(180, 180, 180));
-			RECT r = {10, y, client.right - 10, y + 40};
-			const char *z = "No comp open.";
-			DrawTextA(dc, z, (int)strlen(z), &r, DT_WORDBREAK);
-			y += 24;
+			y = Note(dc, "No comp open.", RGB(165, 165, 165), y, right);
 		}
 
-		//	The warning that exists because this is the product's one genuinely
-		//	confusing failure, and the effect cannot see it coming.
 		if (S_snap.opaque_belowB) {
-			SetTextColor(dc, RGB(255, 190, 90));
-			RECT r = {10, y, client.right - 10, y + 56};
-			const char *z = "An opaque full-frame layer sits below the onion skin "
-							"layer, so the ghosts will be invisible. Move the "
-							"background above it, or make it a guide layer.";
-			DrawTextA(dc, z, (int)strlen(z), &r, DT_WORDBREAK);
-			y += 58;
+			y = Note(dc, "An opaque full-frame layer sits below the onion skin "
+						"layer, so the ghosts will be invisible. Move the "
+						"background above it, or make it a guide layer.",
+						RGB(255, 190, 90), y, right);
 		}
 
 		if (S_snap.n_instances > 1) {
-			SetTextColor(dc, RGB(170, 170, 170));
-			RECT r = {10, y, client.right - 10, y + 20};
 			sprintf(buf, "Driving %ld effect instances.", (long)S_snap.n_instances);
-			DrawTextA(dc, buf, (int)strlen(buf), &r, DT_SINGLELINE);
-			y += 22;
+			y = Note(dc, buf, RGB(150, 150, 150), y, right);
 		}
 
 		if (S_snap.note[0]) {
-			SetTextColor(dc, RGB(255, 190, 90));
-			RECT r = {10, y, client.right - 10, y + 40};
-			DrawTextA(dc, S_snap.note, (int)strlen(S_snap.note), &r, DT_WORDBREAK);
+			y = Note(dc, S_snap.note, RGB(255, 190, 90), y, right);
 		}
 
+		SelectObject(dc, old);
 		EndPaint(h, &ps);
 	}
 
 	static A_Err S_Snap(AEGP_PanelRefcon, A_LPoint *s, A_long *nP)
-	{ s[0].x = 260; s[0].y = 260; s[1].x = 340; s[1].y = 340; *nP = 2; return A_Err_NONE; }
+	{ s[0].x = 268; s[0].y = 250; s[1].x = 340; s[1].y = 340; *nP = 2; return A_Err_NONE; }
 	static A_Err S_Populate(AEGP_PanelRefcon, AEGP_FlyoutMenuItem *, A_long *nP)
 	{ *nP = 0; return A_Err_NONE; }
 	static A_Err S_Flyout(AEGP_PanelRefcon, AEGP_FlyoutMenuCmdID)

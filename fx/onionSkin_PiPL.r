@@ -35,10 +35,10 @@ resource 'PiPL' (16000) {
 			PF_PLUG_IN_SUBVERS
 		},
 		/*	PF_VERSION bit-packing, NOT the AEGP 'Version' convention -- the two
-			look alike and are not. 1.5.0 build 6 = 688134.
+			look alike and are not. 1.6.0 build 7 = 720903.
 			MUST move in lockstep with PF_VERSION() in GlobalSetup. */
 		AE_Effect_Version {
-			688134
+			720903
 		},
 		AE_Effect_Info_Flags {
 			0
@@ -53,8 +53,11 @@ resource 'PiPL' (16000) {
 		AE_Effect_Global_OutFlags {
 			0x06000002
 		},
+		/*	SUPPORTS_THREADED_RENDERING (1<<27) - Multi-Frame Rendering. Must
+			match GlobalSetup's out_flags2, and must be TRUE of the code: no
+			mutable global state, no sequence data. */
 		AE_Effect_Global_OutFlags_2 {
-			0x00000000
+			0x08000000
 		},
 		AE_Effect_Match_Name {
 			"aldai OnionSkin"

@@ -73,13 +73,24 @@
 #include "../shared/onionSkinIDs.h"
 
 #define OS_MAJOR	1
-#define OS_MINOR	5
+#define OS_MINOR	6
 #define OS_BUG		0
 #define OS_STAGE	PF_Stage_DEVELOP
-#define OS_BUILD	6
+#define OS_BUILD	7
 
 #define OS_LOG_LEAF			"onionskin_fx.txt"
-void OS_Log(const char *fmt, ...);
+
+//	MFR: Render may run on several threads at once, so the effect carries NO
+//	mutable global state. The log takes its enable flag as an ARGUMENT rather
+//	than reading a global that Render used to write, and its path is resolved
+//	once in GLOBAL_SETUP - a selector AE guarantees is never concurrent with
+//	anything else - after which it is read-only.
+//
+//	Lines from different threads can still interleave in the file. That is a
+//	property of the log, not a race, and it is stated rather than hidden: when
+//	reading a log from an MFR render, do not assume the blocks are contiguous.
+void OS_ResolveLogPath();
+void OS_Log(A_Boolean onB, const char *fmt, ...);
 
 extern "C" {
 	DllExport PF_Err EffectMain(
