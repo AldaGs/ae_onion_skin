@@ -88,6 +88,11 @@ ActiveComp(AEGP_CompH *compPH)
 	ERR(suites.ItemSuite6()->AEGP_GetActiveItem(&itemH));
 	if (err || !itemH) return err;
 
+	//	An import makes the new footage the active item. GetCompFromItem on a
+	//	non-comp trips AE's verifier ("Item must be a comp") before we can react.
+	AEGP_ItemType type = AEGP_ItemType_NONE;
+	if (suites.ItemSuite6()->AEGP_GetItemType(itemH, &type) || type != AEGP_ItemType_COMP) return A_Err_NONE;
+
 	return suites.CompSuite4()->AEGP_GetCompFromItem(itemH, compPH);
 }
 
